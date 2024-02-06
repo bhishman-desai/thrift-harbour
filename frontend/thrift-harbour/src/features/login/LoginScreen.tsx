@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Container, InputCard } from "./LoginStyles";
 import {
   Button,
@@ -10,15 +10,32 @@ import {
   Title,
 } from "../registration/RegistrationStyles";
 import { LoginCredentials } from "../../types/types";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { Auth } from "../../services/Auth";
 
 const Login: React.FC = () => {
+  const { token, handleLogin } = useAuth();
+  const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loginCredentials, setLoginCredentials] = useState(
     {} as LoginCredentials
   );
-  const onSubmitLogin = (e: FormEvent) => {
+  const auth = new Auth();
+
+  useEffect(() => {
+    if (token?.length) {
+      navigate("/home");
+    }
+  }, [token]);
+
+  const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("loginCredentials", loginCredentials);
+    const token = await auth.signInUser(loginCredentials);
+    if (token) {
+      handleLogin && handleLogin(token);
+      navigate("/home");
+    }
   };
 
   return (
