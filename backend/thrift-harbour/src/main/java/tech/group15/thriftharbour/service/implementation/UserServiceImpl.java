@@ -9,7 +9,7 @@ import tech.group15.thriftharbour.service.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImplementation implements UserService {
+public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
 
   /**

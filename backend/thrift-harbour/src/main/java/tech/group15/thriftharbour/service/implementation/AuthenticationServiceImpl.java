@@ -19,7 +19,7 @@ import tech.group15.thriftharbour.service.JWTService;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImplementation implements AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;

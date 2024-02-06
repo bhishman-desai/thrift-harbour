@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import tech.group15.thriftharbour.service.JWTService;
 
 @Service
-public class JWTServiceImplementation implements JWTService {
+public class JWTServiceImpl implements JWTService {
   /* Methods that generate JWT token, and extract information from the token */
 
   /**

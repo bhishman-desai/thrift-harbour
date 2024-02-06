@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
 
 public class HttpUtils {
@@ -30,6 +31,9 @@ public class HttpUtils {
     /* If the email id already exists in the system */
     if (exception instanceof EmailAlreadyExistsException) {
       return HttpStatus.CONFLICT;
+    }
+    if (exception instanceof MethodArgumentNotValidException) {
+      return HttpStatus.BAD_REQUEST;
     }
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }

@@ -31,8 +31,9 @@ public class ThriftHarbourApplication implements CommandLineRunner {
 
       /* TODO: Change the hard-coded password and use a better approach */
       admin.setFirstName("admin");
+      admin.setLastName("admin");
       admin.setEmail("admin@dal.ca");
-      admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
+      admin.setPassword(new BCryptPasswordEncoder().encode("Admin@123"));
       admin.setRole(RoleEnum.ADMIN);
 
       userRepository.save(admin);
