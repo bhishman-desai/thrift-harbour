@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const InputCard = styled.div`
-  height: 75%;
+  height: 80%;
   width: 30%;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ export const InputCard = styled.div`
   background-color: #fff;
   border: 1px solid #edf1f7;
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px 18px 12px 18px;
 `;
 
 export const Title = styled.h2`
@@ -43,12 +43,14 @@ export const Input = styled.input`
   }
   height: 1.5rem;
 `;
+
 export const Field = styled.div`
   display: flex;
   flex-direction: column;
   bprder: 1px solid red;
   margin-bottom: 12px;
 `;
+
 export const Form = styled.form`
   width: 100%;
 `;
@@ -61,6 +63,7 @@ export const Button = styled.div`
   width: 100%;
   margin-top: 14px;
 `;
+
 export const RegisterButton = styled.button`
   width: 100%;
   padding: 0.75rem;
@@ -72,4 +75,18 @@ export const RegisterButton = styled.button`
   &:hover {
     background-color: #191d88;
   }
+`;
+
+export const LoginLink = styled.div`
+  text-align-center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+`;
+
+export const Message = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;

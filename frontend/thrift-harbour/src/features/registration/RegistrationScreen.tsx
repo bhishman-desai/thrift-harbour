@@ -12,16 +12,22 @@ import {
   RegisterButton,
   Title,
   Button,
+  LoginLink,
+  Message,
 } from "./RegistrationStyles";
+import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const Registration: React.FC = () => {
   const [credentials, setCredentials] = useState({} as Credentials);
-  const [validPass, setValidPass] = useState(false);
   const [showCriteria, setShowCriteria] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [nameError, setNameError] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [alreadyExist, setAlreadyExist] = useState(false);
+  const [error, setError] = useState(false);
   const auth = new Auth();
 
   const validatePassword = () => {
@@ -40,7 +46,7 @@ const Registration: React.FC = () => {
     }
   };
 
-  const onSubmitRegister = (e: FormEvent) => {
+  const onSubmitRegister = async (e: FormEvent) => {
     e.preventDefault();
     const valid = validatePassword();
     const validName = validateNames();
@@ -50,10 +56,30 @@ const Registration: React.FC = () => {
     }
     if (!valid) {
       setShowCriteria(true);
-      setValidPass(false);
     } else {
-      setValidPass(true);
-      const response = auth.signUpUser(credentials as Credentials);
+      setIsLoading(true);
+      setCredentials({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      });
+      const response: any = await auth.signUpUser(credentials as Credentials);
+      if (response === 200) {
+        setIsLoading(false);
+        setRegisterSuccess(true);
+      } else if (response.response.status === 409) {
+        setIsLoading(false);
+        setAlreadyExist(true);
+      } else {
+        setIsLoading(false);
+        setCredentials({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+        });
+      }
     }
   };
 
@@ -65,6 +91,18 @@ const Registration: React.FC = () => {
     setShowCriteria(!showCriteria);
   };
 
+  const toggoleRegisterSuccess = () => {
+    setRegisterSuccess(!registerSuccess);
+  };
+
+  const toggoleAlreadyExist = () => {
+    setAlreadyExist(!alreadyExist);
+  };
+
+  const toggleError = () => {
+    setError(!error);
+  };
+
   return (
     <Container>
       <InputCard>
@@ -73,6 +111,7 @@ const Registration: React.FC = () => {
           <Field>
             <Label>First Name</Label>
             <Input
+              value={credentials.firstName}
               required={true}
               id="firstName"
               onFocus={() => setIsFocused(true)}
@@ -85,6 +124,7 @@ const Registration: React.FC = () => {
           <Field>
             <Label htmlFor="lastName">Last Name</Label>
             <Input
+              value={credentials.lastName}
               required={true}
               id="lastName"
               onFocus={() => setIsFocused(!isFocused)}
@@ -97,6 +137,7 @@ const Registration: React.FC = () => {
           <Field>
             <Label>E-mail ID</Label>
             <Input
+              value={credentials.email}
               required={true}
               type="email"
               id="email"
@@ -110,6 +151,7 @@ const Registration: React.FC = () => {
           <Field>
             <Label>Password</Label>
             <Input
+              value={credentials.password}
               required={true}
               type="password"
               id="password"
@@ -121,9 +163,18 @@ const Registration: React.FC = () => {
             ></Input>
           </Field>
           <Button>
-            <RegisterButton type="submit">Sign up</RegisterButton>
+            <RegisterButton type="submit">
+              {isLoading ? (
+                <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+              ) : (
+                "Sign up"
+              )}
+            </RegisterButton>
           </Button>
         </Form>
+        <LoginLink>
+          <Link to="/login">Already have an account ? Sign in</Link>
+        </LoginLink>
       </InputCard>
 
       {nameError && (
@@ -146,6 +197,36 @@ const Registration: React.FC = () => {
               2. Must be combination of alphanumeric characters
             </p>
           </div>
+        </Modal>
+      )}
+
+      {registerSuccess && (
+        <Modal onClose={toggoleRegisterSuccess}>
+          <Message>
+            <p style={{ color: "green" }}>Registered Successfully!</p>
+            <Link to="/login">Click here to Login</Link>
+          </Message>
+        </Modal>
+      )}
+
+      {alreadyExist && (
+        <Modal onClose={toggoleAlreadyExist}>
+          <Message>
+            <p style={{ color: "Red" }}>
+              User already registered with this email!
+            </p>
+            <Link to="/login">Click here to Login</Link>
+          </Message>
+        </Modal>
+      )}
+
+      {error && (
+        <Modal onClose={toggleError}>
+          <Message>
+            <p style={{ color: "Red" }}>
+              Something went wrong, please try again!
+            </p>
+          </Message>
         </Modal>
       )}
     </Container>

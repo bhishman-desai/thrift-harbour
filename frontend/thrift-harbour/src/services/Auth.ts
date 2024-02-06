@@ -12,8 +12,10 @@ export class Auth {
 
     try {
       const response = await axios.post(requestUrl, requestParams);
-    } catch {
-      console.log("error");
+      return response.status;
+    } catch (error) {
+      console.log("error", error);
+      return error;
     }
   }
 }
