@@ -64,21 +64,22 @@ const Registration: React.FC = () => {
         email: "",
         password: "",
       });
-      const response: any = await auth.signUpUser(credentials as Credentials);
-      if (response === 200) {
+      try {
+        const [data, error] = await auth.signUpUser(credentials as Credentials);
+        if (data?.userID) {
+          setIsLoading(false);
+          setRegisterSuccess(true);
+        } else {
+          setIsLoading(false);
+          setError(true);
+        }
+        if (error?.message === "Email already exists!") {
+          setIsLoading(false);
+          setAlreadyExist(true);
+        }
+      } catch (error) {
         setIsLoading(false);
-        setRegisterSuccess(true);
-      } else if (response.response.status === 409) {
-        setIsLoading(false);
-        setAlreadyExist(true);
-      } else {
-        setIsLoading(false);
-        setCredentials({
-          firstName: "",
-          lastName: "",
-          email: "",
-          password: "",
-        });
+        setError(true);
       }
     }
   };

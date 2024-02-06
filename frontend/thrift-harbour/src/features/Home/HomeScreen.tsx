@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
-import { Container } from "./HomeSreenStyles";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
@@ -13,12 +11,7 @@ const Home: React.FC = () => {
     navigate("/login");
   };
 
-  return (
-    <Container>
-      <h1>Home Screen</h1>
-      <button onClick={() => handleClick()}>Logout</button>
-    </Container>
-  );
+  return <button onClick={() => handleClick()}>Logout</button>;
 };
 
 export default Home;

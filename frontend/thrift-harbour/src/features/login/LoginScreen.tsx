@@ -6,6 +6,7 @@ import {
   Form,
   Input,
   Label,
+  Message,
   RegisterButton,
   Title,
 } from "../registration/RegistrationStyles";
@@ -13,6 +14,8 @@ import { LoginCredentials } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
+import Modal from "../../components/ui-components/Modal/Modal";
+import { ClipLoader } from "react-spinners";
 
 const Login: React.FC = () => {
   const { token, handleLogin } = useAuth();
@@ -21,6 +24,9 @@ const Login: React.FC = () => {
   const [loginCredentials, setLoginCredentials] = useState(
     {} as LoginCredentials
   );
+  const [errorInLogin, setErrorInLogin] = useState(false);
+  const [badCredentials, setBadCredentials] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = new Auth();
 
   useEffect(() => {
@@ -31,13 +37,34 @@ const Login: React.FC = () => {
 
   const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
-    const token = await auth.signInUser(loginCredentials);
-    if (token) {
-      handleLogin && handleLogin(token);
-      navigate("/home");
+    setIsLoading(true);
+    try {
+      const [data, error] = await auth.signInUser(loginCredentials);
+      if (data?.token) {
+        setErrorInLogin(false);
+        setIsLoading(false);
+        handleLogin && handleLogin(data?.token);
+        navigate("/home");
+      }
+      if (error?.message === "Bad credentials") {
+        setIsLoading(false);
+        setErrorInLogin(false);
+        setBadCredentials(true);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      setIsLoading(false);
+      setErrorInLogin(true);
     }
   };
 
+  const toggleErrorInLogin = () => {
+    setErrorInLogin(!toggleErrorInLogin);
+  };
+
+  const togglebadCredentials = () => {
+    setBadCredentials(!togglebadCredentials);
+  };
   return (
     <Container>
       <InputCard>
@@ -76,10 +103,32 @@ const Login: React.FC = () => {
           </Field>
 
           <Button>
-            <RegisterButton type="submit">Login</RegisterButton>
+            <RegisterButton type="submit" style={{ marginTop: "8px" }}>
+              {isLoading ? (
+                <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+              ) : (
+                "Loading"
+              )}
+            </RegisterButton>
           </Button>
         </Form>
       </InputCard>
+      {errorInLogin && (
+        <Modal onClose={toggleErrorInLogin}>
+          <Message>
+            <p style={{ color: "Red" }}>
+              Something went wrong, please try again!
+            </p>
+          </Message>
+        </Modal>
+      )}
+      {badCredentials && (
+        <Modal onClose={togglebadCredentials}>
+          <Message>
+            <p style={{ color: "Red" }}>Wrong Email or Password !</p>
+          </Message>
+        </Modal>
+      )}
     </Container>
   );
 };
