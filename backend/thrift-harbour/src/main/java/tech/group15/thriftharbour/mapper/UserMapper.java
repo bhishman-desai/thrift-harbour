@@ -14,7 +14,8 @@ public class UserMapper {
       SignUpRequest signUpRequest, PasswordEncoder passwordEncoder) {
     User user = new User();
 
-    user.setName(signUpRequest.getName());
+    user.setFirstName(signUpRequest.getFirstName());
+    user.setLastName(signUpRequest.getLastName());
     user.setEmail(signUpRequest.getEmail());
     user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
     user.setRole(RoleEnum.USER);

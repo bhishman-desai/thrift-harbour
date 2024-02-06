@@ -32,7 +32,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     final String userEmail;
 
     /* If the Authorization header is empty or does not start with "Bearer ", continue with the next filter */
-    if (authHeader == null || !authHeader.startsWith("Bearer ") || authHeader.isEmpty()) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);
       return;
     }
@@ -40,7 +40,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     /* Extracting the JWT from the Authorization header */
     jwt = authHeader.substring(7);
     /* Extracting the username from the JWT */
-    userEmail = jwtService.extractUserName(jwt);
+    try {
+      userEmail = jwtService.extractUserName(jwt);
+    } catch (Exception exception) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType("application/json");
+      String jsonResponse = "{ \"message\": \"User not authorized\" }";
+      response.getWriter().write(jsonResponse);
+      return;
+    }
 
     /* If the username is empty and there is no current authentication, validate the JWT */
     if (!userEmail.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {

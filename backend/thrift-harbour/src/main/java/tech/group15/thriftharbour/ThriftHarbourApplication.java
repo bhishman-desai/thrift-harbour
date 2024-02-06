@@ -22,7 +22,7 @@ public class ThriftHarbourApplication implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
 
     /* Admin creation on application startup */
     User adminAccount = userRepository.findByRole(RoleEnum.ADMIN);
@@ -30,7 +30,7 @@ public class ThriftHarbourApplication implements CommandLineRunner {
       User admin = new User();
 
       /* TODO: Change the hard-coded password and use a better approach */
-      admin.setName("admin");
+      admin.setFirstName("admin");
       admin.setEmail("admin@dal.ca");
       admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
       admin.setRole(RoleEnum.ADMIN);
