@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
 
@@ -24,8 +25,8 @@ public class HttpUtils {
   }
 
   private static HttpStatus determineHttpStatus(Exception exception) {
-    /* Handle JWT related exceptions */
-    if (exception instanceof ExpiredJwtException) {
+    /* Handle JWT related exceptions or Bad credential */
+    if (exception instanceof ExpiredJwtException || exception instanceof BadCredentialsException) {
       return HttpStatus.UNAUTHORIZED;
     }
     /* If the email id already exists in the system */
@@ -35,6 +36,7 @@ public class HttpUtils {
     if (exception instanceof MethodArgumentNotValidException) {
       return HttpStatus.BAD_REQUEST;
     }
+
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 }
