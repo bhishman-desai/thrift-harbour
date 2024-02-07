@@ -8,7 +8,7 @@ export class Path {
     if (this.environment === "development") {
       return "http://localhost:8080/api/v1";
     } else {
-      //production env endpoint
+      //TODO : production env endpoint
       return "";
     }
   }
