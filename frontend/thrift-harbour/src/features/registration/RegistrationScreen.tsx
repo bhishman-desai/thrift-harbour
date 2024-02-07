@@ -187,7 +187,7 @@ const Registration: React.FC = () => {
               </Button>
             </Form>
             <LoginLink>
-              <Link to="/login">Already have an account ? Sign in</Link>
+              <Link to="/login">Already have an account ? Sign In</Link>
             </LoginLink>
           </InputCard>
 
