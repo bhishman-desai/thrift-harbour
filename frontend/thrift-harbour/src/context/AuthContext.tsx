@@ -1,6 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
-import { Auth } from "../services/Auth";
-import { LoginCredentials } from "../types/AuthTypes";
+import React, { useState, useEffect, ReactNode } from "react";
 
 interface AuthContextProps {
   token: string;

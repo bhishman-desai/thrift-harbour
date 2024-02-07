@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { Auth } from "../../services/Auth";
 import { Credentials } from "../../types/AuthTypes";
@@ -18,7 +18,6 @@ import {
 import { Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import Home from "../home/HomeScreen";
 
 const Registration: React.FC = () => {
@@ -109,7 +108,7 @@ const Registration: React.FC = () => {
 
   return (
     <>
-      {token?.length && (
+      {token && token?.length > 0 && (
         <>
           <Home />
         </>
