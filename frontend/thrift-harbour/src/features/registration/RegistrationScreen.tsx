@@ -22,7 +22,6 @@ import Home from "../home/HomeScreen";
 
 const Registration: React.FC = () => {
   const { token } = useAuth();
-
   const [credentials, setCredentials] = useState({} as Credentials);
   const [showCriteria, setShowCriteria] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
