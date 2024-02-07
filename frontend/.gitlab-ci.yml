@@ -13,4 +13,4 @@ deploy_prod:
     - npm run build
     - netlify deploy --dir "build" --auth $AUTH_TOKEN --site $SITE_ID --prod
   only:
-    - feature/issue-22/cicd-fe
+    - development
