@@ -11,10 +11,7 @@ const Home: React.FC = () => {
 
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
-  const handleClick = () => {
-    handleLogout && handleLogout();
-    navigate("/login");
-  };
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,15 +24,29 @@ const Home: React.FC = () => {
           const [data, error] = await auth.getUser(token);
           if (data?.status === 200) {
             setAuthorized(true);
-          }
-          if (error) {
+          } else if (error) {
+            setError(true);
             setAuthorized(false);
+          } else {
+            setError(true);
           }
-        } catch (error) {}
+        } catch (error) {
+          setError(true);
+        }
       }
     })();
   }, [token]);
 
+  const toggleError = () => {
+    setError(false);
+    handleLogout && handleLogout();
+    navigate("/login");
+  };
+
+  const handleClick = () => {
+    handleLogout && handleLogout();
+    navigate("/login");
+  };
   return (
     <>
       {authorized && (
@@ -43,6 +54,11 @@ const Home: React.FC = () => {
           <h1>Hello from user!</h1>
           <button onClick={() => handleClick()}>logout</button>
         </HomeParent>
+      )}
+      {error && (
+        <Modal onClose={toggleError}>
+          <p style={{ color: "red" }}>Something went wrong try again!</p>
+        </Modal>
       )}
     </>
   );

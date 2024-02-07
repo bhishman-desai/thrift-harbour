@@ -250,8 +250,3 @@ const Registration: React.FC = () => {
 };
 
 export default Registration;
-
-//@,*,#
-//login once then not signup (do token verification)
-//on home display response!
-//login to signup
