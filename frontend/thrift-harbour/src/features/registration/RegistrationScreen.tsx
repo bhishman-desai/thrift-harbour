@@ -18,7 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
-import Home from "../home/HomeScreen";
+import Home from "../login/HomeScreen";
 
 const Registration: React.FC = () => {
   const { token } = useAuth();
