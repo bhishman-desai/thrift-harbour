@@ -20,5 +20,8 @@ export class Path {
     if (service === "signin") {
       return "/auth/signin";
     }
+    if (service === "getUser") {
+      return "/user";
+    }
   }
 }

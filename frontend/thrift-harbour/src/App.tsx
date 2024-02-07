@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Registration from "./features/registration/RegistrationScreen";
 import Login from "./features/login/LoginScreen";
 import AuthWrapper from "./context/AuthContext";
-import Home from "./features/Home/HomeScreen";
+import Home from "./features/home/HomeScreen";
 
 function App() {
   return (

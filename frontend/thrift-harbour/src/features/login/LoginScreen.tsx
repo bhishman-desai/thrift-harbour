@@ -6,12 +6,13 @@ import {
   Form,
   Input,
   Label,
+  LoginLink,
   Message,
   RegisterButton,
   Title,
 } from "../registration/RegistrationStyles";
 import { LoginCredentials } from "../../types/AuthTypes";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
 import Modal from "../../components/ui-components/Modal/Modal";
@@ -110,6 +111,10 @@ const Login: React.FC = () => {
                 "Login"
               )}
             </RegisterButton>
+
+            <LoginLink>
+              <Link to="/">Don't have an account ? Sign un</Link>
+            </LoginLink>
           </Button>
         </Form>
       </InputCard>

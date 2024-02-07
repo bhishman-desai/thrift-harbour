@@ -25,3 +25,8 @@ export interface ErrorResponse {
   status: number;
   message: string;
 }
+
+export interface GetUserResponse {
+  status: number;
+  message: string;
+}

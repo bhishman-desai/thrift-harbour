@@ -1,7 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   Credentials,
   ErrorResponse,
+  GetUserResponse,
   LoginCredentials,
   LoginResponse,
   SignUpResponse,
@@ -39,8 +40,8 @@ export class Auth {
     requestParams: LoginCredentials
   ): Promise<[LoginResponse | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
-    const signUpUrl = this.path.getAuthUrl("signin");
-    const requestUrl = baseUrl + signUpUrl;
+    const signInUrl = this.path.getAuthUrl("signin");
+    const requestUrl = baseUrl + signInUrl;
 
     try {
       const response: AxiosResponse<LoginResponse> = await axios.post(
@@ -48,6 +49,31 @@ export class Auth {
         requestParams
       );
       return [response.data, null];
+    } catch (error: any) {
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
+    }
+  }
+
+  async getUser(
+    token: string
+  ): Promise<[GetUserResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getUserUrl = this.path.getAuthUrl("getUser");
+    const requestUrl = baseUrl + getUserUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [
         null,
