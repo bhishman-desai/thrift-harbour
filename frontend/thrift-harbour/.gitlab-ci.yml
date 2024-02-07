@@ -1,0 +1,16 @@
+image: node:latest
+
+stages:
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  script:
+    - echo "REACT_APP_BASE_URL=https://culturenet-apis.netlify.app/.netlify/functions/api" >> ".env"
+    - cd frontend/thrift-harbour
+    - npm install --legacy-peer-deps
+    - npm install netlify-cli -g
+    - npm run build
+    - netlify deploy --dir "build" --auth $AUTH_TOKEN --site $SITE_ID --prod
+  only:
+    - development
