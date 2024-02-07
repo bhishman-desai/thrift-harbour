@@ -1,11 +1,11 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   Credentials,
   ErrorResponse,
   LoginCredentials,
   LoginResponse,
   SignUpResponse,
-} from "../types/types";
+} from "../types/AuthTypes";
 import { Path } from "../utils/Path";
 
 export class Auth {

@@ -10,7 +10,7 @@ import {
   RegisterButton,
   Title,
 } from "../registration/RegistrationStyles";
-import { LoginCredentials } from "../../types/types";
+import { LoginCredentials } from "../../types/AuthTypes";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";

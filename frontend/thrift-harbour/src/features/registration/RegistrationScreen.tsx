@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from "react";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { Auth } from "../../services/Auth";
-import { Credentials } from "../../types/types";
+import { Credentials } from "../../types/AuthTypes";
 import {
   Container,
   Label,
@@ -22,7 +22,6 @@ const Registration: React.FC = () => {
   const [credentials, setCredentials] = useState({} as Credentials);
   const [showCriteria, setShowCriteria] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState("");
   const [nameError, setNameError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
