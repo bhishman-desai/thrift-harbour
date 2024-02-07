@@ -25,8 +25,13 @@ export class Auth {
       );
       return [response.data, null];
     } catch (error: any) {
-      console.log("error", error);
-      return [null, error?.response.data as ErrorResponse];
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
     }
   }
 
@@ -42,10 +47,15 @@ export class Auth {
         requestUrl,
         requestParams
       );
-
       return [response.data, null];
     } catch (error: any) {
-      return [null, error?.response.data as ErrorResponse];
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
     }
   }
 }

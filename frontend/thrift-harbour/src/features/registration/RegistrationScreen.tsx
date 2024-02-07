@@ -48,13 +48,13 @@ const Registration: React.FC = () => {
 
   const onSubmitRegister = async (e: FormEvent) => {
     e.preventDefault();
-    const valid = validatePassword();
+    const validPassword = validatePassword();
     const validName = validateNames();
     if (!validName) {
       setNameError(true);
       return;
     }
-    if (!valid) {
+    if (!validPassword) {
       setShowCriteria(true);
     } else {
       setIsLoading(true);
@@ -69,13 +69,12 @@ const Registration: React.FC = () => {
         if (data?.userID) {
           setIsLoading(false);
           setRegisterSuccess(true);
+        } else if (error?.status === 409) {
+          setIsLoading(false);
+          setAlreadyExist(true);
         } else {
           setIsLoading(false);
           setError(true);
-        }
-        if (error?.message === "Email already exists!") {
-          setIsLoading(false);
-          setAlreadyExist(true);
         }
       } catch (error) {
         setIsLoading(false);

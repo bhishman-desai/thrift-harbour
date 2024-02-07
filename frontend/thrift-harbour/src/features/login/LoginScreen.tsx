@@ -28,7 +28,6 @@ const Login: React.FC = () => {
   const [badCredentials, setBadCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const auth = new Auth();
-
   useEffect(() => {
     if (token?.length) {
       navigate("/home");
@@ -45,14 +44,15 @@ const Login: React.FC = () => {
         setIsLoading(false);
         handleLogin && handleLogin(data?.token);
         navigate("/home");
-      }
-      if (error?.message === "Bad credentials") {
+      } else if (error?.status === 401) {
         setIsLoading(false);
         setErrorInLogin(false);
         setBadCredentials(true);
+      } else {
+        setIsLoading(false);
+        setErrorInLogin(true);
       }
     } catch (error) {
-      console.log("Error:", error);
       setIsLoading(false);
       setErrorInLogin(true);
     }
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
               {isLoading ? (
                 <ClipLoader color="#ffffff" loading={isLoading} size={20} />
               ) : (
-                "Loading"
+                "Login"
               )}
             </RegisterButton>
           </Button>
