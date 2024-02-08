@@ -9,7 +9,7 @@ export class Path {
       return "http://localhost:8080/api/v1";
     } else {
       //TODO : production env endpoint
-      return "";
+      return "http://localhost:8080/api/v1";
     }
   }
 
