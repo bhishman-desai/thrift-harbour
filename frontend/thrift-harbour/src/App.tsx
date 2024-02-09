@@ -4,6 +4,7 @@ import Registration from "./features/registration/RegistrationScreen";
 import Login from "./features/login/LoginScreen";
 import AuthWrapper from "./context/AuthContext";
 import Home from "./features/home/HomeScreen";
+import ForgotPassword from "./features/forgotpassword/ForgotPassword";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
         </Routes>
       </Router>
     </AuthWrapper>

@@ -30,3 +30,7 @@ export interface GetUserResponse {
   status: number;
   message: string;
 }
+
+export interface ForgotPasswordCredentials {
+  email: string;
+}
