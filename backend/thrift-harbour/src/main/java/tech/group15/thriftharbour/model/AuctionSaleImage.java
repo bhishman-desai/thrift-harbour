@@ -15,7 +15,7 @@ public class AuctionSaleImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int imageID;
 
-    private int auctionSaleListingID;
+    private String auctionSaleListingID;
 
     private String imageURL;
 

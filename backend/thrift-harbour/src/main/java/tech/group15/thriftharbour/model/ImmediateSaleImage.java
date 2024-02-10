@@ -15,7 +15,7 @@ public class ImmediateSaleImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int imageID;
 
-    private int immediateSaleListingID;
+    private String immediateSaleListingID;
 
     private String imageURL;
 

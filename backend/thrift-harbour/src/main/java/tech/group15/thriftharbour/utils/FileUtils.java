@@ -1,4 +1,5 @@
 package tech.group15.thriftharbour.utils;
+
 import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.exception.ImageTypeNotValidException;
 
@@ -7,7 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileUtils {
-    private FileUtils(){}
+    private FileUtils() {
+    }
 
     public static Path generateTempFilePath(MultipartFile file) {
         Path tempFilePath = null;
@@ -28,7 +30,28 @@ public class FileUtils {
         throw new ImageTypeNotValidException("Images should be of type png, jpg, jpeg");
     }
 
-    public static double fileSizeInMB(MultipartFile file){
-        return file.getSize()* 0.000_001;
+    public static double fileSizeInMB(MultipartFile file) {
+        return file.getSize() * 0.000_001;
+    }
+
+    public static String getFileExtention(MultipartFile file){
+        String fileContent = file.getContentType();
+        String extension = fileContent.split("/")[1];
+        return "." + extension;
+    }
+
+    public static String generateUniqueFileNameForImage(String sellType,
+                                                        String userName,
+                                                        int productNumber,
+                                                        String fileExtension) {
+
+        String fileName = sellType + "/" + userName + "/" + "productImage" +
+                Integer.toString(productNumber) + fileExtension;
+        return fileName;
+    }
+
+    public static String generateImageURL(String bucketName, String region, String fileName){
+        String imageURL = "https://"+bucketName+".s3."+region + ".amazonaws.com" + "/" + fileName;
+        return imageURL;
     }
 }
