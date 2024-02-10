@@ -26,4 +26,8 @@ public class FileUtils {
         }
         throw new NullPointerException();
     }
+
+    public static double fileSizeInMB(MultipartFile file){
+        return file.getSize()* 0.000_001;
+    }
 }
