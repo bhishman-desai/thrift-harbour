@@ -15,16 +15,15 @@ import java.util.Date;
 @Entity
 public class AuctionSaleListing {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int auctionSaleListingID;
+    private String auctionSaleListingID;
 
     private String productName;
 
     private String productDescription;
 
-    private Float startingBid;
+    private double startingBid;
 
-    private Float highestBid;
+    private double highestBid;
 
     private String currentHighestBidUserMail;
 

@@ -1,5 +1,6 @@
 package tech.group15.thriftharbour.utils;
 import org.springframework.web.multipart.MultipartFile;
+import tech.group15.thriftharbour.exception.ImageTypeNotValidException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +25,7 @@ public class FileUtils {
             String fileName = file.getOriginalFilename();
             return fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg");
         }
-        throw new NullPointerException();
+        throw new ImageTypeNotValidException("Images should be of type png, jpg, jpeg");
     }
 
     public static double fileSizeInMB(MultipartFile file){

@@ -13,13 +13,13 @@ import java.util.Date;
 @Entity
 public class ImmediateSaleListing {
     @Id
-    private int immediateSaleListingID;
+    private String immediateSaleListingID;
 
     private String productName;
 
     private String productDescription;
 
-    private Float price;
+    private double price;
 
     private String category;
 
