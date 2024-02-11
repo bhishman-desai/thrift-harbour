@@ -35,6 +35,8 @@ public class AuctionSaleListing {
 
     private String SellerEmail;
 
+    private Date auctionSlot;
+
     @Default
     private boolean active = true;
 
