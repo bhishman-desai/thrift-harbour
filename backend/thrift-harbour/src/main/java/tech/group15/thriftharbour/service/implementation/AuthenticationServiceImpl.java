@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -71,43 +70,50 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   public ForgotPassResponse forgotPassword(String userEmail) {
     User user =
-            userRepository
-                    .findByEmail(userEmail)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
+        userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
+
+    Optional<PasswordResetToken> oldPassResetToken = passwordResetTokenRepository.findByUser(user);
+      oldPassResetToken.ifPresent(passwordResetToken -> passwordResetTokenRepository.deleteAllByTokenID(passwordResetToken.getTokenID()));
     PasswordResetToken token = new PasswordResetToken();
     token.setToken(UUID.randomUUID().toString());
     token.setUser(user);
     token.setExpiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 30));
     passwordResetTokenRepository.save(token);
 
-    emailService.sendEmail(userEmail, "Reset Password Link", "http://localhost:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
+    emailService.sendEmail(
+        userEmail,
+        "Reset Password Link",
+        "http://localhost:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
 
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
   }
 
   public Object resetPassTokenVerify(String token) {
     PasswordResetToken passResetToken =
-            passwordResetTokenRepository
-                    .findByToken(token)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+        passwordResetTokenRepository
+            .findByToken(token)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
 
-    if(!passResetToken.getExpiryDate().before(new Date()))
-    {
+    if (!passResetToken.getExpiryDate().before(new Date())) {
+      //      To Do : Replace Frontend Url
       return new RedirectView("Frontend url" + passResetToken.getToken());
     }
 
+    passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
     return "Reset Password Link has been expired.";
   }
 
   public Object resetPassword(ResetPassRequest resetPassRequest) {
     PasswordResetToken passResetToken =
-            passwordResetTokenRepository
-                    .findByToken(resetPassRequest.getToken())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+        passwordResetTokenRepository
+            .findByToken(resetPassRequest.getToken())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
     User user =
-            userRepository
-                    .findById(passResetToken.getUser().getUserID())
-                    .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
+        userRepository
+            .findById(passResetToken.getUser().getUserID())
+            .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
 
     passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
     user.setPassword(passwordEncoder.encode((resetPassRequest.getPassword())));

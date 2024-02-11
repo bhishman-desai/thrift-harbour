@@ -19,7 +19,7 @@ public class AuthenticationController {
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<SignInResponse> signUp(@RequestBody SignInRequest signInRequest) {
+  public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
     return ResponseEntity.ok(authenticationService.signIn(signInRequest));
   }
 
@@ -29,8 +29,8 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
   }
 
-  @GetMapping("/forgot-password/{email}")
-  public ResponseEntity<ForgotPassResponse> forgetPassword(@PathVariable String email) {
+  @GetMapping("/forgot-password")
+  public ResponseEntity<ForgotPassResponse> forgetPassword(@RequestParam String email) {
     return ResponseEntity.ok(authenticationService.forgotPassword(email));
   }
 
