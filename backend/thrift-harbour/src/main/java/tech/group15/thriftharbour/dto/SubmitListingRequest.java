@@ -1,6 +1,7 @@
 package tech.group15.thriftharbour.dto;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.enums.SellCategoryEnum;
 
@@ -22,5 +23,6 @@ public class SubmitListingRequest {
 
     private SellCategoryEnum sellCategory;
 
-    private Date auctionSlot;
+    @Nullable
+    private String auctionSlot;
 }
