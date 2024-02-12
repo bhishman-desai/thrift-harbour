@@ -5,7 +5,8 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #091c7a;
+  // background-color: #091c7a;
+  background-color: #e8e8e8;
 `;
 
 export const InputCard = styled.div`
@@ -94,4 +95,14 @@ export const Error = styled.div`
   font-family: inter;
   font-weight: 400;
   color: "red";
+`;
+
+export const InfoContainer = styled.div`
+  display: flex;
+  margin-left: 4px;
+`;
+
+export const PasswordContainer = styled.div`
+  display: flex;
+  flex-direction: row;
 `;

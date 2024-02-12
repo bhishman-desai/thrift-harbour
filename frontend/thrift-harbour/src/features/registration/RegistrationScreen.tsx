@@ -15,11 +15,14 @@ import {
   LoginLink,
   Message,
   Error,
+  InfoContainer,
+  PasswordContainer,
 } from "./RegistrationStyles";
 import { Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
 import Home from "../home/HomeScreen";
+import Info from "../../assets/icons/Info";
 
 const Registration: React.FC = () => {
   const { token, handleLogin } = useAuth();
@@ -28,7 +31,6 @@ const Registration: React.FC = () => {
   const [credentials, setCredentials] = useState({} as Credentials);
   const [showCriteria, setShowCriteria] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [nameError, setNameError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [alreadyExist, setAlreadyExist] = useState(false);
@@ -41,29 +43,20 @@ const Registration: React.FC = () => {
 
   const validatePassword = () => {
     const password = credentials.password;
-    // if (/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#*])[A-Za-z\d@#*]{8,}$/.test(password)) {
-    //   console.log("valid if");
-    //   setValidPassword(true);
-    //   setPasswordError("");
-    // } else
+
     if (password.length < 8) {
-      console.log("length");
       setPasswordError("Password length should be atleast 8");
       return false;
     } else if (!/[#@*]/.test(password)) {
-      console.log("special");
       setPasswordError("Password must contain a special character");
       return false;
     } else if (!/\d/.test(password)) {
-      console.log("number");
       setPasswordError("Password must contain atleast a number");
       return false;
     } else if (!/[a-zA-Z]/.test(password)) {
-      console.log("alphabets");
       setPasswordError("Password must contain atleast a alphabet");
       return false;
     } else {
-      console.log("in else");
       setValidPassword(true);
       setPasswordError("");
       return true;
@@ -72,10 +65,6 @@ const Registration: React.FC = () => {
 
   const validateNames = (name: string) => {
     return /^\w+$/.test(name);
-  };
-
-  const toggleNameError = () => {
-    setNameError(!nameError);
   };
 
   const toggleCriteria = () => {
@@ -103,20 +92,8 @@ const Registration: React.FC = () => {
 
     validFirstName ? setFirstNameError(false) : setFirstNameError(true);
     validLastName ? setLastNameError(false) : setLastNameError(true);
-    // if (!validFirstName) {
-    //   setFirstNameError(true);
-    // } else {
-    //   setFirstNameError(false);
-    // }
 
-    // if (!validLastName) {
-    //   setLastNameError(true);
-    // } else {
-    //   setLastNameError(false);
-    // }
-    console.log(validFirstName, validLastName, validPass);
     if (validFirstName && validLastName && validPass) {
-      console.log("in if");
       setIsLoading(true);
       setCredentials({
         firstName: "",
@@ -221,7 +198,12 @@ const Registration: React.FC = () => {
                 ></Input>
               </Field>
               <Field>
-                <Label>Password</Label>
+                <PasswordContainer>
+                  <Label>Password</Label>
+                  <InfoContainer onClick={toggleCriteria}>
+                    <Info color="blue" />
+                  </InfoContainer>
+                </PasswordContainer>
                 <Input
                   value={credentials.password}
                   required={true}
@@ -254,16 +236,6 @@ const Registration: React.FC = () => {
               <Link to="/login">Already have an account ? Sign In</Link>
             </LoginLink>
           </InputCard>
-
-          {nameError && (
-            <Modal onClose={toggleNameError}>
-              <div>
-                <p style={{ color: "red" }}>
-                  First Name or Last Name should be one word only
-                </p>
-              </div>
-            </Modal>
-          )}
 
           {showCriteria && (
             <Modal onClose={toggleCriteria}>
