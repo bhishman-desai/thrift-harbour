@@ -9,8 +9,6 @@ export const Container = styled.div`
 `;
 
 export const InputCard = styled.div`
-  height: 80%;
-  width: 30%;
   display: flex;
   flex-direction: column;
   border: 1px solid red;
@@ -89,4 +87,11 @@ export const Message = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const Error = styled.div`
+  margin-top: 8px;
+  font-family: inter;
+  font-weight: 400;
+  color: "red";
 `;
