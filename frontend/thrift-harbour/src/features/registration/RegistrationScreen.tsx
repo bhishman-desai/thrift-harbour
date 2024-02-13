@@ -75,7 +75,7 @@ const Registration: React.FC = () => {
     setRegisterSuccess(!registerSuccess);
   };
 
-  const toggoleAlreadyExist = () => {
+  const toggleAlreadyExist = () => {
     setAlreadyExist(!alreadyExist);
   };
 
@@ -260,7 +260,7 @@ const Registration: React.FC = () => {
           )}
 
           {alreadyExist && (
-            <Modal onClose={toggoleAlreadyExist}>
+            <Modal onClose={toggleAlreadyExist}>
               <Message>
                 <p style={{ color: "Red" }}>
                   User already registered with this email!
