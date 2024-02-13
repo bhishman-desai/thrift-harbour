@@ -71,7 +71,7 @@ const Registration: React.FC = () => {
     setShowCriteria(!showCriteria);
   };
 
-  const toggoleRegisterSuccess = () => {
+  const toggleRegisterSuccess = () => {
     setRegisterSuccess(!registerSuccess);
   };
 
@@ -251,7 +251,7 @@ const Registration: React.FC = () => {
           )}
 
           {registerSuccess && (
-            <Modal onClose={toggoleRegisterSuccess}>
+            <Modal onClose={toggleRegisterSuccess}>
               <Message>
                 <p style={{ color: "green" }}>Registered Successfully!</p>
                 <Link to="/login">Click here to Login</Link>
