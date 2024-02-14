@@ -14,5 +14,5 @@ deploy_prod:
     - npm install netlify-cli -g
     - npm run build
     - netlify deploy --dir "build" --auth $AUTH_TOKEN --site $SITE_ID --prod
-  only:
-    - main
+  rules:
+    - when: on_success
