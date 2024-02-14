@@ -34,3 +34,8 @@ export interface GetUserResponse {
 export interface ForgotPasswordCredentials {
   email: string;
 }
+
+export interface ResetPasswordCredentials {
+  newpassword: string;
+  confirmpassword: string;
+}

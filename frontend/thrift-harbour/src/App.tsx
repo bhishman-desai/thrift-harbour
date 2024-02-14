@@ -5,6 +5,7 @@ import Login from "./features/login/LoginScreen";
 import AuthWrapper from "./context/AuthContext";
 import Home from "./features/home/HomeScreen";
 import ForgotPassword from "./features/forgotpassword/ForgotPassword";
+import ResetPassword from "./features/resetpassword/ResetPassword";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
         </Routes>
       </Router>
     </AuthWrapper>
