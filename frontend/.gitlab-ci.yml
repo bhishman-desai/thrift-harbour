@@ -3,7 +3,7 @@ image: node:latest
 stages:
   - deploy
 
-deploy_prod:
+deploy-fe:
   stage: deploy
   script:
     - echo "REACT_APP_BASE_URL=https://culturenet-apis.netlify.app/.netlify/functions/api" >> ".env"

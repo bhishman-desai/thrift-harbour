@@ -7,19 +7,19 @@ stages:
   - publish
   - deploy
 
-build:
+build-be:
   stage: build
   image: maven:latest
   script:
     - mvn clean package
 
-test:
+test-be:
   stage: test
   image: maven:latest
   script:
     - mvn test
 
-publish:
+publish-be:
   image: docker:latest
   stage: publish
   tags:
@@ -39,7 +39,7 @@ publish:
   only:
     - main
 
-deploy:
+deploy-be:
   image: alpine:latest
   stage: deploy
   tags:
