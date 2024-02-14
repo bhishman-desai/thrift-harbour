@@ -33,7 +33,7 @@ public class AuctionSaleListing {
 
     private String category;
 
-    private String SellerEmail;
+    private String sellerEmail;
 
     private Date auctionSlot;
 

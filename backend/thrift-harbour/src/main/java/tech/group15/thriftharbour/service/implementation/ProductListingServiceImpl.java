@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
+import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.model.AuctionSaleImage;
@@ -54,7 +55,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     private String region;
 
     @Override
-    public void CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -65,13 +66,15 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .productName(listingRequest.getProductName())
                 .productDescription(listingRequest.getProductDescription())
                 .price(listingRequest.getProductPrice())
-                .SellerEmail(userName)
+                .sellerEmail(userName)
                 .category(listingRequest.getProductCategory())
                 .createdDate(createdDate)
                 .updatedDate(createdDate)
                 .build();
 
         List<ImmediateSaleImage> immediateSaleImages = new ArrayList<ImmediateSaleImage>();
+        List<String> imageURLs = new ArrayList<String>();
+
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
         for(int iter = 0; iter < productImages.size(); ++iter){
@@ -89,6 +92,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                             .createdDate(createdDate)
                             .build();
                     immediateSaleImages.add(immediateSaleImage);
+                    imageURLs.add(imageURL);
                 }
                 else {
                     throw new ImageUploadException("Error while Uploading image, Please try again later");
@@ -99,6 +103,21 @@ public class ProductListingServiceImpl implements ProductListingService {
 
         immediateSaleListingRepository.save(immediateSaleListing);
         immediateSaleImageRepository.saveAll(immediateSaleImages);
+
+        return ImmediateSaleListingCreationResponse
+                .builder()
+                .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
+                .productName(immediateSaleListing.getProductName())
+                .productDescription(immediateSaleListing.getProductDescription())
+                .price(immediateSaleListing.getPrice())
+                .category(immediateSaleListing.getCategory())
+                .sellerEmail(immediateSaleListing.getSellerEmail())
+                .imageURLs(imageURLs)
+                .active(immediateSaleListing.isActive())
+                .isApproved(immediateSaleListing.isApproved())
+                .isRejected(immediateSaleListing.isRejected())
+                .createdDate(immediateSaleListing.getCreatedDate())
+                .build();
 
     }
 
@@ -115,7 +134,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .productName(listingRequest.getProductName())
                 .productDescription(listingRequest.getProductDescription())
                 .startingBid(listingRequest.getProductPrice())
-                .SellerEmail(userName)
+                .sellerEmail(userName)
                 .category(listingRequest.getProductCategory())
                 .auctionSlot(auctionSlot)
                 .createdDate(createdDate)
@@ -150,6 +169,8 @@ public class ProductListingServiceImpl implements ProductListingService {
 
         auctionSaleListingRepository.save(auctionSaleListing);
         auctionSaleImageRepository.saveAll(auctionSaleImages);
+
+
 
     }
 }

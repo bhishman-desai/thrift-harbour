@@ -27,7 +27,7 @@ public class ImmediateSaleListing {
 
     private String category;
 
-    private String SellerEmail;
+    private String sellerEmail;
 
     @Builder.Default
     private boolean active = true;

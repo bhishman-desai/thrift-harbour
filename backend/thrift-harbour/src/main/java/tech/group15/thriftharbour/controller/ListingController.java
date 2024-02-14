@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.service.ProductListingService;
 
@@ -17,10 +18,11 @@ public class ListingController {
     ProductListingService productListingService;
 
     @PostMapping("create-immediatesale-listing")
-    public ResponseEntity<String> createImmediateListing(@RequestHeader("Authorization") String authorizationHeader,
-                                                         @ModelAttribute SubmitListingRequest submitListingRequest){
-        productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest);
-        return ResponseEntity.ok("Immediate sale Listing created");
+    public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing(@RequestHeader("Authorization") String authorizationHeader,
+                                                                                       @ModelAttribute SubmitListingRequest submitListingRequest){
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest));
     }
 
     @PostMapping("create-auctionsale-listing")
