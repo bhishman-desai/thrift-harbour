@@ -1,5 +1,5 @@
 before_script:
-  - cd thrift-harbour
+  - cd backend/thrift-harbour
 
 stages:
   - build
