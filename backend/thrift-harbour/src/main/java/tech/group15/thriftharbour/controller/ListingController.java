@@ -1,10 +1,12 @@
 package tech.group15.thriftharbour.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -18,7 +20,7 @@ public class ListingController {
     ProductListingService productListingService;
 
     @PostMapping("create-immediatesale-listing")
-    public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing(@RequestHeader("Authorization") String authorizationHeader,
+    public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing(@Valid @RequestHeader("Authorization") String authorizationHeader,
                                                                                        @ModelAttribute SubmitListingRequest submitListingRequest){
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -26,9 +28,10 @@ public class ListingController {
     }
 
     @PostMapping("create-auctionsale-listing")
-    public ResponseEntity<String> createAuctionListing(@RequestHeader("Authorization") String authorizationHeader,
-                                                       @ModelAttribute SubmitListingRequest submitListingRequest){
+    public ResponseEntity<AuctionSaleListingCreationResponse> createAuctionListing(@Valid @RequestHeader("Authorization") String authorizationHeader,
+                                                                                   @ModelAttribute SubmitListingRequest submitListingRequest){
         productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest);
-        return ResponseEntity.ok("Auction sale Listing created");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest));
     }
 }

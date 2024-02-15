@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
+import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.exception.ImageUploadException;
@@ -122,7 +123,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
     @Override
-    public void CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -142,6 +143,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .build();
 
         List<AuctionSaleImage> auctionSaleImages = new ArrayList<AuctionSaleImage>();
+        List<String> imageURLs = new ArrayList<String>();
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
         for (int iter = 0; iter < productImages.size(); ++iter){
@@ -160,6 +162,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                             .createdDate(createdDate)
                             .build();
                     auctionSaleImages.add(auctionSaleImage);
+                    imageURLs.add(imageURL);
                 }
                 else {
                     throw new ImageUploadException("Error while Uploading image, Please try again later");
@@ -169,6 +172,22 @@ public class ProductListingServiceImpl implements ProductListingService {
 
         auctionSaleListingRepository.save(auctionSaleListing);
         auctionSaleImageRepository.saveAll(auctionSaleImages);
+
+        return AuctionSaleListingCreationResponse
+                .builder()
+                .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+                .productName(auctionSaleListing.getProductName())
+                .productDescription(auctionSaleListing.getProductDescription())
+                .startingBid(auctionSaleListing.getStartingBid())
+                .category(auctionSaleListing.getCategory())
+                .sellerEmail(auctionSaleListing.getSellerEmail())
+                .auctionSlot(auctionSaleListing.getAuctionSlot())
+                .imageURLs(imageURLs)
+                .active(auctionSaleListing.isActive())
+                .isApproved(auctionSaleListing.isApproved())
+                .isRejected(auctionSaleListing.isRejected())
+                .createdDate(auctionSaleListing.getCreatedDate())
+                .build();
 
 
 
