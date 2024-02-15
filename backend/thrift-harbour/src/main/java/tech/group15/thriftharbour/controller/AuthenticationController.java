@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.AuthenticationService;
@@ -37,8 +38,8 @@ public class AuthenticationController {
   }
 
   @GetMapping("/verify-password-reset-token/{token}")
-  public ResponseEntity<Object> verifyPasswordResetToken(@PathVariable String token) {
-    return ResponseEntity.ok(authenticationService.resetPassTokenVerify(token));
+  public RedirectView verifyPasswordResetToken(@PathVariable String token) {
+    return new RedirectView((String)authenticationService.resetPassTokenVerify(token));
   }
 
   @PostMapping("/reset-password")

@@ -98,11 +98,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     if (!passResetToken.getExpiryDate().before(new Date())) {
       //      To Do : Replace Frontend Url
-      return new RedirectView("Frontend url" + passResetToken.getToken());
+      return "http://localhost:3000/reset-password" + "?token=" + token;
     }
 
     passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
-    return "Reset Password Link has been expired.";
+    return "http://localhost:3000/login" + "?msg=Link Expired";
   }
 
   public Object resetPassword(ResetPassRequest resetPassRequest) {
