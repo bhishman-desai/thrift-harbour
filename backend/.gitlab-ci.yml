@@ -15,7 +15,7 @@ build-be:
     - mvn clean package
   artifacts:
     paths:
-      - target/*.jar
+      - backend/thrift-harbour/target/*.jar
 
 test-be:
   stage: test
