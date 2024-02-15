@@ -95,11 +95,7 @@ export class Auth {
     const getForgotPassUrl = this.path.getAuthUrl("forgot-password");
     const requestUrl = baseUrl + getForgotPassUrl;
     try {
-      const response = await axios.post(requestUrl, null, {
-        params: {
-          email: `${email}`,
-        },
-      });
+      const response = await axios.post(requestUrl, { email: email });
       return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [
