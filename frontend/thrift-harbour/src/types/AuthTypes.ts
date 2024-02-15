@@ -30,3 +30,27 @@ export interface GetUserResponse {
   status: number;
   message: string;
 }
+
+export interface ForgotPasswordCredentials {
+  email: string;
+}
+
+export interface ResetPasswordFields {
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ForgotPasswordResponse {
+  status: number;
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  password: string;
+  token: string;
+}
+
+export interface ResetPasswordResponse {
+  status: number;
+  message: string;
+}
