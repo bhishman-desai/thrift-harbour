@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from "react";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { Auth } from "../../services/Auth";
-import { Credentials } from "../../types/AuthTypes";
+import { Credentials, LoginCredentials } from "../../types/AuthTypes";
 import {
   Container,
   Label,
@@ -14,51 +14,86 @@ import {
   Button,
   LoginLink,
   Message,
+  Error,
+  InfoContainer,
+  PasswordContainer,
 } from "./RegistrationStyles";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
 import Home from "../home/HomeScreen";
+import Info from "../../assets/icons/Info";
 
 const Registration: React.FC = () => {
-  const { token } = useAuth();
+  const { token, handleLogin } = useAuth();
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState({} as Credentials);
   const [showCriteria, setShowCriteria] = useState(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [nameError, setNameError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [alreadyExist, setAlreadyExist] = useState(false);
   const [error, setError] = useState(false);
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
+  const [passwordError, setPasswordError] = useState("" as string);
+  const [validPassword, setValidPassword] = useState(false);
   const auth = new Auth();
 
   const validatePassword = () => {
-    const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[#@*]).{8,}$/;
-    return regex.test(credentials.password);
+    const password = credentials.password;
+
+    if (password.length < 8) {
+      setPasswordError("Password length should be atleast 8");
+      return false;
+    } else if (!/[#@*]/.test(password)) {
+      setPasswordError("Password must contain a special character");
+      return false;
+    } else if (!/\d/.test(password)) {
+      setPasswordError("Password must contain atleast a number");
+      return false;
+    } else if (!/[a-zA-Z]/.test(password)) {
+      setPasswordError("Password must contain atleast a alphabet");
+      return false;
+    } else {
+      setValidPassword(true);
+      setPasswordError("");
+      return true;
+    }
   };
 
-  const validateNames = () => {
-    const validFirstName = /^\w+$/.test(credentials.firstName.trim());
-    const validLastName = /^\w+$/.test(credentials.lastName.trim());
+  const validateNames = (name: string) => {
+    return /^\w+$/.test(name);
+  };
 
-    if (validFirstName && validLastName) {
-      return true;
-    } else {
-      return false;
-    }
+  const toggleCriteria = () => {
+    setShowCriteria(!showCriteria);
+  };
+
+  const toggleRegisterSuccess = () => {
+    setRegisterSuccess(!registerSuccess);
+  };
+
+  const toggleAlreadyExist = () => {
+    setAlreadyExist(!alreadyExist);
+  };
+
+  const toggleError = () => {
+    setError(!error);
   };
 
   const onSubmitRegister = async (e: FormEvent) => {
     e.preventDefault();
-    const validPassword = validatePassword();
-    const validName = validateNames();
-    if (!validName) {
-      setNameError(true);
-      return;
-    }
-    if (!validPassword) {
-      setShowCriteria(true);
-    } else {
+
+    const validPass = validatePassword();
+    const validFirstName = validateNames(credentials.firstName.trim());
+    const validLastName = validateNames(credentials.lastName.trim());
+
+    validFirstName ? setFirstNameError(false) : setFirstNameError(true);
+    validLastName ? setLastNameError(false) : setLastNameError(true);
+
+    if (validFirstName && validLastName && validPass) {
       setIsLoading(true);
       setCredentials({
         firstName: "",
@@ -69,6 +104,18 @@ const Registration: React.FC = () => {
       try {
         const [data, error] = await auth.signUpUser(credentials as Credentials);
         if (data?.userID) {
+          const [data, error] = await auth.signInUser({
+            email: credentials.email,
+            password: credentials.password,
+          } as LoginCredentials);
+          if (data?.token) {
+            handleLogin && handleLogin(data?.token);
+            navigate("/home");
+          }
+          if (error) {
+            setIsLoading(false);
+            setError(true);
+          }
           setIsLoading(false);
           setRegisterSuccess(true);
         } else if (error?.status === 409) {
@@ -83,26 +130,6 @@ const Registration: React.FC = () => {
         setError(true);
       }
     }
-  };
-
-  const toggleNameError = () => {
-    setNameError(!nameError);
-  };
-
-  const toggleCriteria = () => {
-    setShowCriteria(!showCriteria);
-  };
-
-  const toggoleRegisterSuccess = () => {
-    setRegisterSuccess(!registerSuccess);
-  };
-
-  const toggoleAlreadyExist = () => {
-    setAlreadyExist(!alreadyExist);
-  };
-
-  const toggleError = () => {
-    setError(!error);
   };
 
   return (
@@ -132,6 +159,11 @@ const Registration: React.FC = () => {
                     })
                   }
                 ></Input>
+                {firstNameError && (
+                  <Error style={{ color: "red" }}>
+                    First Name should be only of one word
+                  </Error>
+                )}
               </Field>
               <Field>
                 <Label htmlFor="lastName">Last Name</Label>
@@ -145,6 +177,11 @@ const Registration: React.FC = () => {
                     setCredentials({ ...credentials, lastName: e.target.value })
                   }
                 ></Input>
+                {lastNameError && (
+                  <Error style={{ color: "red" }}>
+                    Last Name should be only of one word
+                  </Error>
+                )}
               </Field>
               <Field>
                 <Label>E-mail ID</Label>
@@ -161,7 +198,12 @@ const Registration: React.FC = () => {
                 ></Input>
               </Field>
               <Field>
-                <Label>Password</Label>
+                <PasswordContainer>
+                  <Label>Password</Label>
+                  <InfoContainer onClick={toggleCriteria}>
+                    <Info color="blue" />
+                  </InfoContainer>
+                </PasswordContainer>
                 <Input
                   value={credentials.password}
                   required={true}
@@ -169,10 +211,16 @@ const Registration: React.FC = () => {
                   id="password"
                   onFocus={() => setIsFocused(!isFocused)}
                   onBlur={() => setIsFocused(false)}
-                  onChange={(e) =>
-                    setCredentials({ ...credentials, password: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setCredentials({
+                      ...credentials,
+                      password: e.target.value,
+                    });
+                  }}
                 ></Input>
+                {!validPassword && (
+                  <Error style={{ color: "red" }}>{passwordError}</Error>
+                )}
               </Field>
               <Button>
                 <RegisterButton type="submit">
@@ -189,16 +237,6 @@ const Registration: React.FC = () => {
             </LoginLink>
           </InputCard>
 
-          {nameError && (
-            <Modal onClose={toggleNameError}>
-              <div>
-                <p style={{ color: "red" }}>
-                  First Name or Last Name should be one word only
-                </p>
-              </div>
-            </Modal>
-          )}
-
           {showCriteria && (
             <Modal onClose={toggleCriteria}>
               <div>
@@ -213,7 +251,7 @@ const Registration: React.FC = () => {
           )}
 
           {registerSuccess && (
-            <Modal onClose={toggoleRegisterSuccess}>
+            <Modal onClose={toggleRegisterSuccess}>
               <Message>
                 <p style={{ color: "green" }}>Registered Successfully!</p>
                 <Link to="/login">Click here to Login</Link>
@@ -222,7 +260,7 @@ const Registration: React.FC = () => {
           )}
 
           {alreadyExist && (
-            <Modal onClose={toggoleAlreadyExist}>
+            <Modal onClose={toggleAlreadyExist}>
               <Message>
                 <p style={{ color: "Red" }}>
                   User already registered with this email!

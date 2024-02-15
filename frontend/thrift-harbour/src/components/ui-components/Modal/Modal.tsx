@@ -1,4 +1,5 @@
 import React from "react";
+import Close from "../../../assets/icons/Close";
 import {
   BodyContainer,
   CloseButton,
@@ -17,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
       <BodyContainer onClick={(e) => e.stopPropagation()}>
         <CloseButtonContainer>
           <CloseButton className="modal-close-btn" onClick={onClose}>
-            X
+            <Close color="red" height={16} width={16} />
           </CloseButton>
         </CloseButtonContainer>
         {children}
