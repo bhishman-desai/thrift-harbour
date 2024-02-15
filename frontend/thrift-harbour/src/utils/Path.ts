@@ -23,5 +23,11 @@ export class Path {
     if (service === "getUser") {
       return "/user";
     }
+    if (service === "forgotPassword") {
+      return "/forgot-password";
+    }
+    if (service === "reset-password") {
+      return "/auth/reset-password";
+    }
   }
 }

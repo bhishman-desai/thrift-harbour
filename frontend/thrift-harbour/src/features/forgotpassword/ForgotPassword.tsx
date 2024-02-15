@@ -23,15 +23,23 @@ const ForgotPassword: React.FC = () => {
   );
   const auth = new Auth();
 
-  useEffect(() => {
-    if (token?.length) {
-      navigate("/home");
-    }
-  }, [token]);
-
   const onSubmitForgotPassword = async (e: FormEvent) => {
     e.preventDefault();
-    navigate("/newpassword");
+    // navigate("/newpassword");
+    try {
+      const [data, error] = await auth.forgotPassword(
+        ForgotPasswordCredentials.email
+      );
+      if (data?.status === 200) {
+        navigate("/home");
+      } else if (error?.status === 500) {
+        console.log("message", data?.message);
+      } else {
+        console.log("error");
+      }
+    } catch (error) {
+      console.log("somwthing wrong");
+    }
   };
 
   return (
@@ -56,7 +64,7 @@ const ForgotPassword: React.FC = () => {
           </Field>
 
           <Button>
-            <RegisterButton type="submit">Forgot password</RegisterButton>
+            <RegisterButton type="submit">Reset password</RegisterButton>
           </Button>
         </Form>
       </InputCard>

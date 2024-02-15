@@ -9,11 +9,8 @@ export const Container = style.div`
 `;
 
 export const InputCard = style.div`
-  height: 55%;
-  width: 30%;
   display: flex;
   flex-direction: column;
-  border: 1px solid red;
   box-sizing: border-box;
   background-color: #fff;
   border: 1px solid #edf1f7;

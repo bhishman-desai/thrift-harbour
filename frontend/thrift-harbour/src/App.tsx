@@ -15,8 +15,8 @@ function App() {
           <Route path="/" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/*" element={<ResetPassword />} />
         </Routes>
       </Router>
     </AuthWrapper>
