@@ -13,33 +13,50 @@ import { ForgotPasswordCredentials } from "../../types/AuthTypes";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
+import Modal from "../../components/ui-components/Modal/Modal";
+import { ClipLoader } from "react-spinners";
 
 const ForgotPassword: React.FC = () => {
-  const { token } = useAuth();
-  const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [ForgotPasswordCredentials, setForgotPasswordCredentials] = useState(
-    {} as ForgotPasswordCredentials
-  );
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [invalidEmail, setInValidEmail] = useState(false);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = new Auth();
 
   const onSubmitForgotPassword = async (e: FormEvent) => {
     e.preventDefault();
-    // navigate("/newpassword");
+    setIsLoading(true);
     try {
-      const [data, error] = await auth.forgotPassword(
-        ForgotPasswordCredentials.email
-      );
+      const [data, error] = await auth.forgotPassword(email);
       if (data?.status === 200) {
-        navigate("/home");
+        setEmail("");
+        setEmailSent(true);
+        setIsLoading(false);
       } else if (error?.status === 500) {
-        console.log("message", data?.message);
+        setIsLoading(false);
+        setInValidEmail(true);
       } else {
-        console.log("error");
+        setIsLoading(false);
+        setError(true);
       }
     } catch (error) {
+      setIsLoading(false);
       console.log("somwthing wrong");
     }
+  };
+
+  const toggleEmailSent = () => {
+    setEmailSent(!emailSent);
+  };
+
+  const toggleInvalidEmail = () => {
+    setInValidEmail(!invalidEmail);
+  };
+
+  const toggleError = () => {
+    setError(!error);
   };
 
   return (
@@ -50,24 +67,51 @@ const ForgotPassword: React.FC = () => {
           <Field>
             <Label>E-mail ID</Label>
             <Input
+              value={email}
               required={true}
               id="email"
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              onChange={(e) =>
-                setForgotPasswordCredentials({
-                  ...ForgotPasswordCredentials,
-                  email: e.target.value,
-                })
-              }
+              onChange={(e) => setEmail(e.target.value)}
             ></Input>
           </Field>
 
           <Button>
-            <RegisterButton type="submit">Reset password</RegisterButton>
+            <RegisterButton type="submit">
+              {isLoading ? (
+                <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+              ) : (
+                "Reset password"
+              )}
+            </RegisterButton>
           </Button>
         </Form>
       </InputCard>
+
+      {emailSent && (
+        <Modal onClose={toggleEmailSent}>
+          <div>
+            <p style={{ color: "green" }}>Email sent successfully on {email}</p>
+          </div>
+        </Modal>
+      )}
+      {invalidEmail && (
+        <Modal onClose={toggleInvalidEmail}>
+          <div>
+            <p style={{ color: "red" }}>Please enter valid Email</p>
+          </div>
+        </Modal>
+      )}
+
+      {error && (
+        <Modal onClose={toggleError}>
+          <div>
+            <p style={{ color: "red" }}>
+              Something went wrong, please try again!
+            </p>
+          </div>
+        </Modal>
+      )}
     </Container>
   );
 };

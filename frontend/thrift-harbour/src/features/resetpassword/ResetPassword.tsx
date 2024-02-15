@@ -42,7 +42,7 @@ const ResetPassword: React.FC = () => {
       try {
         const [data, error] = await auth.resetPassword({
           password: resetPasswordFields.confirmPassword,
-          token: "f197ee36-8fa0-4d14-a9c9-3aa33e01572f", //change this
+          token: "f7d389ec-ece5-4627-85d2-fc5c3cec3281", //change this
         } as ResetPasswordRequest);
         if (data?.status === 200) {
           console.log("success");

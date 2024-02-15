@@ -92,15 +92,14 @@ export class Auth {
     email: string
   ): Promise<[ForgotPasswordResponse | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
-    const getForgotPassUrl = this.path.getAuthUrl("forgotPassword");
+    const getForgotPassUrl = this.path.getAuthUrl("forgot-password");
     const requestUrl = baseUrl + getForgotPassUrl;
-
     try {
-      const params = {
-        email: email,
-      };
-
-      const response = await axios.get(requestUrl, { params });
+      const response = await axios.post(requestUrl, null, {
+        params: {
+          email: `${email}`,
+        },
+      });
       return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [
@@ -119,7 +118,7 @@ export class Auth {
     const baseUrl = this.path.getBaseUrl();
     const getResetPassUrl = this.path.getAuthUrl("reset-password");
     const requestUrl = baseUrl + getResetPassUrl;
-
+    console.log("request url", requestUrl);
     try {
       const response: AxiosResponse<ResetPasswordResponse> = await axios.post(
         requestUrl,
