@@ -17,6 +17,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
+import { ClipLoader } from "react-spinners";
+import Modal from "../../components/ui-components/Modal/Modal";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -24,37 +26,88 @@ const ResetPassword: React.FC = () => {
   const [resetPasswordFields, setReserPasswordFields] = useState(
     {} as ResetPasswordFields
   );
-  const [notMatched, setNotMatched] = useState(false);
+  // const [notMatched, setNotMatched] = useState(false);
+  const [passwordError, setPasswordError] = useState("" as string);
+  const [validPassword, setValidPassword] = useState(false);
+  const [inValidToken, setInValidToken] = useState(false);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const auth = new Auth();
 
-  const url = window.location.href;
-  const token = url.substring(url.lastIndexOf("/") + 1);
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  // Get the token parameter value
+  const token = urlParams.get("token");
   console.log("token", token);
 
-  const onSubmitResetPassword = async (e: FormEvent) => {
-    e.preventDefault();
-    if (
+  const validatePassword = () => {
+    const password = resetPasswordFields.confirmPassword;
+
+    if (password.length < 8) {
+      setPasswordError("Password length should be atleast 8");
+      return false;
+    } else if (!/[#@*]/.test(password)) {
+      setPasswordError("Password must contain a special character");
+      return false;
+    } else if (!/\d/.test(password)) {
+      setPasswordError("Password must contain atleast a number");
+      return false;
+    } else if (!/[a-zA-Z]/.test(password)) {
+      setPasswordError("Password must contain atleast a alphabet");
+      return false;
+    } else if (
       resetPasswordFields.newPassword.trim() !==
       resetPasswordFields.confirmPassword.trim()
     ) {
-      setNotMatched(true);
+      setPasswordError("New Password and Confirm Password not matched!");
+      return false;
     } else {
+      setValidPassword(true);
+      setPasswordError("");
+      return true;
+    }
+  };
+
+  const onSubmitResetPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const validPass = validatePassword();
+    console.log("validPass", validPass);
+
+    if (validPass) {
       try {
         const [data, error] = await auth.resetPassword({
           password: resetPasswordFields.confirmPassword,
-          token: "f7d389ec-ece5-4627-85d2-fc5c3cec3281", //change this
+          token: token, //change this
         } as ResetPasswordRequest);
         if (data?.status === 200) {
           console.log("success");
+          setIsLoading(false);
         } else if (error?.status === 500) {
-          console.log("message", data?.message);
+          setInValidToken(true);
+          setIsLoading(false);
         } else {
-          console.log("error");
+          setError(true);
+          setIsLoading(false);
         }
       } catch (error) {
         console.log("somwthing wrong");
+        setError(true);
+        setIsLoading(false);
       }
+    } else {
+      setIsLoading(false);
     }
+  };
+
+  const toggleError = () => {
+    setError(!error);
+  };
+
+  const toggleInvalidToken = () => {
+    setInValidToken(!inValidToken);
   };
 
   return (
@@ -65,6 +118,7 @@ const ResetPassword: React.FC = () => {
           <Field>
             <Label>New Password</Label>
             <Input
+              value={resetPasswordFields.newPassword}
               type="password"
               required={true}
               id="New Password"
@@ -81,27 +135,51 @@ const ResetPassword: React.FC = () => {
           <Field>
             <Label>Confirm Password</Label>
             <Input
+              value={resetPasswordFields.confirmPassword}
               type="password"
               required={true}
               id="Confirm Password"
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              onChange={(e) =>
+              onChange={(e) => {
                 setReserPasswordFields({
                   ...resetPasswordFields,
                   confirmPassword: e.target.value,
-                })
-              }
+                });
+              }}
             ></Input>
-            {notMatched && (
-              <Error style={{ color: "red" }}>Password did not match!</Error>
+
+            {!validPassword && (
+              <Error style={{ color: "red" }}>{passwordError}</Error>
             )}
           </Field>
           <Button>
-            <RegisterButton type="submit">Change password</RegisterButton>
+            <RegisterButton type="submit">
+              {isLoading ? (
+                <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+              ) : (
+                "Change Password"
+              )}
+            </RegisterButton>
           </Button>
         </Form>
       </InputCard>
+      {error && (
+        <Modal onClose={toggleError}>
+          <div>
+            <p style={{ color: "red" }}>
+              Something went wrong, please try again!
+            </p>
+          </div>
+        </Modal>
+      )}
+      {inValidToken && (
+        <Modal onClose={toggleInvalidToken}>
+          <div>
+            <p style={{ color: "red" }}>Please regenerates the link!</p>
+          </div>
+        </Modal>
+      )}
     </Container>
   );
 };
