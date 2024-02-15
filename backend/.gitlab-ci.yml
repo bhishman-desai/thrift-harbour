@@ -4,6 +4,7 @@ before_script:
 stages:
   - build
   - test
+  #  - quality
   - publish
   - deploy
 
@@ -14,13 +15,25 @@ build-be:
     - mvn clean package
   artifacts:
     paths:
-      - backend/thrift-harbour/target/*.jar
+      - target/*.jar
 
 test-be:
   stage: test
   image: maven:latest
   script:
     - mvn test
+
+# quality-be:
+#   stage: quality
+#   image: openjdk:11
+#   script:
+#     - echo "Compiling the project"
+#     - mkdir smells/
+#     - java -jar $CI_PROJECT_DIR/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR -o $CI_PROJECT_DIR/smells/ -d
+#   artifacts:
+#     paths:
+#       - smells/
+#       - $CI_PROJECT_DIR
 
 publish-be:
   image: docker:latest
