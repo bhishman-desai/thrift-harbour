@@ -96,12 +96,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
 
     if (!passResetToken.getExpiryDate().before(new Date())) {
-      //      To Do : Replace Frontend Url
-      return "http://localhost:3000/reset-password" + "?token=" + token;
+      return "https://thriftharbour.netlify.app/reset-password" + "?token=" + token;
     }
 
     passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
-    return "http://localhost:3000/login" + "?msg=Link Expired";
+    return "https://thriftharbour.netlify.app/login" + "?msg=Link Expired";
   }
 
   public Object resetPassword(ResetPassRequest resetPassRequest) {
