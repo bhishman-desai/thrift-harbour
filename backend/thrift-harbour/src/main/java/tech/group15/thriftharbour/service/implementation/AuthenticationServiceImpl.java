@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.view.RedirectView;
 import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
 import tech.group15.thriftharbour.mapper.UserMapper;
@@ -68,10 +67,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return null;
   }
 
-  public ForgotPassResponse forgotPassword(String userEmail) {
+  public ForgotPassResponse forgotPassword(ForgotPassRequest forgotPassRequest) {
     User user =
         userRepository
-            .findByEmail(userEmail)
+            .findByEmail(forgotPassRequest.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
 
     Optional<PasswordResetToken> oldPassResetToken = passwordResetTokenRepository.findByUser(user);
@@ -83,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     passwordResetTokenRepository.save(token);
 
     emailService.sendEmail(
-        userEmail,
+        forgotPassRequest.getEmail(),
         "Reset Password Link",
         "http://localhost:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
 

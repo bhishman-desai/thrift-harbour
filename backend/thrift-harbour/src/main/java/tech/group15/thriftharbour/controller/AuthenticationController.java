@@ -32,19 +32,18 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
   }
 
-  @GetMapping("/forgot-password")
-  public ResponseEntity<ForgotPassResponse> forgetPassword(@RequestParam String email) {
-    return ResponseEntity.ok(authenticationService.forgotPassword(email));
+  @PostMapping("/forgot-password")
+  public ResponseEntity<ForgotPassResponse> forgetPassword(@RequestBody ForgotPassRequest forgotPassRequest) {
+    return ResponseEntity.ok(authenticationService.forgotPassword(forgotPassRequest));
   }
 
   @GetMapping("/verify-password-reset-token/{token}")
   public RedirectView verifyPasswordResetToken(@PathVariable String token) {
-    return new RedirectView((String)authenticationService.resetPassTokenVerify(token));
+    return new RedirectView((String) authenticationService.resetPassTokenVerify(token));
   }
 
   @PostMapping("/reset-password")
   public ResponseEntity<Object> resetPassword(@RequestBody ResetPassRequest resetPassRequest) {
     return ResponseEntity.ok(authenticationService.resetPassword(resetPassRequest));
   }
-
 }
