@@ -12,6 +12,9 @@ build-be:
   image: maven:latest
   script:
     - mvn clean package
+  artifacts:
+    paths:
+      - backend/thrift-harbour/target/*.jar
 
 test-be:
   stage: test
