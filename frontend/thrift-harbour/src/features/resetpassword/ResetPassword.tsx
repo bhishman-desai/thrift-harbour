@@ -40,7 +40,6 @@ const ResetPassword: React.FC = () => {
 
   // Get the token parameter value
   const token = urlParams.get("token");
-  console.log("token", token);
 
   const validatePassword = () => {
     const password = resetPasswordFields.confirmPassword;
@@ -74,7 +73,6 @@ const ResetPassword: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     const validPass = validatePassword();
-    console.log("validPass", validPass);
 
     if (validPass) {
       try {
@@ -83,7 +81,6 @@ const ResetPassword: React.FC = () => {
           token: token, //change this
         } as ResetPasswordRequest);
         if (data?.status === 200) {
-          console.log("success");
           setIsLoading(false);
         } else if (error?.status === 500) {
           setInValidToken(true);
@@ -93,7 +90,6 @@ const ResetPassword: React.FC = () => {
           setIsLoading(false);
         }
       } catch (error) {
-        console.log("somwthing wrong");
         setError(true);
         setIsLoading(false);
       }

@@ -43,7 +43,6 @@ const ForgotPassword: React.FC = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.log("somwthing wrong");
     }
   };
 

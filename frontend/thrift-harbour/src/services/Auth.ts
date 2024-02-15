@@ -118,7 +118,6 @@ export class Auth {
     const baseUrl = this.path.getBaseUrl();
     const getResetPassUrl = this.path.getAuthUrl("reset-password");
     const requestUrl = baseUrl + getResetPassUrl;
-    console.log("request url", requestUrl);
     try {
       const response: AxiosResponse<ResetPasswordResponse> = await axios.post(
         requestUrl,
