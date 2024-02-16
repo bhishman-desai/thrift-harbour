@@ -1,6 +1,6 @@
 package tech.group15.thriftharbour.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,10 +11,10 @@ import tech.group15.thriftharbour.service.AwsS3Service;
 import tech.group15.thriftharbour.utils.FileUtils;
 
 @Service
+@RequiredArgsConstructor
 public class AwsS3ServiceImpl implements AwsS3Service {
 
-    @Autowired
-    S3Client s3Client;
+    private final S3Client s3Client;
 
     @Value("${aws.bucketName}")
     private String bucketName;

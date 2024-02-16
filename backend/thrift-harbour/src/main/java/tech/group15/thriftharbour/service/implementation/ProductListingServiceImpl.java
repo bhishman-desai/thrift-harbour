@@ -1,6 +1,6 @@
 package tech.group15.thriftharbour.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,25 +29,20 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductListingServiceImpl implements ProductListingService {
 
-    @Autowired
-    JWTService jwtService;
+    private final JWTService jwtService;
 
-    @Autowired
-    AwsS3Service awsS3Service;
+    private final AwsS3Service awsS3Service;
 
-    @Autowired
-    ImmediateSaleListingRepository immediateSaleListingRepository;
+    private final ImmediateSaleListingRepository immediateSaleListingRepository;
 
-    @Autowired
-    ImmediateSaleImageRepository immediateSaleImageRepository;
+    private final ImmediateSaleImageRepository immediateSaleImageRepository;
 
-    @Autowired
-    AuctionSaleListingRepository auctionSaleListingRepository;
+    private final AuctionSaleListingRepository auctionSaleListingRepository;
 
-    @Autowired
-    AuctionSaleImageRepository auctionSaleImageRepository;
+    private final AuctionSaleImageRepository auctionSaleImageRepository;
 
     @Value("${aws.bucketName}")
     private String bucketName;
@@ -73,8 +68,8 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .updatedDate(createdDate)
                 .build();
 
-        List<ImmediateSaleImage> immediateSaleImages = new ArrayList<ImmediateSaleImage>();
-        List<String> imageURLs = new ArrayList<String>();
+        List<ImmediateSaleImage> immediateSaleImages = new ArrayList<>();
+        List<String> imageURLs = new ArrayList<>();
 
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
@@ -142,8 +137,8 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .updatedDate(createdDate)
                 .build();
 
-        List<AuctionSaleImage> auctionSaleImages = new ArrayList<AuctionSaleImage>();
-        List<String> imageURLs = new ArrayList<String>();
+        List<AuctionSaleImage> auctionSaleImages = new ArrayList<>();
+        List<String> imageURLs = new ArrayList<>();
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
         for (int iter = 0; iter < productImages.size(); ++iter){
