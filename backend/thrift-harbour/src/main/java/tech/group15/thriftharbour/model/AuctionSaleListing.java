@@ -45,6 +45,10 @@ public class AuctionSaleListing {
 
     private boolean isRejected;
 
+    private String approverEmail;
+
+    private String messageFromApprover;
+
     @Default
     private boolean isSold = false;
 

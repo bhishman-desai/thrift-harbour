@@ -50,28 +50,19 @@ public class ProductListingServiceImpl implements ProductListingService {
     @Value("${aws.region}")
     private String region;
 
-    private List<String> uploadProductImages(List<MultipartFile> productImages){
-        List<String> imageURLs = new ArrayList<>();
 
-        for(int iter = 0; iter < productImages.size(); ++iter){
-            MultipartFile productImage = productImages.get(iter);
-        }
-
-        return imageURLs;
-    }
-
-    private int uploadSingleImage(SubmitListingRequest listingRequest, ImmediateSaleListing immediateSaleListing, MultipartFile productImage, int productNumber){
-        if(FileUtils.isImageFile(productImage)) {
-            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
-                    immediateSaleListing.getImmediateSaleListingID(), productNumber, FileUtils.getFileExtention(productImage));
+    // Image file and filename as input and the image is uploaded to s3 bucket
+    private int uploadSingleImage(MultipartFile productImage, String uniqueFileName) {
+        if (FileUtils.isImageFile(productImage)) {
             return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
-        }
-        else {
+        } else {
             throw new ImageUploadException("Error while Uploading image, Please try again later");
         }
 
     }
 
+
+    // Method to create an immediate sale listing
     @Override
     public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
@@ -95,30 +86,27 @@ public class ProductListingServiceImpl implements ProductListingService {
 
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
-        for(int iter = 0; iter < productImages.size(); ++iter){
+        for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
-            if(FileUtils.isImageFile(productImage)){
-                String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
-                        immediateSaleListing.getImmediateSaleListingID(), (iter+1), FileUtils.getFileExtention(productImage));
-                int returnCode = awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
-                if (returnCode == HttpStatusCode.OK){
-                    String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
-                    ImmediateSaleImage immediateSaleImage = ImmediateSaleImage
-                            .builder()
-                            .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
-                            .imageURL(imageURL)
-                            .createdDate(createdDate)
-                            .build();
-                    immediateSaleImages.add(immediateSaleImage);
-                    imageURLs.add(imageURL);
-                }
-                else {
-                    throw new ImageUploadException("Error while Uploading image, Please try again later");
-                }
+            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
+                    immediateSaleListing.getImmediateSaleListingID(), (iter + 1), FileUtils.getFileExtention(productImage));
+            int returnCode = uploadSingleImage(productImage, uniqueFileName); // image is uploaded to s3 bucket and returns an upload status code
+            if (returnCode == HttpStatusCode.OK) {
+                String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
 
+                // Build Immediate sale Image
+                ImmediateSaleImage immediateSaleImage = ImmediateSaleImage
+                        .builder()
+                        .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
+                        .imageURL(imageURL)
+                        .createdDate(createdDate)
+                        .build();
+                immediateSaleImages.add(immediateSaleImage);
+                imageURLs.add(imageURL);
             }
         }
 
+        // Save Listing and image to database
         immediateSaleListingRepository.save(immediateSaleListing);
         immediateSaleImageRepository.saveAll(immediateSaleImages);
 
@@ -163,29 +151,27 @@ public class ProductListingServiceImpl implements ProductListingService {
         List<String> imageURLs = new ArrayList<>();
 
         List<MultipartFile> productImages = listingRequest.getProductImages();
-        for (int iter = 0; iter < productImages.size(); ++iter){
+        for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
-            if (FileUtils.isImageFile(productImage)){
-                String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
-                        auctionSaleListing.getAuctionSaleListingID(), (iter+1), FileUtils.getFileExtention(productImage));
-                int returnCode = awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
-                if (returnCode == HttpStatusCode.OK){
-                    String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
+            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
+                    auctionSaleListing.getAuctionSaleListingID(), (iter + 1), FileUtils.getFileExtention(productImage));
+            int returnCode = uploadSingleImage(productImage, uniqueFileName);
+            if (returnCode == HttpStatusCode.OK) {
+                String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
 
-                    AuctionSaleImage auctionSaleImage = AuctionSaleImage
-                            .builder()
-                            .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
-                            .imageURL(imageURL)
-                            .createdDate(createdDate)
-                            .build();
-                    auctionSaleImages.add(auctionSaleImage);
-                    imageURLs.add(imageURL);
-                }
-                else {
-                    throw new ImageUploadException("Error while Uploading image, Please try again later");
-                }
+                AuctionSaleImage auctionSaleImage = AuctionSaleImage
+                        .builder()
+                        .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+                        .imageURL(imageURL)
+                        .createdDate(createdDate)
+                        .build();
+                auctionSaleImages.add(auctionSaleImage);
+                imageURLs.add(imageURL);
+            } else {
+                throw new ImageUploadException("Error while Uploading image, Please try again later");
             }
         }
+
 
         auctionSaleListingRepository.save(auctionSaleListing);
         auctionSaleImageRepository.saveAll(auctionSaleImages);
@@ -205,7 +191,6 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .isRejected(auctionSaleListing.isRejected())
                 .createdDate(auctionSaleListing.getCreatedDate())
                 .build();
-
 
 
     }

@@ -37,6 +37,10 @@ public class ImmediateSaleListing {
 
     private boolean isRejected;
 
+    private String approverEmail;
+
+    private String messageFromApprover;
+
     @Builder.Default
     private boolean isSold = false;
 
