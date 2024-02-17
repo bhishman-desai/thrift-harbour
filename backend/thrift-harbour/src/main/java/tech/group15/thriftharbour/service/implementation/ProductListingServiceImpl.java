@@ -50,6 +50,28 @@ public class ProductListingServiceImpl implements ProductListingService {
     @Value("${aws.region}")
     private String region;
 
+    private List<String> uploadProductImages(List<MultipartFile> productImages){
+        List<String> imageURLs = new ArrayList<>();
+
+        for(int iter = 0; iter < productImages.size(); ++iter){
+            MultipartFile productImage = productImages.get(iter);
+        }
+
+        return imageURLs;
+    }
+
+    private int uploadSingleImage(SubmitListingRequest listingRequest, ImmediateSaleListing immediateSaleListing, MultipartFile productImage, int productNumber){
+        if(FileUtils.isImageFile(productImage)) {
+            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
+                    immediateSaleListing.getImmediateSaleListingID(), productNumber, FileUtils.getFileExtention(productImage));
+            return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
+        }
+        else {
+            throw new ImageUploadException("Error while Uploading image, Please try again later");
+        }
+
+    }
+
     @Override
     public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
