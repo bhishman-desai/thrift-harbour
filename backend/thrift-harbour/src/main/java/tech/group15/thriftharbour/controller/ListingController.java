@@ -34,6 +34,7 @@ public class ListingController {
                 .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest));
     }
 
+    // Get all immediate sale listing of the user
     @GetMapping("/get-immediatesale-listing")
     public ResponseEntity<List<ImmediateSaleListing>> getImmediateSaleListings
             (@Valid @RequestHeader("Authorization") String authorizationHeader) {
@@ -41,6 +42,7 @@ public class ListingController {
                 .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
     }
 
+    // get image url associated with the immediatesale listing
     @GetMapping("/get-immediatesale-images/{id}")
     public ResponseEntity<GetListingImageResponse> getImmediateSaleListingsImages(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK)
