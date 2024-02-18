@@ -8,8 +8,7 @@ export class Path {
     if (this.environment === "development") {
       return "http://localhost:8080/api/v1";
     } else {
-      //TODO : production env endpoint
-      return "http://localhost:8080/api/v1";
+      return "/thrift/api/v1";
     }
   }
 
@@ -22,6 +21,12 @@ export class Path {
     }
     if (service === "getUser") {
       return "/user";
+    }
+    if (service === "forgot-password") {
+      return "/auth/forgot-password";
+    }
+    if (service === "reset-password") {
+      return "/auth/reset-password";
     }
   }
 }

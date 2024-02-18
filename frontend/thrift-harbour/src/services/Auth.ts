@@ -2,9 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import {
   Credentials,
   ErrorResponse,
+  ForgotPasswordResponse,
   GetUserResponse,
   LoginCredentials,
   LoginResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
   SignUpResponse,
 } from "../types/AuthTypes";
 import { Path } from "../utils/Path";
@@ -74,6 +77,49 @@ export class Auth {
         },
       });
       return [{ status: response.status, message: response.data }, null];
+    } catch (error: any) {
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
+    }
+  }
+
+  async forgotPassword(
+    email: string
+  ): Promise<[ForgotPasswordResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getForgotPassUrl = this.path.getAuthUrl("forgot-password");
+    const requestUrl = baseUrl + getForgotPassUrl;
+    try {
+      const response = await axios.post(requestUrl, { email: email });
+      return [{ status: response.status, message: response.data }, null];
+    } catch (error: any) {
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
+    }
+  }
+
+  async resetPassword(
+    requestParams: ResetPasswordRequest
+  ): Promise<[ResetPasswordResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getResetPassUrl = this.path.getAuthUrl("reset-password");
+    const requestUrl = baseUrl + getResetPassUrl;
+    try {
+      const response: AxiosResponse<ResetPasswordResponse> = await axios.post(
+        requestUrl,
+        requestParams
+      );
+      return [response.data, null];
     } catch (error: any) {
       return [
         null,

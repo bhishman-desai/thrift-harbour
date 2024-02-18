@@ -10,7 +10,7 @@ public interface AuthenticationService {
 
   SignInResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-  ForgotPassResponse forgotPassword(String userEmail);
+  ForgotPassResponse forgotPassword(ForgotPassRequest forgotPassRequest);
 
   Object resetPassTokenVerify(String token);
 

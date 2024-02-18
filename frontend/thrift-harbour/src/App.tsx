@@ -4,6 +4,8 @@ import Registration from "./features/registration/RegistrationScreen";
 import Login from "./features/login/LoginScreen";
 import AuthWrapper from "./context/AuthContext";
 import Home from "./features/home/HomeScreen";
+import ForgotPassword from "./features/forgotpassword/ForgotPassword";
+import ResetPassword from "./features/resetpassword/ResetPassword";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
           <Route path="/" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/*" element={<ResetPassword />} />
         </Routes>
       </Router>
     </AuthWrapper>

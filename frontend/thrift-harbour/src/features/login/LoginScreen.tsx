@@ -111,7 +111,9 @@ const Login: React.FC = () => {
                 "Login"
               )}
             </RegisterButton>
-
+            <LoginLink>
+              <Link to="/forgot-password">Forgot password</Link>
+            </LoginLink>
             <LoginLink>
               <Link to="/">Don't have an account ? Sign Up</Link>
             </LoginLink>
