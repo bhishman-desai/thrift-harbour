@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
 import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
+import tech.group15.thriftharbour.dto.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.exception.ImageUploadException;
@@ -27,6 +28,7 @@ import tech.group15.thriftharbour.utils.UUIDUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -194,4 +196,44 @@ public class ProductListingServiceImpl implements ProductListingService {
 
 
     }
+
+    @Override
+    public List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader) {
+        String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+        return immediateSaleListingRepository.findAllBySellerEmail(sellerEmail);
+    }
+
+    @Override
+    public List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader) {
+        String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+        return auctionSaleListingRepository.findAllBySellerEmail(sellerEmail);
+    }
+
+    @Override
+    public GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID) {
+        List<ImmediateSaleImage> productImages = immediateSaleImageRepository
+                .getAllByImmediateSaleListingID(listingID);
+        return GetListingImageResponse
+                .builder()
+                .ListingId(listingID)
+                .imageURLs(productImages.stream()
+                        .map(ImmediateSaleImage::getImageURL)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID){
+        List<AuctionSaleImage> productImages = auctionSaleImageRepository
+                .findAllByAuctionSaleListingID(listingID);
+        return GetListingImageResponse
+                .builder()
+                .ListingId(listingID)
+                .imageURLs(productImages.stream()
+                        .map(AuctionSaleImage::getImageURL)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+
 }
