@@ -10,9 +10,10 @@ import "./ModalStyles.tsx";
 
 export interface ModalProps {
   onClose: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  images?: File[];
 }
-const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ onClose, children, images }) => {
   return (
     <Overlay onClick={onClose}>
       <BodyContainer onClick={(e) => e.stopPropagation()}>
@@ -22,6 +23,14 @@ const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
           </CloseButton>
         </CloseButtonContainer>
         {children}
+        {images &&
+          images.map((image, index) => (
+            <img
+              key={index}
+              src={URL.createObjectURL(image)}
+              alt={`Selected Image ${index + 1}`}
+            />
+          ))}
       </BodyContainer>
     </Overlay>
   );

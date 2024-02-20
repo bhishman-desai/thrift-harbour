@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
-import Modal from "../../components/ui-components/Modal/Modal";
-import Hamburg from "../../components/ui-components/hamburg/Hamburg";
 import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
 import Navbar from "../../components/ui-components/navbar/Navbar";
 
@@ -86,7 +84,7 @@ const Home: React.FC = () => {
       )} */}
       <Navbar />
 
-      <Hamburg menuItems={items.menuItems} />
+      {/* <Hamburg menuItems={items.menuItems} /> */}
     </>
   );
 };

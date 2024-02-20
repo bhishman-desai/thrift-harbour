@@ -1,23 +1,82 @@
 import style from "styled-components";
 
 export const Container = style.div`
-  height: 100vh;
+  margin-top:5%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #091c7a;
-  background: rgb(0,212,255);
-  background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(23,16,148,1) 100%);
+  flex-direction:column;
+  background-color:#fff;
 `;
 
-export const InputCard = style.div`
+export const Listing = style.div`
   display: flex;
-  width:30%;
+  justify-content:center;
+  width:100%;
+`;
+
+export const ProductImage = style.div`
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  height:75px;
+  width:75px;
+  border-radius: 50%;
+  margin-top:16px;
+  border:1px solid black;
+`;
+
+export const IconContainer = style.div`
+  display: flex;
+  position:relative;
+  top:65px;
+  right:25px;
+`;
+
+export const FormContainer = style.form`
+  margin-top:16px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+`;
+
+export const NamePrice = style.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:40%;
+`;
+
+export const Description = style.div`
+  width:40%;
+`;
+
+export const Button = style.div`
+  display: flex;
   flex-direction: column;
-  border: 1px solid red;
-  box-sizing: border-box;
-  background-color:#fff;
-  border: 1px solid #edf1f7;
-  border-radius: 8px;
-  padding: 12px 18px 12px 18px;
+  justify-content: center;
+  align-items: center;
+  width: 25%;
+  margin-top: 14px;
+`;
+
+export const UploadImageModal = style.div`
+  display:flex;
+  flex-direction:column;
+`;
+
+export const ImageGrid = style.div`
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+grid-gap: 10px;
+justify-content: center; 
+align-items: center; 
+`;
+
+export const Img = style.img`
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 `;

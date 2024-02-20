@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
+import ProductListing from "../../../features/product-listing/ProductListing";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
-import Hamburg from "../hamburg/Hamburg";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
 import {
@@ -17,47 +17,22 @@ import {
 const Navbar: React.FC<any> = () => {
   const NavOptions = [
     {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
+    {
       key: "Dashboard",
       value: "Dashboard",
       isSelected: true,
     },
-    {
-      key: "Send Review",
-      value: "Send Review",
-      isSelected: false,
-    },
-    {
-      key: "Change settings",
-      value: "Change settings",
-      isSelected: false,
-    },
+
     {
       key: "Contact us",
       value: "Contact us",
       isSelected: false,
     },
   ];
-
-  const items: HamburgerMenuProps = {
-    menuItems: [
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-    ],
-  };
 
   const [currentSelected, setCurrentSelected] = useState("Dashboard");
   const [isProfileBgHovered, setIsProfileBgHovered] = useState(false);
@@ -105,9 +80,8 @@ const Navbar: React.FC<any> = () => {
         </TabsOptionsContainer>
       </NavContainer>
       {/* {currentSelected === "Dashboard" && <Dashboard />}
-      {currentSelected === "Send Review" && <SendReview />}
-      {currentSelected === "Change settings" && <ChangeSettings />}
       {currentSelected === "Contact us" && <ContactUs />} */}
+      {currentSelected === "List Product" && <ProductListing />}
       {isProfileBgHovered && <Profilepopup />}
     </>
   );
