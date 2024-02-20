@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
 import Modal from "../../components/ui-components/Modal/Modal";
+import Hamburg from "../../components/ui-components/hamburg/Hamburg";
+import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
+import Navbar from "../../components/ui-components/navbar/Navbar";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +15,27 @@ const Home: React.FC = () => {
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const [error, setError] = useState(false);
+
+  const items: HamburgerMenuProps = {
+    menuItems: [
+      {
+        id: 1,
+        label: "List Product",
+      },
+      {
+        id: 1,
+        label: "List Product",
+      },
+      {
+        id: 1,
+        label: "List Product",
+      },
+      {
+        id: 1,
+        label: "List Product",
+      },
+    ],
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -49,7 +73,7 @@ const Home: React.FC = () => {
   };
   return (
     <>
-      {authorized && (
+      {/* {authorized && (
         <HomeParent>
           <h1>Hello from user!</h1>
           <button onClick={() => handleClick()}>logout</button>
@@ -59,7 +83,10 @@ const Home: React.FC = () => {
         <Modal onClose={toggleError}>
           <p style={{ color: "red" }}>Something went wrong try again!</p>
         </Modal>
-      )}
+      )} */}
+      <Navbar />
+
+      <Hamburg menuItems={items.menuItems} />
     </>
   );
 };
