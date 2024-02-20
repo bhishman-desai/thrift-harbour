@@ -22,6 +22,7 @@ public class FileUtils {
         return tempFilePath;
     }
 
+    // Validation for image, accepted format .png .jpg .jpeg
     public static boolean isImageFile(MultipartFile file) {
         if (file != null) {
             String fileName = file.getOriginalFilename();
@@ -40,13 +41,14 @@ public class FileUtils {
         return "." + extension;
     }
 
+    // Generating unique filename for the images, eg DIRECT/{posting id}/productImage1.png
     public static String generateUniqueFileNameForImage(String sellType,
                                                         String userName,
                                                         int productNumber,
                                                         String fileExtension) {
 
         String fileName = sellType + "/" + userName + "/" + "productImage" +
-                Integer.toString(productNumber) + fileExtension;
+                productNumber + fileExtension;
         return fileName;
     }
 
