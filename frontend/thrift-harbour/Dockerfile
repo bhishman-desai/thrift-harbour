@@ -13,6 +13,8 @@ RUN npm install
 # Copy the rest of the application code to the container
 COPY . .
 
+ENV NODE_ENV=production
+
 # Build the React app
 RUN npm run build
 
