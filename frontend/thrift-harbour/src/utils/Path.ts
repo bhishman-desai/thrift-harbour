@@ -6,7 +6,7 @@ export class Path {
 
   getBaseUrl() {
     if (this.environment === "development") {
-      return "http://localhost:8080/api/v1";
+      return "http://127.0.0.1:8080/api/v1";
     } else {
       return "/thrift/api/v1";
     }
