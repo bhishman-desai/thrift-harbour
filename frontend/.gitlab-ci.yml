@@ -13,6 +13,7 @@ publish-fe:
   variables:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: "tcp://docker:2375"
+    NODE_ENV: "production"
   services:
     - docker:dind
   script:
