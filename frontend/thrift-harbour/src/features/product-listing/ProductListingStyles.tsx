@@ -63,9 +63,11 @@ export const Button = style.div`
 export const UploadImageModal = style.div`
   display:flex;
   flex-direction:column;
+  border:1px solid red;
 `;
 
 export const ImageGrid = style.div`
+border:1px solid red;
 display: grid;
 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 grid-gap: 10px;
@@ -79,4 +81,5 @@ export const Img = style.img`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  border:1px solid black;
 `;

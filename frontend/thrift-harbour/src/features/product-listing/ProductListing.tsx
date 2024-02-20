@@ -26,6 +26,8 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { ClipLoader } from "react-spinners";
 import Modal from "../../components/ui-components/Modal/Modal";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
 
 const ProductListing: React.FC = () => {
   const uploadImage = () => {
@@ -208,22 +210,42 @@ const ProductListing: React.FC = () => {
 
       {showModal && selectedFiles.length > 0 && (
         <Modal onClose={closeModal}>
-          <UploadImageModal>
-            <ImageGrid>
-              {selectedFiles &&
-                selectedFiles.map((selectedFiles, index) => (
-                  <Img
-                    key={index}
-                    src={URL.createObjectURL(selectedFiles)}
-                    alt={`Selected Image ${index + 1}`}
-                  />
-                ))}
-            </ImageGrid>
+          {/* <UploadImageModal> */}
+          {/* <ImageGrid>
+            {selectedFiles &&
+              selectedFiles.map((selectedFiles, index) => (
+                <Img
+                  key={index}
+                  src={URL.createObjectURL(selectedFiles)}
+                  alt={`Selected Image ${index + 1}`}
+                />
+              ))}
+          </ImageGrid> */}
 
-            {/* <RegisterButton type="submit" style={{ marginTop: "8px" }}>
+          <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+            {selectedFiles &&
+              selectedFiles.map((image, index) => (
+                <ImageListItem key={index}>
+                  <img
+                    style={{
+                      height: "164px",
+                      width: "164px",
+                    }}
+                    srcSet={
+                      `${image}` + `?w=164&h=164&fit=crop&auto=format&dpr=2 2x`
+                    }
+                    src={`${URL.createObjectURL(image)}`}
+                    // alt={`Selected Image ${index + 1}`}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+          </ImageList>
+
+          {/* <RegisterButton type="submit" style={{ marginTop: "8px" }}>
               "Upload"
             </RegisterButton> */}
-          </UploadImageModal>
+          {/* </UploadImageModal> */}
         </Modal>
       )}
     </>

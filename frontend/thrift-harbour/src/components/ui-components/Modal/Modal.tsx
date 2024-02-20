@@ -23,14 +23,6 @@ const Modal: React.FC<ModalProps> = ({ onClose, children, images }) => {
           </CloseButton>
         </CloseButtonContainer>
         {children}
-        {images &&
-          images.map((image, index) => (
-            <img
-              key={index}
-              src={URL.createObjectURL(image)}
-              alt={`Selected Image ${index + 1}`}
-            />
-          ))}
       </BodyContainer>
     </Overlay>
   );
