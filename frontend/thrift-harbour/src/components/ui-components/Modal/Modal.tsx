@@ -4,6 +4,7 @@ import {
   BodyContainer,
   CloseButton,
   CloseButtonContainer,
+  ModalTitle,
   Overlay,
 } from "./ModalStyles";
 import "./ModalStyles.tsx";
@@ -11,17 +12,18 @@ import "./ModalStyles.tsx";
 export interface ModalProps {
   onClose: () => void;
   children?: React.ReactNode;
-  images?: File[];
+  title?: string;
 }
-const Modal: React.FC<ModalProps> = ({ onClose, children, images }) => {
+const Modal: React.FC<ModalProps> = ({ onClose, children, title }) => {
   return (
     <Overlay onClick={onClose}>
       <BodyContainer onClick={(e) => e.stopPropagation()}>
-        <CloseButtonContainer>
-          <CloseButton className="modal-close-btn" onClick={onClose}>
-            <Close color="red" height={16} width={16} />
-          </CloseButton>
-        </CloseButtonContainer>
+        {/* <CloseButtonContainer> */}
+        <CloseButton onClick={onClose}>
+          <Close color="red" height={24} width={24} />
+        </CloseButton>
+        {/* </CloseButtonContainer> */}
+        <ModalTitle>{title}</ModalTitle>
         {children}
       </BodyContainer>
     </Overlay>

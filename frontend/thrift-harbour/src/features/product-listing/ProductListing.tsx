@@ -9,6 +9,7 @@ import {
   Listing,
   NamePrice,
   ProductImage,
+  UploadButtonContainer,
   UploadImageModal,
 } from "./ProductListingStyles";
 import ImageIcon from "../../assets/icons/ImageIcon";
@@ -28,6 +29,7 @@ import { ClipLoader } from "react-spinners";
 import Modal from "../../components/ui-components/Modal/Modal";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
+import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
 
 const ProductListing: React.FC = () => {
   const uploadImage = () => {
@@ -41,6 +43,28 @@ const ProductListing: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [productName, setProductName] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [productPriceError, setProductPriceError] = useState("");
+  const [touchedFields, setTouchedFields] = useState({} as TouchedFieldsType);
+
+  const [listingData, setListingData] = useState({
+    productName: "",
+    productPrice: 0,
+    productDescription: "",
+    sellCategory: "",
+    images: [],
+    productCategory: "",
+    auctionSlot: "",
+  } as ListingDataTypes);
+
+  const handleFieldBlur = (field: string) => {
+    setTouchedFields({
+      ...touchedFields,
+      [field]: true,
+    });
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,6 +110,11 @@ const ProductListing: React.FC = () => {
     setSelectedFiles([]);
   };
 
+  const handleProductPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const price = parseInt(e.currentTarget.value);
+    setProductPrice(e.currentTarget.value);
+  };
+
   return (
     <>
       <Container>
@@ -119,23 +148,49 @@ const ProductListing: React.FC = () => {
           <NamePrice>
             <Field style={{ width: "48%" }}>
               <TextField
-                // error
-                // id="standard-error-helper-text"
+                error={
+                  listingData.productName.length === 0 &&
+                  touchedFields.productName
+                }
+                id="standard-error-helper-text"
                 label="Product Name"
-                defaultValue=""
-                // helperText="Incorrect entry."
+                value={listingData.productName}
+                helperText={
+                  listingData.productName.length === 0 &&
+                  touchedFields.productName &&
+                  "It should not be empty"
+                }
                 variant="outlined"
+                onBlur={() => handleFieldBlur("productName")}
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    productName: e.target.value,
+                  });
+                }}
               />
             </Field>
 
             <Field style={{ width: "48%" }}>
               <TextField
-                // error
-                // id="standard-error-helper-text"
+                type="number"
+                error={!listingData.productPrice && touchedFields.productPrice}
+                id="standard-error-helper-text"
                 label="Product Price"
-                defaultValue=""
-                // helperText="Incorrect entry."
+                value={listingData.productPrice}
+                helperText={
+                  !listingData.productPrice &&
+                  touchedFields.productPrice &&
+                  "Required field"
+                }
                 variant="outlined"
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    productPrice: parseInt(e.target.value),
+                  });
+                }}
+                onBlur={() => handleFieldBlur("productPrice")}
               />
             </Field>
           </NamePrice>
@@ -143,10 +198,26 @@ const ProductListing: React.FC = () => {
           <NamePrice>
             <Field style={{ width: "48%" }}>
               <TextField
-                // id="outlined-multiline-static"
+                error={
+                  listingData.productDescription.length === 0 &&
+                  touchedFields.productDescription
+                }
+                id="outlined-multiline-static"
                 label="Product Description"
                 multiline
-                defaultValue=""
+                helperText={
+                  listingData.productDescription.length === 0 &&
+                  touchedFields.productDescription &&
+                  "Required Field"
+                }
+                value={listingData.productDescription}
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    productDescription: e.target.value,
+                  });
+                }}
+                onBlur={() => handleFieldBlur("productDescription")}
               />
             </Field>
 
@@ -209,19 +280,7 @@ const ProductListing: React.FC = () => {
       </Container>
 
       {showModal && selectedFiles.length > 0 && (
-        <Modal onClose={closeModal}>
-          {/* <UploadImageModal> */}
-          {/* <ImageGrid>
-            {selectedFiles &&
-              selectedFiles.map((selectedFiles, index) => (
-                <Img
-                  key={index}
-                  src={URL.createObjectURL(selectedFiles)}
-                  alt={`Selected Image ${index + 1}`}
-                />
-              ))}
-          </ImageGrid> */}
-
+        <Modal onClose={closeModal} title={"Selected Images"}>
           <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
             {selectedFiles &&
               selectedFiles.map((image, index) => (
@@ -235,17 +294,21 @@ const ProductListing: React.FC = () => {
                       `${image}` + `?w=164&h=164&fit=crop&auto=format&dpr=2 2x`
                     }
                     src={`${URL.createObjectURL(image)}`}
-                    // alt={`Selected Image ${index + 1}`}
                     loading="lazy"
                   />
                 </ImageListItem>
               ))}
           </ImageList>
 
-          {/* <RegisterButton type="submit" style={{ marginTop: "8px" }}>
-              "Upload"
-            </RegisterButton> */}
-          {/* </UploadImageModal> */}
+          <UploadButtonContainer>
+            <RegisterButton
+              onClick={() => handleUpload()}
+              style={{ width: "50%" }}
+              type="submit"
+            >
+              Upload
+            </RegisterButton>
+          </UploadButtonContainer>
         </Modal>
       )}
     </>

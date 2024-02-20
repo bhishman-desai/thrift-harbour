@@ -83,3 +83,9 @@ export const Img = style.img`
   object-fit: contain;
   border:1px solid black;
 `;
+
+export const UploadButtonContainer = style.div`
+ display:flex;
+ justify-content:center;
+ align-items:center;
+`;
