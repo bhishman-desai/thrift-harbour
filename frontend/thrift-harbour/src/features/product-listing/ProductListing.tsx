@@ -22,7 +22,7 @@ import {
 } from "../registration/RegistrationStyles";
 import TextField from "@mui/material/TextField";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { ClipLoader } from "react-spinners";
@@ -30,31 +30,24 @@ import Modal from "../../components/ui-components/Modal/Modal";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
+import { ListingService } from "../../services/Listing";
 
 const ProductListing: React.FC = () => {
-  const uploadImage = () => {
-    console.log("upload image");
-  };
-
-  const [sellCategory, setSellCategory] = useState("");
-  const [productCategory, setProductCategory] = useState("");
+  const listingService = new ListingService();
   const [isLoading, setIsLoading] = useState(false);
-  const [auctionSlot, setAuctionSlot] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productDescription, setProductDescription] = useState("");
-  const [productPriceError, setProductPriceError] = useState("");
   const [touchedFields, setTouchedFields] = useState({} as TouchedFieldsType);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
+  const token = localStorage.getItem("token");
   const [listingData, setListingData] = useState({
     productName: "",
     productPrice: 0,
     productDescription: "",
     sellCategory: "",
-    images: [],
+    productImages: [],
     productCategory: "",
     auctionSlot: "",
   } as ListingDataTypes);
@@ -68,23 +61,18 @@ const ProductListing: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSellCategory = (event: SelectChangeEvent) => {
-    setSellCategory(event.target.value);
-  };
-
-  const handleProductCategory = (event: SelectChangeEvent) => {
-    setProductCategory(event.target.value);
-  };
-
-  const handleAuctionSlot = (event: SelectChangeEvent) => {
-    setAuctionSlot(event.target.value);
-  };
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const filesArray = Array.from(event.target.files).slice(0, 5); // Limit to max 5 files
       setSelectedFiles(filesArray);
       console.log("length", filesArray.length);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setThumbnailUrl(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(event.target.files[0]);
       setShowModal(true);
     }
   };
@@ -100,7 +88,7 @@ const ProductListing: React.FC = () => {
 
   const handleUpload = () => {
     if (selectedFiles.length > 0) {
-      // Here you can handle the file upload, e.g., send them to a server
+      setListingData({ ...listingData, productImages: selectedFiles });
       console.log("Selected files:", selectedFiles);
     }
   };
@@ -110,19 +98,45 @@ const ProductListing: React.FC = () => {
     setSelectedFiles([]);
   };
 
-  const handleProductPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const price = parseInt(e.currentTarget.value);
-    setProductPrice(e.currentTarget.value);
-  };
+  const handleFormSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log("formData =>", listingData);
 
+    try {
+      const [data, error] = await listingService.immediateListing(
+        listingData,
+        token
+      );
+      console.log("data", data);
+      if (data?.userID) {
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
       <Container>
         <Listing onClick={() => handleIconClick}>
           <label htmlFor="file-input">
-            <ProductImage>
+            {thumbnailUrl ? (
+              <ProductImage>
+                <img
+                  style={{ borderRadius: "50%" }}
+                  height={"100%"}
+                  width={"100%"}
+                  src={thumbnailUrl}
+                  alt="Thumbnail"
+                />
+              </ProductImage>
+            ) : (
+              <ProductImage>
+                <ImageIcon height={24} width={24} />
+              </ProductImage>
+            )}
+            {/* <ProductImage>
               <ImageIcon height={24} width={24} />
-            </ProductImage>
+            </ProductImage> */}
             {/* <IconContainer>
               <EditIcon />
             </IconContainer> */}
@@ -136,15 +150,15 @@ const ProductListing: React.FC = () => {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
-          {imagePreview && (
+          {/* {imagePreview && (
             <img
               src={imagePreview}
               alt="Selected"
               style={{ maxWidth: "100%", maxHeight: "200px" }}
             />
-          )}
+          )} */}
         </Listing>
-        <FormContainer>
+        <FormContainer onSubmit={handleFormSubmit}>
           <NamePrice>
             <Field style={{ width: "48%" }}>
               <TextField
@@ -225,10 +239,15 @@ const ProductListing: React.FC = () => {
               <InputLabel>Product category</InputLabel>
               <Select
                 labelId="demo-simple-select-disabled-label"
-                // id="demo-simple-select-disabled"
-                value={productCategory}
+                id="demo-simple-select-disabled"
+                value={listingData.productCategory}
                 label="Product category"
-                onChange={handleProductCategory}
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    productCategory: e.target.value,
+                  });
+                }}
               >
                 <MenuItem value={"Furniture"}>Furniture</MenuItem>
                 <MenuItem value={"Electronics"}>Electronics</MenuItem>
@@ -240,30 +259,40 @@ const ProductListing: React.FC = () => {
 
           <NamePrice>
             <Field style={{ width: "48%" }}>
-              <InputLabel>Auction Slot</InputLabel>
-              <Select
-                labelId="demo-simple-select-disabled-label"
-                // id="demo-simple-select-disabled"
-                value={auctionSlot}
-                label="Auction Slot"
-                onChange={handleAuctionSlot}
-              >
-                <MenuItem value={"Thursday"}>Thursday</MenuItem>
-                <MenuItem value={"Next Thursday"}>Next Thursday</MenuItem>
-              </Select>
-            </Field>
-
-            <Field style={{ width: "48%" }}>
               <InputLabel>Sell category</InputLabel>
               <Select
                 labelId="demo-simple-select-disabled-label"
-                // id="demo-simple-select-disabled"
-                value={sellCategory}
+                id="demo-simple-select-disabled"
+                value={listingData.sellCategory}
                 label="Sell category"
-                onChange={handleSellCategory}
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    sellCategory: e.target.value,
+                  });
+                }}
               >
-                <MenuItem value={"Auction"}>Auction</MenuItem>
-                <MenuItem value={"Direct"}>Direct</MenuItem>
+                <MenuItem value={"AUCTION"}>Auction</MenuItem>
+                <MenuItem value={"DIRECT"}>Direct</MenuItem>
+              </Select>
+            </Field>
+            <Field style={{ width: "48%" }}>
+              <InputLabel>Auction Slot</InputLabel>
+              <Select
+                disabled={listingData.sellCategory === "DIRECT"}
+                labelId="demo-simple-select-disabled-label"
+                id="demo-simple-select-disabled"
+                value={listingData.auctionSlot}
+                label="Auction Slot"
+                onChange={(e) => {
+                  setListingData({
+                    ...listingData,
+                    auctionSlot: e.target.value,
+                  });
+                }}
+              >
+                <MenuItem value={"Thursday"}>Thursday</MenuItem>
+                <MenuItem value={"Next Thursday"}>Next Thursday</MenuItem>
               </Select>
             </Field>
           </NamePrice>

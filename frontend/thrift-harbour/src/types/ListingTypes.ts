@@ -12,7 +12,7 @@ export interface ListingDataTypes {
   productPrice: number;
   productDescription: string;
   sellCategory: string;
-  images: File[];
+  productImages: File[];
   productCategory: string;
   auctionSlot?: string;
 }

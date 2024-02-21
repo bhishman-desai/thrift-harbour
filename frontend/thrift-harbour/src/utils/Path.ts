@@ -29,4 +29,10 @@ export class Path {
       return "/auth/reset-password";
     }
   }
+
+  getListingUrl(service: string) {
+    if (service === "immediate-listing") {
+      return "/listing/create-immediatesale-listing";
+    }
+  }
 }

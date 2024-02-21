@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 const Profilepopup: React.FC = () => {
   let navigate = useNavigate();
   const onClickLogout = async () => {
-    // navigate("/login");
-    // console.log("logout", res);
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
