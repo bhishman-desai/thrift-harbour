@@ -114,6 +114,7 @@ const ProductListing: React.FC = () => {
   };
 
   const emptyListingData = () => {
+    setThumbnailUrl(null);
     setListingData({
       productName: "",
       productPrice: 0,
