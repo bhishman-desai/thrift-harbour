@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
 import tech.group15.thriftharbour.dto.SellerResponse;
+import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.service.UserService;
@@ -43,8 +44,22 @@ public class AdminController {
   }
 
   /* Get user by id */
-  @GetMapping("users/{userID}")
-  public ResponseEntity<User> getUserById(@PathVariable Integer userID) {
-    return ResponseEntity.ok(userService.findUserById(userID));
+  @GetMapping("/sellers/{sellerID}")
+  public ResponseEntity<User> getUserById(@PathVariable Integer sellerID) {
+    return ResponseEntity.ok(userService.findUserById(sellerID));
+  }
+
+  /* Get user listing by userid */
+  @GetMapping("/sellers/{sellerID}/product-listing")
+  public ResponseEntity<List<ImmediateSaleListing>> getUserListingByUserId(@PathVariable Integer sellerID) {
+    return ResponseEntity.ok(productListingService.findUserListingById(sellerID));
+  }
+
+  /* Get single immediate sale product */
+  @GetMapping("/get-immediatesale-product/{id}")
+  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
+  (@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findImmediateSaleListingByID(id));
   }
 }

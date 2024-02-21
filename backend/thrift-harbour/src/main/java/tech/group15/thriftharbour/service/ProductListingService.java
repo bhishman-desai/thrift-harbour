@@ -27,4 +27,6 @@ public interface ProductListingService {
     GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID);
 
     GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID);
+
+    List<ImmediateSaleListing> findUserListingById(Integer sellerID);
 }

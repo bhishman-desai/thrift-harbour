@@ -39,14 +39,6 @@ public class ListingController {
                 .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
     }
 
-    /* Get single immediate sale product */
-    @GetMapping("/get-immediatesale-product/{id}")
-    public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
-            (@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productListingService.findImmediateSaleListingByID(id));
-    }
-
     // get image url associated with the immediatesale listing
     @GetMapping("/get-immediatesale-images/{id}")
     public ResponseEntity<GetListingImageResponse> getImmediateSaleListingsImages(@PathVariable String id){

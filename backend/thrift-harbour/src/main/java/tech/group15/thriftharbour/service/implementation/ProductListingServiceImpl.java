@@ -250,5 +250,11 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .build();
     }
 
+    /* Get all product listing from seller id */
+    @Override
+    public List<ImmediateSaleListing> findUserListingById(Integer sellerID) {
+        return immediateSaleListingRepository.findAllBySellerID(sellerID);
+    }
+
 
 }
