@@ -74,7 +74,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
 
     Optional<PasswordResetToken> oldPassResetToken = passwordResetTokenRepository.findByUser(user);
-      oldPassResetToken.ifPresent(passwordResetToken -> passwordResetTokenRepository.deleteAllByTokenID(passwordResetToken.getTokenID()));
+    oldPassResetToken.ifPresent(
+        passwordResetToken ->
+            passwordResetTokenRepository.deleteAllByTokenID(passwordResetToken.getTokenID()));
     PasswordResetToken token = new PasswordResetToken();
     token.setToken(UUID.randomUUID().toString());
     token.setUser(user);
@@ -83,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     emailService.sendEmail(
         forgotPassRequest.getEmail(),
-        "Reset Password Link",
+        "Thrift Harbour Reset Password Link",
         "http://localhost:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
 
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
@@ -96,11 +98,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
 
     if (!passResetToken.getExpiryDate().before(new Date())) {
-      return "https://thriftharbour.netlify.app/reset-password" + "?token=" + token;
+      return "http://172.17.1.50:3000/reset-password" + "?token=" + token;
     }
 
     passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
-    return "https://thriftharbour.netlify.app/login" + "?msg=Link Expired";
+    return "http://172.17.1.50:3000/login" + "?msg=Link Expired";
   }
 
   public Object resetPassword(ResetPassRequest resetPassRequest) {
