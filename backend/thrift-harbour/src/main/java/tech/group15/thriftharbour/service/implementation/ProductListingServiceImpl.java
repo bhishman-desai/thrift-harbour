@@ -66,7 +66,7 @@ public class ProductListingServiceImpl implements ProductListingService {
 
     // Method to create an immediate sale listing
     @Override
-    public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -130,7 +130,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
     @Override
-    public AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();

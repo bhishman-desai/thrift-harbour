@@ -13,10 +13,10 @@ import java.util.List;
 public interface ProductListingService {
 
     // Creates an immediate sale listing for the submitted form and saves the respective images in S3 bucket
-    ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
+    ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
     // Creates an auction sale listing for the submitted form and saves the respective images in S3 bucket
-    AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
+    AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
