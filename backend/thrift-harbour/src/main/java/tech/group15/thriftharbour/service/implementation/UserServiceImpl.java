@@ -1,15 +1,15 @@
 package tech.group15.thriftharbour.service.implementation;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.group15.thriftharbour.dto.SellerResponse;
 import tech.group15.thriftharbour.mapper.UserMapper;
+import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.repository.UserRepository;
 import tech.group15.thriftharbour.service.UserService;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +31,12 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<SellerResponse> findAllSellers() {
     return UserMapper.generateSellerInformationResponse(userRepository.findAllSellers());
+  }
+
+  @Override
+  public User findUserById(Integer userID) {
+    return userRepository
+        .findById(userID)
+        .orElseThrow(() -> new UsernameNotFoundException("User not Found!"));
   }
 }

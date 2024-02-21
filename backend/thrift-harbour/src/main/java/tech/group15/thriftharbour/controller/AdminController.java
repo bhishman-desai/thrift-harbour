@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
 import tech.group15.thriftharbour.dto.SellerResponse;
+import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.service.UserService;
 
@@ -38,5 +40,11 @@ public class AdminController {
   public ResponseEntity<List<SellerResponse>> getAllSellers() {
     return ResponseEntity.status(HttpStatus.OK)
             .body(userService.findAllSellers());
+  }
+
+  /* Get user by id */
+  @GetMapping("users/{userID}")
+  public ResponseEntity<User> getUserById(@PathVariable Integer userID) {
+    return ResponseEntity.ok(userService.findUserById(userID));
   }
 }
