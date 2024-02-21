@@ -1,5 +1,6 @@
 package tech.group15.thriftharbour.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
@@ -12,10 +13,10 @@ import java.util.List;
 public interface ProductListingService {
 
     // Creates an immediate sale listing for the submitted form and saves the respective images in S3 bucket
-    ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest);
+    ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
     // Creates an auction sale listing for the submitted form and saves the respective images in S3 bucket
-    AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest);
+    AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
