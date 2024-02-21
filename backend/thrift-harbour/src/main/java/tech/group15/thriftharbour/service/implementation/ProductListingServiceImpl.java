@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
@@ -12,14 +13,8 @@ import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.mapper.ProductMapper;
-import tech.group15.thriftharbour.model.AuctionSaleImage;
-import tech.group15.thriftharbour.model.AuctionSaleListing;
-import tech.group15.thriftharbour.model.ImmediateSaleImage;
-import tech.group15.thriftharbour.model.ImmediateSaleListing;
-import tech.group15.thriftharbour.repository.AuctionSaleImageRepository;
-import tech.group15.thriftharbour.repository.AuctionSaleListingRepository;
-import tech.group15.thriftharbour.repository.ImmediateSaleImageRepository;
-import tech.group15.thriftharbour.repository.ImmediateSaleListingRepository;
+import tech.group15.thriftharbour.model.*;
+import tech.group15.thriftharbour.repository.*;
 import tech.group15.thriftharbour.service.AwsS3Service;
 import tech.group15.thriftharbour.service.JWTService;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -42,6 +37,8 @@ public class ProductListingServiceImpl implements ProductListingService {
     private final AuctionSaleListingRepository auctionSaleListingRepository;
 
     private final AuctionSaleImageRepository auctionSaleImageRepository;
+
+    private final UserRepository userRepository;
 
     @Value("${aws.bucketName}")
     private String bucketName;
@@ -66,6 +63,12 @@ public class ProductListingServiceImpl implements ProductListingService {
     public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
+        /* Fetch the User entity based on the seller's email */
+        User seller =
+            userRepository
+                .findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+
         Date createdDate = DateUtil.getCurrentDate();
 
         ImmediateSaleListing immediateSaleListing = ImmediateSaleListing
@@ -74,6 +77,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .productName(listingRequest.getProductName())
                 .productDescription(listingRequest.getProductDescription())
                 .price(listingRequest.getProductPrice())
+                .seller(seller)
                 .sellerEmail(userName)
                 .category(listingRequest.getProductCategory())
                 .createdDate(createdDate)

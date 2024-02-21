@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
+import tech.group15.thriftharbour.dto.SellerResponse;
 import tech.group15.thriftharbour.service.ProductListingService;
+import tech.group15.thriftharbour.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -17,6 +19,7 @@ import tech.group15.thriftharbour.service.ProductListingService;
 @Tag(name = "Admin")
 public class AdminController {
   private final ProductListingService productListingService;
+  private final UserService userService;
 
   @GetMapping
   public ResponseEntity<String> hi() {
@@ -28,5 +31,12 @@ public class AdminController {
   public ResponseEntity<List<ImmediateSaleMinifiedResponse>> getAllImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllImmediateSaleListing());
+  }
+
+  /* Get all seller who've listed their products */
+  @GetMapping("/get-all-sellers")
+  public ResponseEntity<List<SellerResponse>> getAllSellers() {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(userService.findAllSellers());
   }
 }
