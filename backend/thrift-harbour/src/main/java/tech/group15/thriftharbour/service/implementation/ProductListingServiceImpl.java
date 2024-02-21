@@ -58,9 +58,10 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
 
+
     // Method to create an immediate sale listing
     @Override
-    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         /* Fetch the User entity based on the seller's email */
@@ -88,7 +89,7 @@ public class ProductListingServiceImpl implements ProductListingService {
         List<String> imageURLs = new ArrayList<>();
 
 
-        List<MultipartFile> productImages = listingRequest.getProductImages();
+        List<MultipartFile> productImages = images;
         for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
             String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
@@ -131,7 +132,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
     @Override
-    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -153,7 +154,7 @@ public class ProductListingServiceImpl implements ProductListingService {
         List<AuctionSaleImage> auctionSaleImages = new ArrayList<>();
         List<String> imageURLs = new ArrayList<>();
 
-        List<MultipartFile> productImages = listingRequest.getProductImages();
+        List<MultipartFile> productImages = images;
         for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
             String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),

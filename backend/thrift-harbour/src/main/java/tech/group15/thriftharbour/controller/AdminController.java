@@ -2,13 +2,15 @@ package tech.group15.thriftharbour.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import tech.group15.thriftharbour.dto.ListingReviewRequest;
+import tech.group15.thriftharbour.dto.ListingReviewResponse;
+import tech.group15.thriftharbour.service.AdminService;
 import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
 import tech.group15.thriftharbour.dto.SellerResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
@@ -23,6 +25,8 @@ import tech.group15.thriftharbour.service.UserService;
 public class AdminController {
   private final ProductListingService productListingService;
   private final UserService userService;
+
+  private final AdminService adminService;
 
   @GetMapping
   public ResponseEntity<String> hi() {
@@ -61,5 +65,14 @@ public class AdminController {
   (@PathVariable String id) {
     return ResponseEntity.status(HttpStatus.OK)
             .body(productListingService.findImmediateSaleListingByID(id));
+  }
+
+  @Tag(name = "Approve/Reject User Listing")
+  @PostMapping("/review-request")
+  public ResponseEntity<ListingReviewResponse> reviewRequest(
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @RequestBody ListingReviewRequest listingReviewRequest) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(adminService.reviewListing(authorizationHeader, listingReviewRequest));
   }
 }

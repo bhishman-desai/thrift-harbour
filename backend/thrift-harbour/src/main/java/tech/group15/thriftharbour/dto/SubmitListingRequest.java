@@ -3,7 +3,6 @@ package tech.group15.thriftharbour.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.lang.Nullable;
-import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.enums.SellCategoryEnum;
 
 import java.util.List;
@@ -18,9 +17,6 @@ public class SubmitListingRequest {
     private String productDescription;
 
     @NotBlank
-    private List<MultipartFile> productImages;
-
-    @NotBlank
     private double productPrice;
 
     @NotBlank
@@ -31,4 +27,5 @@ public class SubmitListingRequest {
 
     @Nullable
     private String auctionSlot;
+
 }

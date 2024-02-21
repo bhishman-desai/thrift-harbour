@@ -12,4 +12,6 @@ public interface ImmediateSaleListingRepository extends JpaRepository<ImmediateS
 
     @Query("SELECT i FROM ImmediateSaleListing i WHERE i.seller.userID = ?1")
     List<ImmediateSaleListing> findAllBySellerID(Integer sellerID);
+
+    ImmediateSaleListing findByImmediateSaleListingID(String immediateSaleListingID);
 }
