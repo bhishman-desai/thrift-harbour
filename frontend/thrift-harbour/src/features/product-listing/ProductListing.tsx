@@ -161,6 +161,7 @@ const ProductListing: React.FC = () => {
             multiple
             ref={fileInputRef}
             id="file-input"
+            name="productImages"
             type="file"
             accept="image/png"
             onChange={handleFileChange}

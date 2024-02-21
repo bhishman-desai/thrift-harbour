@@ -19,7 +19,13 @@ export class ListingService {
 
       Object.entries(payload).forEach(([key, value]) => {
         console.log("key value", key, value);
-        formData.append(key, value);
+        if (key === "productImages") {
+          value.forEach((file:any) => {
+            formData.append(key, file);
+          })
+        } else {
+          formData.append(key, value);
+        }
       });
       //   formData.append("productName", payload.productName);
       //   formData.append("productDescription", payload.productDescription);
