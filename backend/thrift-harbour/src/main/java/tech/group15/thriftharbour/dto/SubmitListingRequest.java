@@ -14,7 +14,6 @@ public class SubmitListingRequest {
     @NotBlank
     private String productDescription;
 
-
     @NotBlank
     private double productPrice;
 
@@ -26,4 +25,5 @@ public class SubmitListingRequest {
 
     @Nullable
     private String auctionSlot;
+
 }
