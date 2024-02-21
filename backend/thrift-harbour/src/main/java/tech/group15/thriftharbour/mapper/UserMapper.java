@@ -46,16 +46,29 @@ public class UserMapper {
     List<SellerResponse> sellerResponses = new ArrayList<>();
 
     for (User user : users) {
-      SellerResponse sellerResponse = new SellerResponse();
+      /* Making sure there is only one seller added even though they might have multiple listing in the table */
+      if (!containsUserID(sellerResponses, user.getUserID())) {
+        SellerResponse sellerResponse = new SellerResponse();
 
-      sellerResponse.setUserID(user.getUserID());
-      sellerResponse.setFirstName(user.getFirstName());
-      sellerResponse.setLastName(user.getLastName());
-      sellerResponse.setEmail(user.getEmail());
+        sellerResponse.setUserID(user.getUserID());
+        sellerResponse.setFirstName(user.getFirstName());
+        sellerResponse.setLastName(user.getLastName());
+        sellerResponse.setEmail(user.getEmail());
 
-      sellerResponses.add(sellerResponse);
+        sellerResponses.add(sellerResponse);
+      }
     }
 
     return sellerResponses;
+  }
+
+  /* Helper methods */
+  private static boolean containsUserID(List<SellerResponse> sellerResponses, int userID) {
+    for (SellerResponse sellerResponse : sellerResponses) {
+      if (sellerResponse.getUserID() == userID) {
+        return true;
+      }
+    }
+    return false;
   }
 }
