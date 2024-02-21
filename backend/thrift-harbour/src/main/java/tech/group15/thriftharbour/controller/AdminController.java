@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.ApprovedAuctionSaleListingForAdminResponse;
 import tech.group15.thriftharbour.dto.ApprovedImmediateSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.DeniedAuctionSaleListingForAdminResponse;
 import tech.group15.thriftharbour.dto.DeniedImmediateSaleListingForAdminResponse;
 import tech.group15.thriftharbour.service.ProductListingService;
 
@@ -46,6 +47,13 @@ public class AdminController {
           () {
     return ResponseEntity.status(HttpStatus.OK)
             .body(productListingService.findAllApprovedAuctionSaleListing());
+  }
+
+  @GetMapping("/get-denied-auctionsale-listing")
+  public ResponseEntity<List<DeniedAuctionSaleListingForAdminResponse>> getDeniedAuctionSaleListings
+          () {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findAllDeniedAuctionSaleListing());
   }
 
 }

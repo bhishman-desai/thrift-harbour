@@ -27,4 +27,6 @@ public interface ProductListingService {
     List<DeniedImmediateSaleListingForAdminResponse>findAllDeniedImmediateSaleListing();
 
     List<ApprovedAuctionSaleListingForAdminResponse>findAllApprovedAuctionSaleListing();
+
+    List<DeniedAuctionSaleListingForAdminResponse>findAllDeniedAuctionSaleListing();
 }

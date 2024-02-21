@@ -336,5 +336,40 @@ public class ProductListingServiceImpl implements ProductListingService {
         return approvedAuctionSaleListingForAdminResponseList;
     }
 
+    @Override
+    public List<DeniedAuctionSaleListingForAdminResponse> findAllDeniedAuctionSaleListing() {
+
+        List<AuctionSaleListing> auctionSaleListings = auctionSaleListingRepository.findAll();
+        List<DeniedAuctionSaleListingForAdminResponse> deniedAuctionSaleListingForAdminResponseList = new ArrayList<>();
+
+        for (AuctionSaleListing auctionSale : auctionSaleListings)
+        {
+            if(auctionSale.isActive() && auctionSale.isRejected() && !auctionSale.isApproved())
+            {
+                DeniedAuctionSaleListingForAdminResponse deniedAuctionSaleListingForAdminResponse = new DeniedAuctionSaleListingForAdminResponse();
+
+                deniedAuctionSaleListingForAdminResponse.setAuctionSaleListingID(auctionSale.getAuctionSaleListingID());
+                deniedAuctionSaleListingForAdminResponse.setProductName(auctionSale.getProductName());
+                deniedAuctionSaleListingForAdminResponse.setProductDescription(auctionSale.getProductDescription());
+                deniedAuctionSaleListingForAdminResponse.setCategory(auctionSale.getCategory());
+                deniedAuctionSaleListingForAdminResponse.setSellerEmail(auctionSale.getSellerEmail());
+                List<AuctionSaleImage> productImages = auctionSaleImageRepository
+                        .findAllByAuctionSaleListingID(auctionSale.getAuctionSaleListingID());
+                deniedAuctionSaleListingForAdminResponse.setImageURLs(productImages.stream()
+                        .map(AuctionSaleImage::getImageURL)
+                        .collect(Collectors.toList()));
+                deniedAuctionSaleListingForAdminResponse.setActive(auctionSale.isActive());
+                deniedAuctionSaleListingForAdminResponse.setRejected(auctionSale.isRejected());
+                deniedAuctionSaleListingForAdminResponse.setApproverEmail(auctionSale.getApproverEmail());
+                deniedAuctionSaleListingForAdminResponse.setMessageFromApprover(auctionSale.getMessageFromApprover());
+                deniedAuctionSaleListingForAdminResponse.setDateOfApproval(auctionSale.getDateOfApproval());
+                deniedAuctionSaleListingForAdminResponse.setSold(auctionSale.isSold());
+
+                deniedAuctionSaleListingForAdminResponseList.add(deniedAuctionSaleListingForAdminResponse);
+            }
+        }
+        return deniedAuctionSaleListingForAdminResponseList;
+    }
+
 
 }

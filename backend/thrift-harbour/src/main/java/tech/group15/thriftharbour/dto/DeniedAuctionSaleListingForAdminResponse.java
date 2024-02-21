@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class ApprovedAuctionSaleListingForAdminResponse {
+public class DeniedAuctionSaleListingForAdminResponse {
 
     private String auctionSaleListingID;
 
@@ -22,7 +22,7 @@ public class ApprovedAuctionSaleListingForAdminResponse {
 
     private boolean active;
 
-    private boolean isApproved;
+    private boolean isRejected;
 
     private String approverEmail;
 
@@ -31,5 +31,4 @@ public class ApprovedAuctionSaleListingForAdminResponse {
     private LocalDate dateOfApproval;
 
     private boolean isSold;
-
 }
