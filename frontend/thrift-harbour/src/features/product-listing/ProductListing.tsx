@@ -113,8 +113,27 @@ const ProductListing: React.FC = () => {
     setShowModal(false);
   };
 
-  const toggleError = () => {
-    setError(false);
+  const emptyListingData = () => {
+    setListingData({
+      productName: "",
+      productPrice: 0,
+      productDescription: "",
+      sellCategory: "",
+      productImages: [],
+      productCategory: "",
+      auctionSlot: "",
+    });
+  };
+
+  const setTouchedFalse = () => {
+    setTouchedFields({
+      productName: false,
+      productPrice: false,
+      productDescription: false,
+      sellCategory: false,
+      productCategory: false,
+      auctionSlot: false,
+    });
   };
 
   const handleFormSubmit = async (e: FormEvent) => {
@@ -131,15 +150,21 @@ const ProductListing: React.FC = () => {
         console.log("data", data);
         if (data?.immediateSaleListingID) {
           setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
           setError(false);
           setOpenModal(true);
         } else {
           setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
           setError(true);
           setOpenModal(true);
         }
       } catch (error) {
         setIsLoading(false);
+        emptyListingData();
+        setTouchedFalse();
         setError(true);
         setOpenModal(true);
       }
@@ -154,15 +179,21 @@ const ProductListing: React.FC = () => {
         console.log("data", data);
         if (data?.auctionSaleListingID) {
           setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
           setError(false);
           setOpenModal(true);
         } else {
           setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
           setError(true);
           setOpenModal(true);
         }
       } catch (error) {
         setIsLoading(false);
+        emptyListingData();
+        setTouchedFalse();
         setError(true);
         setOpenModal(true);
       }
