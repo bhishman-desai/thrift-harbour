@@ -28,27 +28,27 @@ const Navbar: React.FC<any> = () => {
     },
 
     {
-      key: "Contact us",
-      value: "Contact us",
+      key: "My Listed Products",
+      value: "My Listed Products",
       isSelected: false,
     },
   ];
 
   const [currentSelected, setCurrentSelected] = useState("Dashboard");
-  const [isProfileBgHovered, setIsProfileBgHovered] = useState(false);
-  useEffect(() => {
-    const handleDocumentClick = () => {
-      setIsProfileBgHovered(false);
-    };
+  const [isProfileClicked, setIsProfileClicked] = useState(false);
+  // useEffect(() => {
+  //   const handleDocumentClick = () => {
+  //     setIsProfileBgHovered(false);
+  //   };
 
-    if (isProfileBgHovered) {
-      document.addEventListener("click", handleDocumentClick);
-    }
+  //   if (isProfileBgHovered) {
+  //     document.addEventListener("click", handleDocumentClick);
+  //   }
 
-    return () => {
-      document.removeEventListener("click", handleDocumentClick);
-    };
-  }, [isProfileBgHovered]);
+  //   return () => {
+  //     document.removeEventListener("click", handleDocumentClick);
+  //   };
+  // }, [isProfileBgHovered]);
 
   const onClickOption = (key: string) => {
     setCurrentSelected(key);
@@ -72,7 +72,7 @@ const Navbar: React.FC<any> = () => {
               );
             })}
           </Tabs>
-          <Profile onMouseEnter={() => setIsProfileBgHovered(true)}>
+          <Profile onClick={() => setIsProfileClicked(!isProfileClicked)}>
             <ProfileIconBg>
               <ProfileIcon />
             </ProfileIconBg>
@@ -82,7 +82,7 @@ const Navbar: React.FC<any> = () => {
       {/* {currentSelected === "Dashboard" && <Dashboard />}
       {currentSelected === "Contact us" && <ContactUs />} */}
       {currentSelected === "List Product" && <ProductListing />}
-      {isProfileBgHovered && <Profilepopup />}
+      {isProfileClicked && <Profilepopup />}
     </>
   );
 };
