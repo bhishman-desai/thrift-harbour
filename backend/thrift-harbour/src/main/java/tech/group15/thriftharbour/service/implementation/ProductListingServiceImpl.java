@@ -1,5 +1,9 @@
 package tech.group15.thriftharbour.service.implementation;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,11 +25,6 @@ import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -301,6 +300,40 @@ public class ProductListingServiceImpl implements ProductListingService {
             }
         }
         return deniedImmediateSaleListingForAdminResponseList;
+    }
+
+    @Override
+    public List<ApprovedAuctionSaleListingForAdminResponse> findAllApprovedAuctionSaleListing() {
+        List<AuctionSaleListing> auctionSaleListings = auctionSaleListingRepository.findAll();
+        List<ApprovedAuctionSaleListingForAdminResponse> approvedAuctionSaleListingForAdminResponseList = new ArrayList<>();
+
+        for (AuctionSaleListing auctionSale : auctionSaleListings)
+        {
+            if(auctionSale.isActive() && auctionSale.isApproved() && !auctionSale.isRejected())
+            {
+                ApprovedAuctionSaleListingForAdminResponse approvedAuctionSaleListingForAdminResponse = new ApprovedAuctionSaleListingForAdminResponse();
+
+                approvedAuctionSaleListingForAdminResponse.setAuctionSaleListingID(auctionSale.getAuctionSaleListingID());
+                approvedAuctionSaleListingForAdminResponse.setProductName(auctionSale.getProductName());
+                approvedAuctionSaleListingForAdminResponse.setProductDescription(auctionSale.getProductDescription());
+                approvedAuctionSaleListingForAdminResponse.setCategory(auctionSale.getCategory());
+                approvedAuctionSaleListingForAdminResponse.setSellerEmail(auctionSale.getSellerEmail());
+                List<AuctionSaleImage> productImages = auctionSaleImageRepository
+                        .findAllByAuctionSaleListingID(auctionSale.getAuctionSaleListingID());
+                approvedAuctionSaleListingForAdminResponse.setImageURLs(productImages.stream()
+                        .map(AuctionSaleImage::getImageURL)
+                        .collect(Collectors.toList()));
+                approvedAuctionSaleListingForAdminResponse.setActive(auctionSale.isActive());
+                approvedAuctionSaleListingForAdminResponse.setApproved(auctionSale.isApproved());
+                approvedAuctionSaleListingForAdminResponse.setApproverEmail(auctionSale.getApproverEmail());
+                approvedAuctionSaleListingForAdminResponse.setMessageFromApprover(auctionSale.getMessageFromApprover());
+                approvedAuctionSaleListingForAdminResponse.setDateOfApproval(auctionSale.getDateOfApproval());
+                approvedAuctionSaleListingForAdminResponse.setSold(auctionSale.isSold());
+
+                approvedAuctionSaleListingForAdminResponseList.add(approvedAuctionSaleListingForAdminResponse);
+            }
+        }
+        return approvedAuctionSaleListingForAdminResponseList;
     }
 
 
