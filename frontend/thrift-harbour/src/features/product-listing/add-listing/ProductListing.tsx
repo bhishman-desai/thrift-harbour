@@ -13,30 +13,33 @@ import {
   UploadButtonContainer,
   UploadImageModal,
 } from "./ProductListingStyles";
-import ImageIcon from "../../assets/icons/ImageIcon";
-import EditIcon from "../../assets/icons/EditIcon";
+import ImageIcon from "../../../assets/icons/ImageIcon";
+import EditIcon from "../../../assets/icons/EditIcon";
 import {
   Field,
   Form,
   Label,
   RegisterButton,
-} from "../registration/RegistrationStyles";
+} from "../../registration/RegistrationStyles";
 import TextField from "@mui/material/TextField";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FormEvent, useRef, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { ClipLoader } from "react-spinners";
-import Modal from "../../components/ui-components/Modal/Modal";
+import Modal from "../../../components/ui-components/Modal/Modal";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
-import { ListingService } from "../../services/Listing";
+import {
+  ListingDataTypes,
+  TouchedFieldsType,
+} from "../../../types/ListingTypes";
+import { ListingService } from "../../../services/Listing";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
-import { Dates } from "../../utils/Dates";
-import ErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
-import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import { Dates } from "../../../utils/Dates";
+import ErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import SuccessErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const ProductListing: React.FC = () => {
   const listingService = new ListingService();

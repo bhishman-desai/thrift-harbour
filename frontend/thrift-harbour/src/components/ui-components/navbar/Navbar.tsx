@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
-import ProductListing from "../../../features/product-listing/ProductListing";
+import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
