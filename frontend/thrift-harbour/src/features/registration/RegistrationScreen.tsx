@@ -23,6 +23,7 @@ import { ClipLoader } from "react-spinners";
 import useAuth from "../../hooks/useAuth";
 import Home from "../home/HomeScreen";
 import Info from "../../assets/icons/Info";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const Registration: React.FC = () => {
   const { token, handleLogin } = useAuth();
@@ -237,48 +238,40 @@ const Registration: React.FC = () => {
             </LoginLink>
           </InputCard>
 
-          {showCriteria && (
-            <Modal onClose={toggleCriteria}>
-              <div>
-                <p style={{ color: "red" }}>
-                  1. Must be at least 8 characters long{" "}
-                </p>
-                <p style={{ color: "red" }}>
-                  2. Must be combination of alphanumeric characters
-                </p>
-              </div>
-            </Modal>
-          )}
+          <SuccessErrorModal
+            type="ERROR"
+            message={`1.Must be at least 8 characters long ${(<br />)}
+            2. Must be combination of alphanumeric characters
+            `}
+            open={showCriteria}
+            setOpen={setShowCriteria}
+            title={"Criteria"}
+            criteria={true}
+          />
 
-          {registerSuccess && (
-            <Modal onClose={toggleRegisterSuccess}>
-              <Message>
-                <p style={{ color: "green" }}>Registered Successfully!</p>
-                <Link to="/login">Click here to Login</Link>
-              </Message>
-            </Modal>
-          )}
+          <SuccessErrorModal
+            type="SUCCESS"
+            message={"Registered Successfully!"}
+            open={registerSuccess}
+            setOpen={setRegisterSuccess}
+            title={"Success"}
+          />
 
-          {alreadyExist && (
-            <Modal onClose={toggleAlreadyExist}>
-              <Message>
-                <p style={{ color: "Red" }}>
-                  User already registered with this email!
-                </p>
-                <Link to="/login">Click here to Login</Link>
-              </Message>
-            </Modal>
-          )}
+          <SuccessErrorModal
+            type="ERROR"
+            message={"User already registered with this email !"}
+            open={alreadyExist}
+            setOpen={setAlreadyExist}
+            title={"error"}
+          />
 
-          {error && (
-            <Modal onClose={toggleError}>
-              <Message>
-                <p style={{ color: "Red" }}>
-                  Something went wrong, please try again!
-                </p>
-              </Message>
-            </Modal>
-          )}
+          <SuccessErrorModal
+            type="ERROR"
+            message={"Something went wrong, please try again!"}
+            open={error}
+            setOpen={setError}
+            title={"error"}
+          />
         </Container>
       )}
     </>

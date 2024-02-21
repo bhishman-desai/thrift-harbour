@@ -11,6 +11,7 @@ export interface ErrorModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   type: "ERROR" | "SUCCESS";
+  criteria?: boolean;
 }
 
 const SuccessErrorModal: React.FC<ErrorModalProps> = ({
@@ -19,6 +20,7 @@ const SuccessErrorModal: React.FC<ErrorModalProps> = ({
   open,
   setOpen,
   type,
+  criteria,
 }) => {
   return (
     <React.Fragment>
@@ -52,7 +54,15 @@ const SuccessErrorModal: React.FC<ErrorModalProps> = ({
             </Typography>
           )}
           <Typography id="modal-desc" textColor="text.tertiary">
-            {message}
+            {/* {message} */}
+            {criteria ? (
+              <>
+                1. Must be at least 8 characters long <br />
+                2. Must be combination of alphanumeric characters
+              </>
+            ) : (
+              <>{message}</>
+            )}
           </Typography>
         </Sheet>
       </Modal>
