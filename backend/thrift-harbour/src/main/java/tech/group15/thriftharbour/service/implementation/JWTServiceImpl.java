@@ -6,11 +6,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.service.JWTService;
 
 @Service
@@ -24,7 +24,11 @@ public class JWTServiceImpl implements JWTService {
    * @return String - A JWT token string.
    */
   public String generateToken(UserDetails userDetails) {
+    Map<String, Object> claims = new HashMap<>();
+    List<Object> roles = Arrays.asList(RoleEnum.USER.name(), RoleEnum.ADMIN.name());
+    claims.put("Roles", roles);
     return Jwts.builder()
+        .setClaims(claims)
         .setSubject(userDetails.getUsername())
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
@@ -100,7 +104,7 @@ public class JWTServiceImpl implements JWTService {
     return extractClaim(token, Claims::getSubject);
   }
 
-  public String extractUserNameFromRequestHeaders(String authorizationHeader){
+  public String extractUserNameFromRequestHeaders(String authorizationHeader) {
     String token = authorizationHeader.substring("Bearer ".length());
     return extractUserName(token);
   }

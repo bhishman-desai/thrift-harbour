@@ -52,10 +52,10 @@ public class SecurityConfiguration {
                         "/swagger-ui.html")
                     .permitAll()
                     /* Requiring ADMIN authority for requests to "/api/v1/admin" */
-                    .requestMatchers("/api/v1/admin")
+                    .requestMatchers("/api/v1/admin/**")
                     .hasAnyAuthority(RoleEnum.ADMIN.name())
                     /* Requiring USER authority for requests to "/api/v1/user" */
-                    .requestMatchers("/api/v1/user")
+                    .requestMatchers("/api/v1/user/**")
                     .hasAnyAuthority(RoleEnum.USER.name())
                     .anyRequest()
                     .authenticated())
