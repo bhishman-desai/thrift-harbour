@@ -10,11 +10,13 @@ export const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 `;
 
 export const BodyContainer = styled.div`
+  position: relative;
   background-color: #ffffff;
-  padding: 0px 20px 14px 20px;
+  padding: 24px 24px 24px 24px;
   border-radius: 4px;
 `;
 
@@ -25,9 +27,21 @@ export const CloseButtonContainer = styled.div`
 `;
 export const CloseButton = styled.button`
   position: absolute;
-  top: 8px;
-  right: 0;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
   cursor: pointer;
+`;
+
+export const ModalTitle = styled.h2`
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  color: green;
+  display:flex;
+  justify-content:center;
+  text-align-center;
 `;

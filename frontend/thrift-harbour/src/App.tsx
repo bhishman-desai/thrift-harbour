@@ -6,6 +6,7 @@ import AuthWrapper from "./context/AuthContext";
 import Home from "./features/home/HomeScreen";
 import ForgotPassword from "./features/forgotpassword/ForgotPassword";
 import ResetPassword from "./features/resetpassword/ResetPassword";
+import ProductListing from "./features/product-listing/ProductListing";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/*" element={<ResetPassword />} />
+          <Route path="/listing" element={<ProductListing />} />
         </Routes>
       </Router>
     </AuthWrapper>
