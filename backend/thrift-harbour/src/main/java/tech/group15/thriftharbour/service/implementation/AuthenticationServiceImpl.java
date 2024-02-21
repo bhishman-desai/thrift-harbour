@@ -74,7 +74,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
 
     Optional<PasswordResetToken> oldPassResetToken = passwordResetTokenRepository.findByUser(user);
-      oldPassResetToken.ifPresent(passwordResetToken -> passwordResetTokenRepository.deleteAllByTokenID(passwordResetToken.getTokenID()));
+    oldPassResetToken.ifPresent(
+        passwordResetToken ->
+            passwordResetTokenRepository.deleteAllByTokenID(passwordResetToken.getTokenID()));
     PasswordResetToken token = new PasswordResetToken();
     token.setToken(UUID.randomUUID().toString());
     token.setUser(user);
