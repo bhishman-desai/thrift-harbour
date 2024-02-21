@@ -2,11 +2,9 @@ package tech.group15.thriftharbour.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,8 +15,6 @@ import tech.group15.thriftharbour.dto.SubmitListingRequest;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.service.ProductListingService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users/listing")
