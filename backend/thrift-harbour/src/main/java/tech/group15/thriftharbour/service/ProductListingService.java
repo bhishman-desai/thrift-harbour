@@ -1,9 +1,6 @@
 package tech.group15.thriftharbour.service;
 
-import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.GetListingImageResponse;
-import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 
@@ -24,4 +21,6 @@ public interface ProductListingService {
     GetListingImageResponse findAllImmediateSaleListingImagesByID(String ListingID);
 
     GetListingImageResponse findAllAuctionSaleListingImagesByID(String ListingID);
+
+    List<ApprovedImmediateSaleListingForAdminResponse>findAllApprovedImmediateSaleListing();
 }

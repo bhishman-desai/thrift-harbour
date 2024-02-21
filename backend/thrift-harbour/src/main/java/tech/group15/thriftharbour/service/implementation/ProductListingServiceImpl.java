@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.GetListingImageResponse;
-import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.model.AuctionSaleImage;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
@@ -233,6 +230,42 @@ public class ProductListingServiceImpl implements ProductListingService {
                         .map(AuctionSaleImage::getImageURL)
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public List<ApprovedImmediateSaleListingForAdminResponse> findAllApprovedImmediateSaleListing() {
+
+        List<ImmediateSaleListing> immediateSaleListings = immediateSaleListingRepository.findAll();
+        List<ApprovedImmediateSaleListingForAdminResponse> immediateSaleListingForAdminResponseList = new ArrayList<>();
+
+        for (ImmediateSaleListing immediateSale : immediateSaleListings)
+        {
+            if(immediateSale.isApproved() && !immediateSale.isRejected())
+            {
+                ApprovedImmediateSaleListingForAdminResponse approvedImmediateSaleListingForAdminResponse = new ApprovedImmediateSaleListingForAdminResponse();
+
+                approvedImmediateSaleListingForAdminResponse.setImmediateSaleListingID(immediateSale.getImmediateSaleListingID());
+                approvedImmediateSaleListingForAdminResponse.setProductName(immediateSale.getProductName());
+                approvedImmediateSaleListingForAdminResponse.setProductDescription(immediateSale.getProductDescription());
+                approvedImmediateSaleListingForAdminResponse.setPrice(immediateSale.getPrice());
+                approvedImmediateSaleListingForAdminResponse.setCategory(immediateSale.getCategory());
+                approvedImmediateSaleListingForAdminResponse.setSellerEmail(immediateSale.getSellerEmail());
+                List<ImmediateSaleImage> productImages = immediateSaleImageRepository
+                        .getAllByImmediateSaleListingID(immediateSale.getImmediateSaleListingID());
+                approvedImmediateSaleListingForAdminResponse.setImageURLs(productImages.stream()
+                        .map(ImmediateSaleImage::getImageURL)
+                        .collect(Collectors.toList()));
+                approvedImmediateSaleListingForAdminResponse.setActive(immediateSale.isActive());
+                approvedImmediateSaleListingForAdminResponse.setApproved(immediateSale.isApproved());
+                approvedImmediateSaleListingForAdminResponse.setApproverEmail(immediateSale.getApproverEmail());
+                approvedImmediateSaleListingForAdminResponse.setMessageFromApprover(immediateSale.getMessageFromApprover());
+                approvedImmediateSaleListingForAdminResponse.setDateOfApproval(immediateSale.getDateOfApproval());
+                approvedImmediateSaleListingForAdminResponse.setSold(immediateSale.isSold());
+
+                immediateSaleListingForAdminResponseList.add(approvedImmediateSaleListingForAdminResponse);
+            }
+        }
+        return immediateSaleListingForAdminResponseList;
     }
 
 
