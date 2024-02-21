@@ -100,6 +100,11 @@ public class JWTServiceImpl implements JWTService {
     return extractClaim(token, Claims::getSubject);
   }
 
+  public String extractUserNameFromRequestHeaders(String authorizationHeader){
+    String token = authorizationHeader.substring("Bearer ".length());
+    return extractUserName(token);
+  }
+
   /**
    * This method checks if a JWT (JSON Web Token) is valid.
    *
