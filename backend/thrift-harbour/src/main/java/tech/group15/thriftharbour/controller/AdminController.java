@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.ApprovedImmediateSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.DeniedImmediateSaleListingForAdminResponse;
 import tech.group15.thriftharbour.service.ProductListingService;
 
 import java.util.List;
@@ -33,6 +34,13 @@ public class AdminController {
           () {
     return ResponseEntity.status(HttpStatus.OK)
             .body(productListingService.findAllApprovedImmediateSaleListing());
+  }
+
+  @GetMapping("/get-denied-immediatesale-listing")
+  public ResponseEntity<List<DeniedImmediateSaleListingForAdminResponse>> getDeniedImmediateSaleListings
+          () {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findAllDeniedImmediateSaleListing());
   }
 
 }

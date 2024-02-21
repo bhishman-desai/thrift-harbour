@@ -236,11 +236,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     public List<ApprovedImmediateSaleListingForAdminResponse> findAllApprovedImmediateSaleListing() {
 
         List<ImmediateSaleListing> immediateSaleListings = immediateSaleListingRepository.findAll();
-        List<ApprovedImmediateSaleListingForAdminResponse> immediateSaleListingForAdminResponseList = new ArrayList<>();
+        List<ApprovedImmediateSaleListingForAdminResponse> approvedImmediateSaleListingForAdminResponseList = new ArrayList<>();
 
         for (ImmediateSaleListing immediateSale : immediateSaleListings)
         {
-            if(immediateSale.isApproved() && !immediateSale.isRejected())
+            if(immediateSale.isActive() && immediateSale.isApproved() && !immediateSale.isRejected())
             {
                 ApprovedImmediateSaleListingForAdminResponse approvedImmediateSaleListingForAdminResponse = new ApprovedImmediateSaleListingForAdminResponse();
 
@@ -262,10 +262,45 @@ public class ProductListingServiceImpl implements ProductListingService {
                 approvedImmediateSaleListingForAdminResponse.setDateOfApproval(immediateSale.getDateOfApproval());
                 approvedImmediateSaleListingForAdminResponse.setSold(immediateSale.isSold());
 
-                immediateSaleListingForAdminResponseList.add(approvedImmediateSaleListingForAdminResponse);
+                approvedImmediateSaleListingForAdminResponseList.add(approvedImmediateSaleListingForAdminResponse);
             }
         }
-        return immediateSaleListingForAdminResponseList;
+        return approvedImmediateSaleListingForAdminResponseList;
+    }
+
+    @Override
+    public List<DeniedImmediateSaleListingForAdminResponse> findAllDeniedImmediateSaleListing() {
+        List<ImmediateSaleListing> immediateSaleListings = immediateSaleListingRepository.findAll();
+        List<DeniedImmediateSaleListingForAdminResponse> deniedImmediateSaleListingForAdminResponseList = new ArrayList<>();
+
+        for (ImmediateSaleListing immediateSale : immediateSaleListings)
+        {
+            if(immediateSale.isActive() && immediateSale.isRejected() && !immediateSale.isApproved())
+            {
+                DeniedImmediateSaleListingForAdminResponse deniedImmediateSaleListingForAdminResponse = new DeniedImmediateSaleListingForAdminResponse();
+
+                deniedImmediateSaleListingForAdminResponse.setImmediateSaleListingID(immediateSale.getImmediateSaleListingID());
+                deniedImmediateSaleListingForAdminResponse.setProductName(immediateSale.getProductName());
+                deniedImmediateSaleListingForAdminResponse.setProductDescription(immediateSale.getProductDescription());
+                deniedImmediateSaleListingForAdminResponse.setPrice(immediateSale.getPrice());
+                deniedImmediateSaleListingForAdminResponse.setCategory(immediateSale.getCategory());
+                deniedImmediateSaleListingForAdminResponse.setSellerEmail(immediateSale.getSellerEmail());
+                List<ImmediateSaleImage> productImages = immediateSaleImageRepository
+                        .getAllByImmediateSaleListingID(immediateSale.getImmediateSaleListingID());
+                deniedImmediateSaleListingForAdminResponse.setImageURLs(productImages.stream()
+                        .map(ImmediateSaleImage::getImageURL)
+                        .collect(Collectors.toList()));
+                deniedImmediateSaleListingForAdminResponse.setActive(immediateSale.isActive());
+                deniedImmediateSaleListingForAdminResponse.setRejected(immediateSale.isRejected());
+                deniedImmediateSaleListingForAdminResponse.setApproverEmail(immediateSale.getApproverEmail());
+                deniedImmediateSaleListingForAdminResponse.setMessageFromApprover(immediateSale.getMessageFromApprover());
+                deniedImmediateSaleListingForAdminResponse.setDateOfApproval(immediateSale.getDateOfApproval());
+                deniedImmediateSaleListingForAdminResponse.setSold(immediateSale.isSold());
+
+                deniedImmediateSaleListingForAdminResponseList.add(deniedImmediateSaleListingForAdminResponse);
+            }
+        }
+        return deniedImmediateSaleListingForAdminResponseList;
     }
 
 
