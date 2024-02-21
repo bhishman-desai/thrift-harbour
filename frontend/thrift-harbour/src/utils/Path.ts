@@ -32,7 +32,10 @@ export class Path {
 
   getListingUrl(service: string) {
     if (service === "immediate-listing") {
-      return "/listing/create-immediatesale-listing";
+      return "/users/listing/create-immediatesale-listing";
+    }
+    if (service === "auction-listing") {
+      return "/users/listing/create-auctionsale-listing";
     }
   }
 }

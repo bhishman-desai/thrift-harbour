@@ -25,3 +25,11 @@ export interface TouchedFieldsType {
   productCategory: boolean;
   auctionSlot?: boolean;
 }
+
+export interface ImmediateListingResponse {
+  immediateSaleListingID: string;
+}
+
+export interface AuctionListingResponse {
+  auctionSaleListingID: string;
+}

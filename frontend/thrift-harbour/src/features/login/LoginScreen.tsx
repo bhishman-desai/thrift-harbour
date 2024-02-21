@@ -17,6 +17,8 @@ import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { ClipLoader } from "react-spinners";
+import ErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const Login: React.FC = () => {
   const { token, handleLogin } = useAuth();
@@ -129,13 +131,13 @@ const Login: React.FC = () => {
           </Message>
         </Modal>
       )}
-      {badCredentials && (
-        <Modal onClose={togglebadCredentials}>
-          <Message>
-            <p style={{ color: "Red" }}>Wrong Email or Password !</p>
-          </Message>
-        </Modal>
-      )}
+      <SuccessErrorModal
+        type="ERROR"
+        message={"Wrong Email or Password !"}
+        open={badCredentials}
+        setOpen={setBadCredentials}
+        title={"error"}
+      />
     </Container>
   );
 };
