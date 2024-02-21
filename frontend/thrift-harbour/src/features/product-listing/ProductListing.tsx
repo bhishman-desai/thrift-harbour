@@ -4,6 +4,7 @@ import {
   Description,
   FormContainer,
   IconContainer,
+  ImageError,
   ImageGrid,
   Img,
   Listing,
@@ -42,6 +43,7 @@ const ProductListing: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [touchedFields, setTouchedFields] = useState({} as TouchedFieldsType);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState("");
 
   const token = localStorage.getItem("token");
   const [listingData, setListingData] = useState({
@@ -97,8 +99,9 @@ const ProductListing: React.FC = () => {
   };
 
   const closeModal = () => {
-    setShowModal(false);
     setSelectedFiles([]);
+    setThumbnailUrl(null);
+    setShowModal(false);
   };
 
   const handleFormSubmit = async (e: FormEvent) => {
@@ -134,8 +137,12 @@ const ProductListing: React.FC = () => {
               </ProductImage>
             ) : (
               <ProductImage>
-                <ImageIcon height={24} width={24} />
+                <ImageIcon height={32} width={32} />
               </ProductImage>
+            )}
+
+            {imageError && (
+              <ImageError style={{ color: "red" }}>{imageError}</ImageError>
             )}
             {/* <ProductImage>
               <ImageIcon height={24} width={24} />
@@ -145,14 +152,16 @@ const ProductListing: React.FC = () => {
             </IconContainer> */}
           </label>
           <input
+            required={true}
             multiple
             ref={fileInputRef}
             id="file-input"
             type="file"
-            accept="image/*" // Specify accepted file types (in this case, images)
+            accept="image/png"
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
+
           {/* {imagePreview && (
             <img
               src={imagePreview}
@@ -166,6 +175,7 @@ const ProductListing: React.FC = () => {
             {/* <Field style={{ width: "48%" }}> */}
             <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
+                required={true}
                 error={
                   listingData.productName.length === 0 &&
                   touchedFields.productName
@@ -193,6 +203,7 @@ const ProductListing: React.FC = () => {
             {/* <Field style={{ width: "48%" }}> */}
             <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
+                required={true}
                 type="number"
                 error={!listingData.productPrice && touchedFields.productPrice}
                 id="standard-error-helper-text"
@@ -221,6 +232,7 @@ const ProductListing: React.FC = () => {
              */}
             <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
+                required={true}
                 error={
                   listingData.productDescription.length === 0 &&
                   touchedFields.productDescription
@@ -255,6 +267,7 @@ const ProductListing: React.FC = () => {
             >
               <InputLabel>Product category</InputLabel>
               <Select
+                required={true}
                 labelId="demo-simple-select-disabled-label"
                 id="demo-simple-select-disabled"
                 value={listingData.productCategory}
@@ -292,6 +305,7 @@ const ProductListing: React.FC = () => {
             >
               <InputLabel>Sell category</InputLabel>
               <Select
+                required={true}
                 labelId="demo-simple-select-disabled-label"
                 id="demo-simple-select-disabled"
                 value={listingData.sellCategory}
@@ -326,6 +340,7 @@ const ProductListing: React.FC = () => {
             >
               <InputLabel>Auction Slot</InputLabel>
               <Select
+                required={true}
                 disabled={
                   listingData.sellCategory === "DIRECT" ||
                   listingData.sellCategory === ""

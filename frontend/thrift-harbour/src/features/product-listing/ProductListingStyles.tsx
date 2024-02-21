@@ -10,6 +10,7 @@ export const Container = style.div`
 export const Listing = style.div`
   display: flex;
   justify-content:center;
+  align-items:center;
   width:100%;
 `;
 
@@ -88,3 +89,11 @@ export const UploadButtonContainer = style.div`
  justify-content:center;
  align-items:center;
 `;
+
+export const ImageError = style.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:8px;
+  margin-bottom: 16px;
+ `;
