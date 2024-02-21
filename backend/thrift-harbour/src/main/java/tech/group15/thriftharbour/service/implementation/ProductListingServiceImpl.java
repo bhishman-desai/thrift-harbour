@@ -58,9 +58,10 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
 
+
     // Method to create an immediate sale listing
     @Override
-    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         /* Fetch the User entity based on the seller's email */

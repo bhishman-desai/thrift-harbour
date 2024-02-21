@@ -15,6 +15,12 @@ public interface ProductListingService {
     // Creates an auction sale listing for the submitted form and saves the respective images in S3 bucket
     AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
+    ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID);
+
+    /* Gets all product listing for admin */
+    List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing();
+
+
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
     List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader);
@@ -24,3 +30,5 @@ public interface ProductListingService {
     GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID);
 
     List<ImmediateSaleListing> findUserListingById(Integer sellerID);
+
+    }
