@@ -36,7 +36,7 @@ public class ListingController {
              @RequestParam("productImages") List<MultipartFile> productImages) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest, productImages));
+                .body(productListingService.createImmediateSaleListing(authorizationHeader, submitListingRequest, productImages));
     }
 
     // Get all immediate sale listing of the user
@@ -60,7 +60,7 @@ public class ListingController {
              @ModelAttribute SubmitListingRequest submitListingRequest,
             @RequestParam("productImages") List<MultipartFile> productImages) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest, productImages));
+                .body(productListingService.createAuctionSaleListing(authorizationHeader, submitListingRequest, productImages));
     }
 
     @GetMapping("/get-auctionsale-listing")
