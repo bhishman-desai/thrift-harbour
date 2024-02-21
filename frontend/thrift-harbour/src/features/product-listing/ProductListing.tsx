@@ -34,9 +34,14 @@ import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
 import { ListingService } from "../../services/Listing";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
+import { Dates } from "../../utils/Dates";
 
 const ProductListing: React.FC = () => {
   const listingService = new ListingService();
+  const dates = new Dates();
+  const nextThursday = dates.getNextThursday();
+  const nextToNextThursday = dates.getNextNextThursday();
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -357,11 +362,14 @@ const ProductListing: React.FC = () => {
                 }}
                 onBlur={() => handleFieldBlur("auctionSlot")}
               >
-                <MenuItem value={"Thursday"}>Thursday</MenuItem>
-                <MenuItem value={"Next Thursday"}>Next Thursday</MenuItem>
+                <MenuItem value={nextThursday}>{nextThursday}</MenuItem>
+                <MenuItem value={nextToNextThursday}>
+                  {nextToNextThursday}
+                </MenuItem>
               </Select>
               <FormHelperText>
-                {listingData.auctionSlot?.length === 0 &&
+                {listingData.sellCategory !== "DIRECT" &&
+                  listingData.auctionSlot?.length === 0 &&
                   touchedFields.auctionSlot &&
                   "Required Field"}
               </FormHelperText>
