@@ -8,4 +8,6 @@ import java.util.List;
 public interface ImmediateSaleListingRepository extends JpaRepository<ImmediateSaleListing, String> {
 
     List<ImmediateSaleListing> findAllBySellerEmail(String sellerEmail);
+
+    ImmediateSaleListing findByImmediateSaleListingID(String immediateSaleListingID);
 }
