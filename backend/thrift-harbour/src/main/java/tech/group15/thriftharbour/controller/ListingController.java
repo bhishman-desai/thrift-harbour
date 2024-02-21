@@ -26,53 +26,58 @@ import java.util.List;
 @Tag(name = "Listing")
 public class ListingController {
 
-    @Autowired
-    ProductListingService productListingService;
+  private final ProductListingService productListingService;
 
-    @PostMapping("/create-immediatesale-listing")
-    public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing
-            (@Valid @RequestHeader("Authorization") String authorizationHeader,
-             @ModelAttribute SubmitListingRequest submitListingRequest,
-             @RequestParam("productImages") List<MultipartFile> productImages) {
+  @PostMapping("/create-immediatesale-listing")
+  public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing(
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @ModelAttribute SubmitListingRequest submitListingRequest,
+      @RequestParam("productImages") List<MultipartFile> productImages) {
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.createImmediateSaleListing(authorizationHeader, submitListingRequest, productImages));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            productListingService.createImmediateSaleListing(
+                authorizationHeader, submitListingRequest, productImages));
+  }
 
-    // Get all immediate sale listing of the user
-    @GetMapping("/get-immediatesale-listing")
-    public ResponseEntity<List<ImmediateSaleListing>> getImmediateSaleListings
-            (@Valid @RequestHeader("Authorization") String authorizationHeader) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
-    }
+  // Get all immediate sale listing of the user
+  @GetMapping("/get-immediatesale-listing")
+  public ResponseEntity<List<ImmediateSaleListing>> getImmediateSaleListings(
+      @Valid @RequestHeader("Authorization") String authorizationHeader) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
+  }
 
-    // get image url associated with the immediatesale listing
-    @GetMapping("/get-immediatesale-images/{id}")
-    public ResponseEntity<GetListingImageResponse> getImmediateSaleListingsImages(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productListingService.findAllImmediateSaleListingImagesByID(id));
-    }
+  // get image url associated with the immediatesale listing
+  @GetMapping("/get-immediatesale-images/{id}")
+  public ResponseEntity<GetListingImageResponse> getImmediateSaleListingsImages(
+      @PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllImmediateSaleListingImagesByID(id));
+  }
 
-    @PostMapping("/create-auctionsale-listing")
-    public ResponseEntity<AuctionSaleListingCreationResponse> createAuctionListing
-            (@Valid @RequestHeader("Authorization") String authorizationHeader,
-             @ModelAttribute SubmitListingRequest submitListingRequest,
-            @RequestParam("productImages") List<MultipartFile> productImages) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.createAuctionSaleListing(authorizationHeader, submitListingRequest, productImages));
-    }
+  @PostMapping("/create-auctionsale-listing")
+  public ResponseEntity<AuctionSaleListingCreationResponse> createAuctionListing(
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @ModelAttribute SubmitListingRequest submitListingRequest,
+      @RequestParam("productImages") List<MultipartFile> productImages) {
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(
+            productListingService.createAuctionSaleListing(
+                authorizationHeader, submitListingRequest, productImages));
+  }
 
-    @GetMapping("/get-auctionsale-listing")
-    public ResponseEntity<List<AuctionSaleListing>> getAuctionSaleListings
-            (@Valid @RequestHeader("Authorization") String authorizationHeader) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productListingService.findAllAuctionSaleListingBySellerEmail(authorizationHeader));
-    }
+  @GetMapping("/get-auctionsale-listing")
+  public ResponseEntity<List<AuctionSaleListing>> getAuctionSaleListings(
+      @Valid @RequestHeader("Authorization") String authorizationHeader) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllAuctionSaleListingBySellerEmail(authorizationHeader));
+  }
 
-    @GetMapping("/get-auctionsale-images/{id}")
-    public ResponseEntity<GetListingImageResponse> getAuctionSaleListingsImages(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productListingService.findAllAuctionSaleListingImagesByID(id));
-    }
+  @GetMapping("/get-auctionsale-images/{id}")
+  public ResponseEntity<GetListingImageResponse> getAuctionSaleListingsImages(
+      @PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllAuctionSaleListingImagesByID(id));
+  }
 }

@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.group15.thriftharbour.dto.ListingReviewRequest;
 import tech.group15.thriftharbour.dto.ListingReviewResponse;
-import tech.group15.thriftharbour.dto.SignUpRequest;
-import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.AdminService;
 
 @RestController
@@ -25,12 +23,12 @@ public class AdminController {
     return ResponseEntity.ok("Hi from admin!");
   }
 
-
+  @Tag(name = "Approve/Reject User Listing")
   @PostMapping("/review-request")
   public ResponseEntity<ListingReviewResponse> reviewRequest(
-          @Valid @RequestHeader("Authorization") String authorizationHeader,
-          @RequestBody ListingReviewRequest listingReviewRequest){
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @RequestBody ListingReviewRequest listingReviewRequest) {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(adminService.reviewListing(authorizationHeader, listingReviewRequest));
+        .body(adminService.reviewListing(authorizationHeader, listingReviewRequest));
   }
 }
