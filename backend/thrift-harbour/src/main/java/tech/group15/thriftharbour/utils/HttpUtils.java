@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
+import tech.group15.thriftharbour.exception.ListingNotFoundException;
 
 public class HttpUtils {
   private HttpUtils() {}
@@ -34,6 +35,10 @@ public class HttpUtils {
       return HttpStatus.CONFLICT;
     }
     if (exception instanceof MethodArgumentNotValidException) {
+      return HttpStatus.BAD_REQUEST;
+    }
+    /* If the listing is not found in the system */
+    if (exception instanceof ListingNotFoundException) {
       return HttpStatus.BAD_REQUEST;
     }
 

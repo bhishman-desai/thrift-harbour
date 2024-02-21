@@ -3,28 +3,29 @@ package tech.group15.thriftharbour.service.implementation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
 import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
-import tech.group15.thriftharbour.model.AuctionSaleImage;
-import tech.group15.thriftharbour.model.AuctionSaleListing;
-import tech.group15.thriftharbour.model.ImmediateSaleImage;
-import tech.group15.thriftharbour.model.ImmediateSaleListing;
-import tech.group15.thriftharbour.repository.AuctionSaleImageRepository;
-import tech.group15.thriftharbour.repository.AuctionSaleListingRepository;
-import tech.group15.thriftharbour.repository.ImmediateSaleImageRepository;
-import tech.group15.thriftharbour.repository.ImmediateSaleListingRepository;
+import tech.group15.thriftharbour.exception.ListingNotFoundException;
+import tech.group15.thriftharbour.mapper.ProductMapper;
+import tech.group15.thriftharbour.model.*;
+import tech.group15.thriftharbour.repository.*;
 import tech.group15.thriftharbour.service.AwsS3Service;
 import tech.group15.thriftharbour.service.JWTService;
 import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,8 @@ public class ProductListingServiceImpl implements ProductListingService {
     private final AuctionSaleListingRepository auctionSaleListingRepository;
 
     private final AuctionSaleImageRepository auctionSaleImageRepository;
+
+    private final UserRepository userRepository;
 
     @Value("${aws.bucketName}")
     private String bucketName;
@@ -60,10 +63,17 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
 
+
     // Method to create an immediate sale listing
     @Override
-    public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+
+        /* Fetch the User entity based on the seller's email */
+        User seller =
+            userRepository
+                .findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
 
         Date createdDate = DateUtil.getCurrentDate();
 
@@ -73,6 +83,7 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .productName(listingRequest.getProductName())
                 .productDescription(listingRequest.getProductDescription())
                 .price(listingRequest.getProductPrice())
+                .seller(seller)
                 .sellerEmail(userName)
                 .category(listingRequest.getProductCategory())
                 .createdDate(createdDate)
@@ -83,7 +94,7 @@ public class ProductListingServiceImpl implements ProductListingService {
         List<String> imageURLs = new ArrayList<>();
 
 
-        List<MultipartFile> productImages = listingRequest.getProductImages();
+        List<MultipartFile> productImages = images;
         for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
             String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
@@ -126,7 +137,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
     @Override
-    public AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -148,7 +159,7 @@ public class ProductListingServiceImpl implements ProductListingService {
         List<AuctionSaleImage> auctionSaleImages = new ArrayList<>();
         List<String> imageURLs = new ArrayList<>();
 
-        List<MultipartFile> productImages = listingRequest.getProductImages();
+        List<MultipartFile> productImages = images;
         for (int iter = 0; iter < productImages.size(); ++iter) {
             MultipartFile productImage = productImages.get(iter);
             String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
@@ -193,6 +204,20 @@ public class ProductListingServiceImpl implements ProductListingService {
 
     }
 
+    /* Get single product for view */
+    @Override
+    public ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID) {
+    return immediateSaleListingRepository
+        .findById(immediateSaleListingID)
+        .orElseThrow(() -> new ListingNotFoundException("Product not found!"));
+    }
+
+    /* Get all product listing for admin */
+    @Override
+    public List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing() {
+        return ProductMapper.minifiedProductResponse(immediateSaleListingRepository.findAll());
+    }
+
     @Override
     public List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader) {
         String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
@@ -211,10 +236,10 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .getAllByImmediateSaleListingID(listingID);
         return GetListingImageResponse
                 .builder()
-                .ListingId(listingID)
+                .listingId(listingID)
                 .imageURLs(productImages.stream()
                         .map(ImmediateSaleImage::getImageURL)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 
@@ -224,11 +249,17 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .findAllByAuctionSaleListingID(listingID);
         return GetListingImageResponse
                 .builder()
-                .ListingId(listingID)
+                .listingId(listingID)
                 .imageURLs(productImages.stream()
                         .map(AuctionSaleImage::getImageURL)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
+    }
+
+    /* Get all product listing from seller id */
+    @Override
+    public List<ImmediateSaleListing> findUserListingById(Integer sellerID) {
+        return immediateSaleListingRepository.findAllBySellerID(sellerID);
     }
 
     @Override

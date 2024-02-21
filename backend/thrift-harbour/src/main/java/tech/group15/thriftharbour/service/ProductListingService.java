@@ -1,5 +1,7 @@
 package tech.group15.thriftharbour.service;
 
+import org.springframework.web.multipart.MultipartFile;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
@@ -9,10 +11,16 @@ import java.util.List;
 public interface ProductListingService {
 
     // Creates an immediate sale listing for the submitted form and saves the respective images in S3 bucket
-    ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest);
+    ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
 
     // Creates an auction sale listing for the submitted form and saves the respective images in S3 bucket
-    AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest);
+    AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages);
+
+    ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID);
+
+    /* Gets all product listing for admin */
+    List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing();
+
 
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
@@ -20,6 +28,9 @@ public interface ProductListingService {
 
     GetListingImageResponse findAllImmediateSaleListingImagesByID(String ListingID);
 
+    List<ImmediateSaleListing> findUserListingById(Integer sellerID);
+
+    }
     GetListingImageResponse findAllAuctionSaleListingImagesByID(String ListingID);
 
     List<ApprovedImmediateSaleListingForAdminResponse>findAllApprovedImmediateSaleListing();

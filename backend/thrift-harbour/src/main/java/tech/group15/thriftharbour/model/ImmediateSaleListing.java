@@ -29,6 +29,10 @@ public class ImmediateSaleListing {
 
     private String sellerEmail;
 
+    @ManyToOne
+    @JoinColumn(name = "sellerId", referencedColumnName = "userid")
+    private User seller;
+
     @Builder.Default
     private boolean active = true;
 
