@@ -1,12 +1,15 @@
 package tech.group15.thriftharbour.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
@@ -18,8 +21,9 @@ import tech.group15.thriftharbour.service.ProductListingService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/listing")
+@RequestMapping("/api/v1/users/listing")
 @RequiredArgsConstructor
+@Tag(name = "Listing")
 public class ListingController {
 
     @Autowired
@@ -28,10 +32,11 @@ public class ListingController {
     @PostMapping("/create-immediatesale-listing")
     public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing
             (@Valid @RequestHeader("Authorization") String authorizationHeader,
-             @ModelAttribute SubmitListingRequest submitListingRequest) {
+             @ModelAttribute SubmitListingRequest submitListingRequest,
+             @RequestParam("productImages") List<MultipartFile> productImages) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest));
+                .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest, productImages));
     }
 
     // Get all immediate sale listing of the user
@@ -52,9 +57,10 @@ public class ListingController {
     @PostMapping("/create-auctionsale-listing")
     public ResponseEntity<AuctionSaleListingCreationResponse> createAuctionListing
             (@Valid @RequestHeader("Authorization") String authorizationHeader,
-             @ModelAttribute SubmitListingRequest submitListingRequest) {
+             @ModelAttribute SubmitListingRequest submitListingRequest,
+            @RequestParam("productImages") List<MultipartFile> productImages) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest));
+                .body(productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest, productImages));
     }
 
     @GetMapping("/get-auctionsale-listing")
