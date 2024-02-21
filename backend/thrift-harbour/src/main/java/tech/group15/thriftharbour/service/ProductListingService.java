@@ -1,10 +1,7 @@
 package tech.group15.thriftharbour.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.GetListingImageResponse;
-import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 
@@ -22,7 +19,8 @@ public interface ProductListingService {
 
     List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader);
 
-    GetListingImageResponse findAllImmediateSaleListingImagesByID(String ListingID);
+    GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID);
 
-    GetListingImageResponse findAllAuctionSaleListingImagesByID(String ListingID);
-}
+    GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID);
+
+    List<ImmediateSaleListing> findUserListingById(Integer sellerID);
