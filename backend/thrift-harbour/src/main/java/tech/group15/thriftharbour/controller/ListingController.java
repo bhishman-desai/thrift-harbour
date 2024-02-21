@@ -2,8 +2,6 @@ package tech.group15.thriftharbour.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ListingController {
 
-    @Autowired
-    ProductListingService productListingService;
+    private final ProductListingService productListingService;
 
     @PostMapping("/create-immediatesale-listing")
     public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing
@@ -31,7 +28,7 @@ public class ListingController {
              @ModelAttribute SubmitListingRequest submitListingRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateImmediateSaleListing(authorizationHeader, submitListingRequest));
+                .body(productListingService.createImmediateSaleListing(authorizationHeader, submitListingRequest));
     }
 
     // Get all immediate sale listing of the user
@@ -40,6 +37,14 @@ public class ListingController {
             (@Valid @RequestHeader("Authorization") String authorizationHeader) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
+    }
+
+    /* Get single immediate sale product */
+    @GetMapping("/get-immediatesale-product/{id}")
+    public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
+            (@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productListingService.findImmediateSaleListingByID(id));
     }
 
     // get image url associated with the immediatesale listing
@@ -54,7 +59,7 @@ public class ListingController {
             (@Valid @RequestHeader("Authorization") String authorizationHeader,
              @ModelAttribute SubmitListingRequest submitListingRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productListingService.CreateAuctionSaleListing(authorizationHeader, submitListingRequest));
+                .body(productListingService.createAuctionSaleListing(authorizationHeader, submitListingRequest));
     }
 
     @GetMapping("/get-auctionsale-listing")

@@ -1,15 +1,18 @@
 package tech.group15.thriftharbour.service.implementation;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.GetListingImageResponse;
-import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
+import tech.group15.thriftharbour.exception.ListingNotFoundException;
+import tech.group15.thriftharbour.mapper.ProductMapper;
 import tech.group15.thriftharbour.model.AuctionSaleImage;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleImage;
@@ -24,11 +27,6 @@ import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +64,7 @@ public class ProductListingServiceImpl implements ProductListingService {
 
     // Method to create an immediate sale listing
     @Override
-    public ImmediateSaleListingCreationResponse CreateImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -130,7 +128,7 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
 
     @Override
-    public AuctionSaleListingCreationResponse CreateAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
+    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest) {
         String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
         Date createdDate = DateUtil.getCurrentDate();
@@ -195,6 +193,20 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .build();
 
 
+    }
+
+    /* Get single product for view */
+    @Override
+    public ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID) {
+    return immediateSaleListingRepository
+        .findById(immediateSaleListingID)
+        .orElseThrow(() -> new ListingNotFoundException("Product not found!"));
+    }
+
+    /* Get all product listing for admin */
+    @Override
+    public List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing() {
+        return ProductMapper.minifiedProductResponse(immediateSaleListingRepository.findAll());
     }
 
     @Override
