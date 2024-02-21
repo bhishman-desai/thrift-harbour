@@ -36,7 +36,7 @@ deploy-fe:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u=$DOCKER_HUB_USER -p=$DOCKER_HUB_PWD docker.io"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull docker.io/group15/frontend:$CI_COMMIT_SHORT_SHA"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f thrift-harbour-frontend-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3000:3000 -e NODE_ENV=production --name thrift-harbour-frontend-app docker.io/group15/frontend:$CI_COMMIT_SHORT_SHA"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 3000:3000 --name thrift-harbour-frontend-app docker.io/group15/frontend:$CI_COMMIT_SHORT_SHA"
   environment:
     name: production
     url: http://172.17.1.50:3000

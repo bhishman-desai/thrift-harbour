@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface JWTService {
   String extractUserName(String token);
 
+  String extractUserNameFromRequestHeaders(String authorizationHeader);
+
   String generateToken(UserDetails userDetails);
 
   String generateRefreshToken(HashMap<String, Object> objectObjectHashMap, UserDetails userDetails);
