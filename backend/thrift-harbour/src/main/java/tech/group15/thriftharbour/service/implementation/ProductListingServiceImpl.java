@@ -3,7 +3,6 @@ package tech.group15.thriftharbour.service.implementation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -227,10 +226,10 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .getAllByImmediateSaleListingID(listingID);
         return GetListingImageResponse
                 .builder()
-                .ListingId(listingID)
+                .listingId(listingID)
                 .imageURLs(productImages.stream()
                         .map(ImmediateSaleImage::getImageURL)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 
@@ -240,10 +239,10 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .findAllByAuctionSaleListingID(listingID);
         return GetListingImageResponse
                 .builder()
-                .ListingId(listingID)
+                .listingId(listingID)
                 .imageURLs(productImages.stream()
                         .map(AuctionSaleImage::getImageURL)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 

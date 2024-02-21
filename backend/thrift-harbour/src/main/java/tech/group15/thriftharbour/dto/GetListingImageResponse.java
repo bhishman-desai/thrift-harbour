@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class GetListingImageResponse {
 
-    String ListingId;
+    String listingId;
 
     List<String> imageURLs;
 }

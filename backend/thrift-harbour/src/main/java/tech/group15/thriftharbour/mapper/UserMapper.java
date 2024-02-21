@@ -2,7 +2,6 @@ package tech.group15.thriftharbour.mapper;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.group15.thriftharbour.dto.ForgotPassResponse;
-import tech.group15.thriftharbour.dto.ResetPassRequest;
 import tech.group15.thriftharbour.dto.SignInResponse;
 import tech.group15.thriftharbour.dto.SignUpRequest;
 import tech.group15.thriftharbour.enums.RoleEnum;
