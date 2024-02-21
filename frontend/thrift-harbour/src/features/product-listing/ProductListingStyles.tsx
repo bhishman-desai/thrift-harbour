@@ -43,7 +43,6 @@ export const FormContainer = style.form`
 export const NamePrice = style.div`
   display:flex;
   justify-content:space-between;
-  align-items:center;
   width:40%;
 `;
 

@@ -31,6 +31,8 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
 import { ListingService } from "../../services/Listing";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
 
 const ProductListing: React.FC = () => {
   const listingService = new ListingService();
@@ -89,6 +91,7 @@ const ProductListing: React.FC = () => {
   const handleUpload = () => {
     if (selectedFiles.length > 0) {
       setListingData({ ...listingData, productImages: selectedFiles });
+      setShowModal(false);
       console.log("Selected files:", selectedFiles);
     }
   };
@@ -160,7 +163,8 @@ const ProductListing: React.FC = () => {
         </Listing>
         <FormContainer onSubmit={handleFormSubmit}>
           <NamePrice>
-            <Field style={{ width: "48%" }}>
+            {/* <Field style={{ width: "48%" }}> */}
+            <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
                 error={
                   listingData.productName.length === 0 &&
@@ -183,9 +187,11 @@ const ProductListing: React.FC = () => {
                   });
                 }}
               />
-            </Field>
+            </FormControl>
+            {/* </Field> */}
 
-            <Field style={{ width: "48%" }}>
+            {/* <Field style={{ width: "48%" }}> */}
+            <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
                 type="number"
                 error={!listingData.productPrice && touchedFields.productPrice}
@@ -206,11 +212,14 @@ const ProductListing: React.FC = () => {
                 }}
                 onBlur={() => handleFieldBlur("productPrice")}
               />
-            </Field>
+            </FormControl>
+            {/* </Field> */}
           </NamePrice>
 
           <NamePrice>
-            <Field style={{ width: "48%" }}>
+            {/* <Field style={{ width: "48%" }}>
+             */}
+            <FormControl sx={{ m: 1, width: "48%" }}>
               <TextField
                 error={
                   listingData.productDescription.length === 0 &&
@@ -233,9 +242,17 @@ const ProductListing: React.FC = () => {
                 }}
                 onBlur={() => handleFieldBlur("productDescription")}
               />
-            </Field>
+            </FormControl>
+            {/* </Field> */}
 
-            <Field style={{ width: "48%" }}>
+            {/* <Field style={{ width: "48%" }}> */}
+            <FormControl
+              sx={{ m: 1, width: "48%" }}
+              error={
+                listingData.productCategory.length === 0 &&
+                touchedFields.productCategory
+              }
+            >
               <InputLabel>Product category</InputLabel>
               <Select
                 labelId="demo-simple-select-disabled-label"
@@ -248,17 +265,31 @@ const ProductListing: React.FC = () => {
                     productCategory: e.target.value,
                   });
                 }}
+                onBlur={() => handleFieldBlur("productCategory")}
               >
                 <MenuItem value={"Furniture"}>Furniture</MenuItem>
                 <MenuItem value={"Electronics"}>Electronics</MenuItem>
                 <MenuItem value={"Lifestyle "}>Lifestyle </MenuItem>
                 <MenuItem value={"Artworks"}>Artworks</MenuItem>
               </Select>
-            </Field>
+              <FormHelperText>
+                {listingData.productCategory.length === 0 &&
+                  touchedFields.productCategory &&
+                  "Required Field"}
+              </FormHelperText>
+            </FormControl>
+            {/* </Field> */}
           </NamePrice>
 
           <NamePrice>
-            <Field style={{ width: "48%" }}>
+            {/* <Field style={{ width: "48%" }}> */}
+            <FormControl
+              sx={{ m: 1, width: "48%" }}
+              error={
+                listingData.sellCategory.length === 0 &&
+                touchedFields.sellCategory
+              }
+            >
               <InputLabel>Sell category</InputLabel>
               <Select
                 labelId="demo-simple-select-disabled-label"
@@ -271,15 +302,34 @@ const ProductListing: React.FC = () => {
                     sellCategory: e.target.value,
                   });
                 }}
+                onBlur={() => handleFieldBlur("sellCategory")}
               >
                 <MenuItem value={"AUCTION"}>Auction</MenuItem>
                 <MenuItem value={"DIRECT"}>Direct</MenuItem>
               </Select>
-            </Field>
-            <Field style={{ width: "48%" }}>
+              <FormHelperText>
+                {listingData.sellCategory.length === 0 &&
+                  touchedFields.sellCategory &&
+                  "Required Field"}
+              </FormHelperText>
+            </FormControl>
+            {/* </Field> */}
+
+            {/* <Field style={{ width: "48%" }}> */}
+            <FormControl
+              sx={{ m: 1, width: "48%" }}
+              error={
+                listingData.sellCategory === "AUCTION" &&
+                listingData.auctionSlot?.length === 0 &&
+                touchedFields.auctionSlot
+              }
+            >
               <InputLabel>Auction Slot</InputLabel>
               <Select
-                disabled={listingData.sellCategory === "DIRECT"}
+                disabled={
+                  listingData.sellCategory === "DIRECT" ||
+                  listingData.sellCategory === ""
+                }
                 labelId="demo-simple-select-disabled-label"
                 id="demo-simple-select-disabled"
                 value={listingData.auctionSlot}
@@ -290,11 +340,18 @@ const ProductListing: React.FC = () => {
                     auctionSlot: e.target.value,
                   });
                 }}
+                onBlur={() => handleFieldBlur("auctionSlot")}
               >
                 <MenuItem value={"Thursday"}>Thursday</MenuItem>
                 <MenuItem value={"Next Thursday"}>Next Thursday</MenuItem>
               </Select>
-            </Field>
+              <FormHelperText>
+                {listingData.auctionSlot?.length === 0 &&
+                  touchedFields.auctionSlot &&
+                  "Required Field"}
+              </FormHelperText>
+            </FormControl>
+            {/* </Field> */}
           </NamePrice>
           <Button>
             <RegisterButton type="submit" style={{ marginTop: "8px" }}>
