@@ -50,7 +50,7 @@ const ProductListing: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [touchedFields, setTouchedFields] = useState({} as TouchedFieldsType);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
-  const [imageError, setImageError] = useState("");
+  const [imageError, setImageError] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState(false);
 
@@ -138,6 +138,10 @@ const ProductListing: React.FC = () => {
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (listingData.productImages.length === 0) {
+      setImageError(true);
+      return;
+    }
     console.log("formData =>", listingData);
     setIsLoading(true);
 
@@ -220,9 +224,6 @@ const ProductListing: React.FC = () => {
               </ProductImage>
             )}
 
-            {imageError && (
-              <ImageError style={{ color: "red" }}>{imageError}</ImageError>
-            )}
             {/* <ProductImage>
               <ImageIcon height={24} width={24} />
             </ProductImage> */}
@@ -506,6 +507,14 @@ const ProductListing: React.FC = () => {
         open={openModal}
         setOpen={setOpenModal}
         title={error ? "error" : "Success"}
+      />
+
+      <SuccessErrorModal
+        type="ERROR"
+        message={"Please upload atleast one image!"}
+        open={imageError}
+        setOpen={setImageError}
+        title={"error"}
       />
     </>
   );
