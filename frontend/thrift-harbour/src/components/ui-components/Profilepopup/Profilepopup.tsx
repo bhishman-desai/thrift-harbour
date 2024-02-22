@@ -4,9 +4,18 @@ import { useNavigate } from "react-router-dom";
 
 const Profilepopup: React.FC = () => {
   let navigate = useNavigate();
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  useEffect(() => {
+    if (token?.length === 0) {
+      navigate("/");
+    }
+  }, [token]);
+
   const onClickLogout = async () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    setToken("");
+    // navigate("/home");
   };
 
   return (

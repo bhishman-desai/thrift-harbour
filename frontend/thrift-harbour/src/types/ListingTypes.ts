@@ -25,3 +25,68 @@ export interface TouchedFieldsType {
   productCategory: boolean;
   auctionSlot?: boolean;
 }
+
+export interface ImmediateListingResponse {
+  immediateSaleListingID: string;
+}
+
+export interface AuctionListingResponse {
+  auctionSaleListingID: string;
+}
+
+export interface ImmediateListing {
+  immediateSaleListingID: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  category: string;
+  sellerEmail: string;
+  active: boolean;
+  // approverEmail: null,
+  // messageFromApprover: null,
+  // dateOfApproval: null,
+  // createdDate: 2024-02-21T21:33:27.021+00:00,
+  // updatedDate: 2024-02-21T21:33:27.021+00:00,
+  sold: boolean;
+  rejected: boolean;
+  approved: boolean;
+  productImages: string[];
+}
+
+export interface AuctionListing {
+  auctionSaleListingID: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  category: string;
+  sellerEmail: string;
+  active: boolean;
+  // approverEmail: null,
+  // messageFromApprover: null,
+  // dateOfApproval: null,
+  // createdDate: 2024-02-21T21:33:27.021+00:00,
+  // updatedDate: 2024-02-21T21:33:27.021+00:00,
+  sold: boolean;
+  rejected: boolean;
+  approved: boolean;
+  productImages: string[];
+}
+
+export interface GetAllImmediateListingResponse {
+  status: number;
+  data: ImmediateListing[];
+}
+
+export interface ImageUrls {
+  imageURLs: string[];
+}
+
+export interface GetAllImmediateListingImagesResponse {
+  status: number;
+  data: ImageUrls;
+}
+
+export interface GetAllAuctionListingResponse {
+  status: number;
+  data: AuctionListing[];
+}

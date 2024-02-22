@@ -6,7 +6,7 @@ import AuthWrapper from "./context/AuthContext";
 import Home from "./features/home/HomeScreen";
 import ForgotPassword from "./features/forgotpassword/ForgotPassword";
 import ResetPassword from "./features/resetpassword/ResetPassword";
-import ProductListing from "./features/product-listing/ProductListing";
+import ProductListing from "./features/product-listing/add-listing/ProductListing";
 
 function App() {
   return (
