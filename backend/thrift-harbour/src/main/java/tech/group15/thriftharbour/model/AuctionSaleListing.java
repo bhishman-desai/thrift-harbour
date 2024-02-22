@@ -52,7 +52,7 @@ public class AuctionSaleListing {
     @Default
     private boolean isSold = false;
 
-    private LocalDate dateOfApproval;
+    private Date dateOfApproval;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

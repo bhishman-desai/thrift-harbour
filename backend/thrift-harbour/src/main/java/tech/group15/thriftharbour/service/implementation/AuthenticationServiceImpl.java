@@ -86,7 +86,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     emailService.sendEmail(
         forgotPassRequest.getEmail(),
         "Thrift Harbour Reset Password Link",
-        "http://localhost:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
+        "http://172.17.1.50:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
 
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
   }
