@@ -3,7 +3,7 @@ import style from "styled-components";
 export const Grid = style.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 18px;
   padding:16px 16px 16px 16px;
 `;
 

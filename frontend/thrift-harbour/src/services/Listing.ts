@@ -185,7 +185,6 @@ export class ListingService {
         },
       });
       // Handle errors
-      console.log("in service", response);
       return [response, null];
     } catch (error) {
       console.error("Error fetching data:", error);

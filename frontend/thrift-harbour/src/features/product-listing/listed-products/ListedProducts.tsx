@@ -58,8 +58,9 @@ const ListedProducts: React.FC = () => {
 
   useEffect(() => {
     (async function () {
-      const response = await listing.getImmediateListedProducts(token);
       try {
+        const response = await listing.getImmediateListedProducts(token);
+
         if (response[0]?.status === 200) {
           setLoading(false);
           const data = response[0].data;
@@ -77,6 +78,7 @@ const ListedProducts: React.FC = () => {
             }
             setImmediateListedProducts([...data]);
           });
+          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -109,7 +111,7 @@ const ListedProducts: React.FC = () => {
             setAuctionListedProducts([...data]);
           });
 
-          console.log("data after if", data);
+          //   console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -121,7 +123,6 @@ const ListedProducts: React.FC = () => {
     })();
   }, []);
 
-  const getAuctionListing = async () => {};
   const getListingStatus = (approved: boolean, rejected: boolean) => {
     if (approved) {
       return "Approved";
@@ -162,7 +163,9 @@ const ListedProducts: React.FC = () => {
                       <ImageContainer>
                         <Image>
                           <img
-                            src={product.productImages[0]}
+                            src={
+                              product.productImages && product.productImages[0]
+                            }
                             height={"100%"}
                             width={"100%"}
                           />
@@ -174,7 +177,7 @@ const ListedProducts: React.FC = () => {
                       </ProductDescription>
                       <ProductPrice>{`Price: ${product.price}`}</ProductPrice>
                       <ApproveStatus>
-                        Status :{" "}
+                        Status :
                         {getListingStatus(product.approved, product.rejected)}
                       </ApproveStatus>
                       <ViewButtonContainer>
@@ -194,7 +197,9 @@ const ListedProducts: React.FC = () => {
                           <img
                             height={"100%"}
                             width={"100%"}
-                            src={product.productImages[0]}
+                            src={
+                              product.productImages && product.productImages[0]
+                            }
                           />
                         </Image>
                       </ImageContainer>
@@ -203,7 +208,7 @@ const ListedProducts: React.FC = () => {
                         {`Description: ${product.productDescription}`}
                       </ProductDescription>
                       <ApproveStatus>
-                        Status :{" "}
+                        Status :
                         {getListingStatus(product.approved, product.rejected)}
                       </ApproveStatus>
                       <ViewButtonContainer>
