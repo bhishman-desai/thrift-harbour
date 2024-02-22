@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { Credentials, ErrorResponse } from "../types/AuthTypes";
 import {
   AuctionListingResponse,
+  GetAllAuctionListingResponse,
   GetAllImmediateListingImagesResponse,
   GetAllImmediateListingResponse,
   ImmediateListingResponse,
@@ -136,6 +137,57 @@ export class ListingService {
       return [response, null];
     } catch (error) {
       // Handle errors
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  }
+
+  async getAuctionListedProducts(
+    token?: string | null
+  ): Promise<[GetAllAuctionListingResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getAuctionListingImagesUrl = this.path.getListingUrl(
+      "get-auctionsale-listing"
+    );
+    const requestUrl = baseUrl + getAuctionListingImagesUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getAuctionListedProductsImages(
+    auctionListingId: string,
+    token?: string | null
+  ): Promise<
+    [GetAllImmediateListingImagesResponse | null, ErrorResponse | null]
+  > {
+    const baseUrl = this.path.getBaseUrl();
+    const getAuctionListingImagesUrl = this.path.getListingUrl(
+      "get-auctionsale-images"
+    );
+    const requestUrl =
+      baseUrl + getAuctionListingImagesUrl + `/${auctionListingId}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle errors
+      console.log("in service", response);
+      return [response, null];
+    } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }

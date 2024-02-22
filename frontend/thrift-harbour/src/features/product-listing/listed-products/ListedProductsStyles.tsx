@@ -34,7 +34,6 @@ export const ImageContainer = style.div`
 `;
 
 export const Image = style.div`
- border:1px solid red;
  display:flex;
  height:100%;
  width:25%;
@@ -50,7 +49,7 @@ export const ProductName = style.div`
 export const ProductDescription = style.div`
  display:flex;
  width:100%;
- height:30%;
+//  height:30%;
 `;
 
 export const ProductPrice = style.div`
@@ -83,4 +82,52 @@ export const NoListing = style.div`
   flex-direction:row;
   justify-content:center;
   align-items:center;
+`;
+
+export const TabsContainer = style.div`
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #f6f4eb;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+interface TabProps {
+  selected: boolean;
+}
+
+export const Tab = style.div<TabProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${(props) => (props.selected ? "#749bc2" : "")};
+
+  &:hover {
+    background-color: #749bc2;
+    color: #fff;
+  }
+
+//   &:focus {
+//     outline: none;
+//     color: #fff;
+//   }
+
+  @media screen and (max-width: 768px) {
+    margin-top: 12px;
+    font-size: 16px;
+  }
 `;

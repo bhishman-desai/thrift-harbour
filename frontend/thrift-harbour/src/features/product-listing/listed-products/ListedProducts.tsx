@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SuccessErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 import { ListingService } from "../../../services/Listing";
 import {
+  AuctionListing,
   ImmediateListing,
   ListingDataTypes,
 } from "../../../types/ListingTypes";
@@ -18,6 +19,8 @@ import {
   Button,
   Header,
   NoListing,
+  TabsContainer,
+  Tab,
 } from "./ListedProductsStyles";
 
 const ListedProducts: React.FC = () => {
@@ -27,9 +30,31 @@ const ListedProducts: React.FC = () => {
   const [immediateListedProducts, setImmediateListedProducts] = useState<
     ImmediateListing[]
   >([]);
+  const [auctionListedProducts, setAuctionListedProducts] = useState<
+    AuctionListing[]
+  >([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [noListedProducts, setNoListedProducts] = useState(false);
+
+  const [filteredProducts, setFilteredProdducts] = useState([]);
+
+  const [activeTab, setActiveTab] = useState("Immediate Listing");
+
+  const tabs = [
+    {
+      key: "Immediate Listing",
+      value: "Immediate Listing",
+    },
+    {
+      key: "Auction Listing",
+      value: "Auction Listing",
+    },
+  ];
+
+  const handleOnClick = (key: string) => {
+    setActiveTab(key);
+  };
 
   useEffect(() => {
     (async function () {
@@ -52,6 +77,37 @@ const ListedProducts: React.FC = () => {
             }
             setImmediateListedProducts([...data]);
           });
+        } else {
+          setError(true);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await listing.getAuctionListedProducts(token);
+        if (response[0]?.status === 200) {
+          setLoading(false);
+          const data = response[0].data;
+          if (data.length === 0) {
+            setNoListedProducts(true);
+          }
+          data.map(async (product, index) => {
+            const imagesResponse = await listing.getAuctionListedProductsImages(
+              product.auctionSaleListingID,
+              token
+            );
+            if (imagesResponse[0]?.status === 200) {
+              product.productImages = imagesResponse[0].data.imageURLs;
+            }
+            setAuctionListedProducts([...data]);
+          });
 
           console.log("data after if", data);
         } else {
@@ -65,6 +121,7 @@ const ListedProducts: React.FC = () => {
     })();
   }, []);
 
+  const getAuctionListing = async () => {};
   const getListingStatus = (approved: boolean, rejected: boolean) => {
     if (approved) {
       return "Approved";
@@ -81,43 +138,82 @@ const ListedProducts: React.FC = () => {
         "Loading..."
       ) : (
         <>
-          {noListedProducts ? (
-            <NoListing>You have not listed any products!</NoListing>
-          ) : (
-            <>
-              <Header style={{ marginLeft: "16px" }}>Listed Products</Header>
-              <Grid>
-                {immediateListedProducts.map((product, index) => {
-                  {
-                    console.log("product in map", product);
-                  }
-                  return (
-                    <>
-                      <ProductCard>
-                        <ImageContainer>
-                          <Image>
-                            <img src={product.productImages[0]} />
-                          </Image>
-                        </ImageContainer>
-                        <ProductName>{`Name: ${product.productName}`}</ProductName>
-                        <ProductDescription>
-                          {`Description: ${product.productDescription}`}
-                        </ProductDescription>
-                        <ProductPrice>{`Price: ${product.price}`}</ProductPrice>
-                        <ApproveStatus>
-                          Status :{" "}
-                          {getListingStatus(product.approved, product.rejected)}
-                        </ApproveStatus>
-                        <ViewButtonContainer>
-                          <Button>View</Button>
-                        </ViewButtonContainer>
-                      </ProductCard>
-                    </>
-                  );
-                })}
-              </Grid>
-            </>
-          )}
+          <TabsContainer>
+            {tabs.map((tab) => (
+              <Tab
+                selected={activeTab === tab.key}
+                key={tab.key}
+                onClick={() => handleOnClick(tab.key)}
+                className={activeTab === tab.key ? "active" : ""}
+                style={{
+                  borderBottom: activeTab === tab.key ? "2px solid blue" : "",
+                }}
+              >
+                {tab.value}
+              </Tab>
+            ))}
+          </TabsContainer>
+          <Grid>
+            {activeTab === "Immediate Listing" &&
+              immediateListedProducts.map((product, index) => {
+                return (
+                  <>
+                    <ProductCard>
+                      <ImageContainer>
+                        <Image>
+                          <img
+                            src={product.productImages[0]}
+                            height={"100%"}
+                            width={"100%"}
+                          />
+                        </Image>
+                      </ImageContainer>
+                      <ProductName>{`Name: ${product.productName}`}</ProductName>
+                      <ProductDescription>
+                        {`Description: ${product.productDescription}`}
+                      </ProductDescription>
+                      <ProductPrice>{`Price: ${product.price}`}</ProductPrice>
+                      <ApproveStatus>
+                        Status :{" "}
+                        {getListingStatus(product.approved, product.rejected)}
+                      </ApproveStatus>
+                      <ViewButtonContainer>
+                        <Button>View</Button>
+                      </ViewButtonContainer>
+                    </ProductCard>
+                  </>
+                );
+              })}
+            {activeTab === "Auction Listing" &&
+              auctionListedProducts.map((product, index) => {
+                return (
+                  <>
+                    <ProductCard>
+                      <ImageContainer>
+                        <Image>
+                          <img
+                            height={"100%"}
+                            width={"100%"}
+                            src={product.productImages[0]}
+                          />
+                        </Image>
+                      </ImageContainer>
+                      <ProductName>{`Name: ${product.productName}`}</ProductName>
+                      <ProductDescription>
+                        {`Description: ${product.productDescription}`}
+                      </ProductDescription>
+                      <ApproveStatus>
+                        Status :{" "}
+                        {getListingStatus(product.approved, product.rejected)}
+                      </ApproveStatus>
+                      <ViewButtonContainer>
+                        <Button>View</Button>
+                      </ViewButtonContainer>
+                    </ProductCard>
+                  </>
+                );
+              })}
+          </Grid>
         </>
       )}
     </>
