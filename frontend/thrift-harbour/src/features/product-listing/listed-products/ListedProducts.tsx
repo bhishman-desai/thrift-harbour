@@ -155,69 +155,93 @@ const ListedProducts: React.FC = () => {
             ))}
           </TabsContainer>
           <Grid>
-            {activeTab === "Immediate Listing" &&
-              immediateListedProducts.map((product, index) => {
-                return (
-                  <>
-                    <ProductCard>
-                      <ImageContainer>
-                        <Image>
-                          <img
-                            src={
-                              product.productImages && product.productImages[0]
-                            }
-                            height={"100%"}
-                            width={"100%"}
-                          />
-                        </Image>
-                      </ImageContainer>
-                      <ProductName>{`Name: ${product.productName}`}</ProductName>
-                      <ProductDescription>
-                        {`Description: ${product.productDescription}`}
-                      </ProductDescription>
-                      <ProductPrice>{`Price: ${product.price}`}</ProductPrice>
-                      <ApproveStatus>
-                        Status :
-                        {getListingStatus(product.approved, product.rejected)}
-                      </ApproveStatus>
-                      <ViewButtonContainer>
-                        <Button>View</Button>
-                      </ViewButtonContainer>
-                    </ProductCard>
-                  </>
-                );
-              })}
-            {activeTab === "Auction Listing" &&
-              auctionListedProducts.map((product, index) => {
-                return (
-                  <>
-                    <ProductCard>
-                      <ImageContainer>
-                        <Image>
-                          <img
-                            height={"100%"}
-                            width={"100%"}
-                            src={
-                              product.productImages && product.productImages[0]
-                            }
-                          />
-                        </Image>
-                      </ImageContainer>
-                      <ProductName>{`Name: ${product.productName}`}</ProductName>
-                      <ProductDescription>
-                        {`Description: ${product.productDescription}`}
-                      </ProductDescription>
-                      <ApproveStatus>
-                        Status :
-                        {getListingStatus(product.approved, product.rejected)}
-                      </ApproveStatus>
-                      <ViewButtonContainer>
-                        <Button>View</Button>
-                      </ViewButtonContainer>
-                    </ProductCard>
-                  </>
-                );
-              })}
+            {activeTab === "Immediate Listing" && (
+              <>
+                {immediateListedProducts.length === 0 ? (
+                  <NoListing>
+                    You don't have any Immediate sale listing
+                  </NoListing>
+                ) : (
+                  immediateListedProducts.map((product, index) => {
+                    return (
+                      <>
+                        <ProductCard>
+                          <ImageContainer>
+                            <Image>
+                              <img
+                                src={
+                                  product.productImages &&
+                                  product.productImages[0]
+                                }
+                                height={"100%"}
+                                width={"100%"}
+                              />
+                            </Image>
+                          </ImageContainer>
+                          <ProductName>{`Name: ${product.productName}`}</ProductName>
+                          <ProductDescription>
+                            {`Description: ${product.productDescription}`}
+                          </ProductDescription>
+                          <ProductPrice>{`Price: ${product.price}`}</ProductPrice>
+                          <ApproveStatus>
+                            Status :
+                            {getListingStatus(
+                              product.approved,
+                              product.rejected
+                            )}
+                          </ApproveStatus>
+                          <ViewButtonContainer>
+                            <Button>View</Button>
+                          </ViewButtonContainer>
+                        </ProductCard>
+                      </>
+                    );
+                  })
+                )}
+              </>
+            )}
+            {activeTab === "Auction Listing" && (
+              <>
+                {auctionListedProducts.length === 0 ? (
+                  <NoListing>You don't have any Auction sale listing</NoListing>
+                ) : (
+                  auctionListedProducts.map((product, index) => {
+                    return (
+                      <>
+                        <ProductCard>
+                          <ImageContainer>
+                            <Image>
+                              <img
+                                height={"100%"}
+                                width={"100%"}
+                                src={
+                                  product.productImages &&
+                                  product.productImages[0]
+                                }
+                              />
+                            </Image>
+                          </ImageContainer>
+                          <ProductName>{`Name: ${product.productName}`}</ProductName>
+                          <ProductDescription>
+                            {`Description: ${product.productDescription}`}
+                          </ProductDescription>
+                          <ApproveStatus>
+                            Status :
+                            {getListingStatus(
+                              product.approved,
+                              product.rejected
+                            )}
+                          </ApproveStatus>
+                          <ViewButtonContainer>
+                            <Button>View</Button>
+                          </ViewButtonContainer>
+                        </ProductCard>
+                      </>
+                    );
+                  })
+                )}
+              </>
+            )}
           </Grid>
         </>
       )}
