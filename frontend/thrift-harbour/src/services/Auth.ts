@@ -119,7 +119,10 @@ export class Auth {
         requestUrl,
         requestParams
       );
-      return [response.data, null];
+      return [
+        { status: response.status, message: response.data?.message },
+        null,
+      ];
     } catch (error: any) {
       return [
         null,

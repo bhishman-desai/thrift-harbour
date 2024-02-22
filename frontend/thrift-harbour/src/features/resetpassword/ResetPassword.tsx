@@ -32,6 +32,7 @@ const ResetPassword: React.FC = () => {
   const [inValidToken, setInValidToken] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const auth = new Auth();
 
@@ -82,6 +83,7 @@ const ResetPassword: React.FC = () => {
         } as ResetPasswordRequest);
         if (data?.status === 200) {
           setIsLoading(false);
+          setSuccess(true);
         } else if (error?.status === 500) {
           setInValidToken(true);
           setIsLoading(false);
@@ -100,6 +102,10 @@ const ResetPassword: React.FC = () => {
 
   const toggleError = () => {
     setError(!error);
+  };
+
+  const toggleSuccess = () => {
+    setSuccess(!success);
   };
 
   const toggleInvalidToken = () => {
@@ -173,6 +179,13 @@ const ResetPassword: React.FC = () => {
         <Modal onClose={toggleInvalidToken}>
           <div>
             <p style={{ color: "red" }}>Please regenerates the link!</p>
+          </div>
+        </Modal>
+      )}
+      {success && (
+        <Modal onClose={toggleSuccess}>
+          <div>
+            <p style={{ color: "green" }}>Password changes successfully !</p>
           </div>
         </Modal>
       )}
