@@ -19,6 +19,7 @@ import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
 import { ClipLoader } from "react-spinners";
 import Modal from "../../components/ui-components/Modal/Modal";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -182,13 +183,13 @@ const ResetPassword: React.FC = () => {
           </div>
         </Modal>
       )}
-      {success && (
-        <Modal onClose={toggleSuccess}>
-          <div>
-            <p style={{ color: "green" }}>Password changes successfully !</p>
-          </div>
-        </Modal>
-      )}
+      <SuccessErrorModal
+        type="SUCCESS"
+        message={"Password Changed Successfully!"}
+        open={success}
+        setOpen={setSuccess}
+        title={"Success"}
+      />
     </Container>
   );
 };
