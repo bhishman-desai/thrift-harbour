@@ -2,7 +2,7 @@ package tech.group15.thriftharbour.dto;
 
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,7 +28,7 @@ public class DeniedAuctionSaleListingForAdminResponse {
 
     private String messageFromApprover;
 
-    private LocalDate dateOfApproval;
+    private Date dateOfApproval;
 
     private boolean isSold;
 }

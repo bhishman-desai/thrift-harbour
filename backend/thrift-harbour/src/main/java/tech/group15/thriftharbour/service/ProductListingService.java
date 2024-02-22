@@ -21,7 +21,6 @@ public interface ProductListingService {
     /* Gets all product listing for admin */
     List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing();
 
-
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
     List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader);
@@ -30,7 +29,6 @@ public interface ProductListingService {
 
     List<ImmediateSaleListing> findUserListingById(Integer sellerID);
 
-    }
     GetListingImageResponse findAllAuctionSaleListingImagesByID(String ListingID);
 
     List<ApprovedImmediateSaleListingForAdminResponse>findAllApprovedImmediateSaleListing();
