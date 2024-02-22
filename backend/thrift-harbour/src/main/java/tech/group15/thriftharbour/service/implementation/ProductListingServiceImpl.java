@@ -22,240 +22,397 @@ import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class ProductListingServiceImpl implements ProductListingService {
 
-    private final JWTService jwtService;
+  private final JWTService jwtService;
 
-    private final AwsS3Service awsS3Service;
+  private final AwsS3Service awsS3Service;
 
-    private final ImmediateSaleListingRepository immediateSaleListingRepository;
+  private final ImmediateSaleListingRepository immediateSaleListingRepository;
 
-    private final ImmediateSaleImageRepository immediateSaleImageRepository;
+  private final ImmediateSaleImageRepository immediateSaleImageRepository;
 
-    private final AuctionSaleListingRepository auctionSaleListingRepository;
+  private final AuctionSaleListingRepository auctionSaleListingRepository;
 
-    private final AuctionSaleImageRepository auctionSaleImageRepository;
+  private final AuctionSaleImageRepository auctionSaleImageRepository;
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Value("${aws.bucketName}")
-    private String bucketName;
+  @Value("${aws.bucketName}")
+  private String bucketName;
 
-    @Value("${aws.region}")
-    private String region;
+  @Value("${aws.region}")
+  private String region;
 
-
-    // Image file and filename as input and the image is uploaded to s3 bucket
-    private int uploadSingleImage(MultipartFile productImage, String uniqueFileName) {
-        if (FileUtils.isImageFile(productImage)) {
-            return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
-        } else {
-            throw new ImageUploadException("Error while Uploading image, Please try again later");
-        }
-
+  // Image file and filename as input and the image is uploaded to s3 bucket
+  private int uploadSingleImage(MultipartFile productImage, String uniqueFileName) {
+    if (FileUtils.isImageFile(productImage)) {
+      return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
+    } else {
+      throw new ImageUploadException("Error while Uploading image, Please try again later");
     }
+  }
 
+  // Method to create an immediate sale listing
+  @Override
+  public ImmediateSaleListingCreationResponse createImmediateSaleListing(
+      String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+    String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
+    /* Fetch the User entity based on the seller's email */
+    User seller =
+        userRepository
+            .findByEmail(userName)
+            .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
 
-    // Method to create an immediate sale listing
-    @Override
-    public ImmediateSaleListingCreationResponse createImmediateSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
-        String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+    Date createdDate = DateUtil.getCurrentDate();
 
-        /* Fetch the User entity based on the seller's email */
-        User seller =
-            userRepository
-                .findByEmail(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+    ImmediateSaleListing immediateSaleListing =
+        ImmediateSaleListing.builder()
+            .immediateSaleListingID(UUIDUtil.generateUUID())
+            .productName(listingRequest.getProductName())
+            .productDescription(listingRequest.getProductDescription())
+            .price(listingRequest.getProductPrice())
+            .seller(seller)
+            .sellerEmail(userName)
+            .category(listingRequest.getProductCategory())
+            .createdDate(createdDate)
+            .updatedDate(createdDate)
+            .build();
 
-        Date createdDate = DateUtil.getCurrentDate();
+    List<ImmediateSaleImage> immediateSaleImages = new ArrayList<>();
+    List<String> imageURLs = new ArrayList<>();
 
-        ImmediateSaleListing immediateSaleListing = ImmediateSaleListing
-                .builder()
-                .immediateSaleListingID(UUIDUtil.generateUUID())
-                .productName(listingRequest.getProductName())
-                .productDescription(listingRequest.getProductDescription())
-                .price(listingRequest.getProductPrice())
-                .seller(seller)
-                .sellerEmail(userName)
-                .category(listingRequest.getProductCategory())
-                .createdDate(createdDate)
-                .updatedDate(createdDate)
-                .build();
+    List<MultipartFile> productImages = images;
+    for (int iter = 0; iter < productImages.size(); ++iter) {
+      MultipartFile productImage = productImages.get(iter);
+      String uniqueFileName =
+          FileUtils.generateUniqueFileNameForImage(
+              String.valueOf(listingRequest.getSellCategory()),
+              immediateSaleListing.getImmediateSaleListingID(),
+              (iter + 1),
+              FileUtils.getFileExtention(productImage));
+      int returnCode =
+          uploadSingleImage(
+              productImage,
+              uniqueFileName); // image is uploaded to s3 bucket and returns an upload status code
+      if (returnCode == HttpStatusCode.OK) {
+        String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
 
-        List<ImmediateSaleImage> immediateSaleImages = new ArrayList<>();
-        List<String> imageURLs = new ArrayList<>();
-
-
-        List<MultipartFile> productImages = images;
-        for (int iter = 0; iter < productImages.size(); ++iter) {
-            MultipartFile productImage = productImages.get(iter);
-            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
-                    immediateSaleListing.getImmediateSaleListingID(), (iter + 1), FileUtils.getFileExtention(productImage));
-            int returnCode = uploadSingleImage(productImage, uniqueFileName); // image is uploaded to s3 bucket and returns an upload status code
-            if (returnCode == HttpStatusCode.OK) {
-                String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
-
-                // Build Immediate sale Image
-                ImmediateSaleImage immediateSaleImage = ImmediateSaleImage
-                        .builder()
-                        .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
-                        .imageURL(imageURL)
-                        .createdDate(createdDate)
-                        .build();
-                immediateSaleImages.add(immediateSaleImage);
-                imageURLs.add(imageURL);
-            }
-        }
-
-        // Save Listing and image to database
-        immediateSaleListingRepository.save(immediateSaleListing);
-        immediateSaleImageRepository.saveAll(immediateSaleImages);
-
-        return ImmediateSaleListingCreationResponse
-                .builder()
+        // Build Immediate sale Image
+        ImmediateSaleImage immediateSaleImage =
+            ImmediateSaleImage.builder()
                 .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
-                .productName(immediateSaleListing.getProductName())
-                .productDescription(immediateSaleListing.getProductDescription())
-                .price(immediateSaleListing.getPrice())
-                .category(immediateSaleListing.getCategory())
-                .sellerEmail(immediateSaleListing.getSellerEmail())
-                .imageURLs(imageURLs)
-                .active(immediateSaleListing.isActive())
-                .isApproved(immediateSaleListing.isApproved())
-                .isRejected(immediateSaleListing.isRejected())
-                .createdDate(immediateSaleListing.getCreatedDate())
-                .build();
-
-    }
-
-    @Override
-    public AuctionSaleListingCreationResponse createAuctionSaleListing(String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
-        String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
-
-        Date createdDate = DateUtil.getCurrentDate();
-        Date auctionSlot = DateUtil.getDateFromString(listingRequest.getAuctionSlot());
-
-        AuctionSaleListing auctionSaleListing = AuctionSaleListing
-                .builder()
-                .auctionSaleListingID(UUIDUtil.generateUUID())
-                .productName(listingRequest.getProductName())
-                .productDescription(listingRequest.getProductDescription())
-                .startingBid(listingRequest.getProductPrice())
-                .sellerEmail(userName)
-                .category(listingRequest.getProductCategory())
-                .auctionSlot(auctionSlot)
+                .imageURL(imageURL)
                 .createdDate(createdDate)
-                .updatedDate(createdDate)
                 .build();
-
-        List<AuctionSaleImage> auctionSaleImages = new ArrayList<>();
-        List<String> imageURLs = new ArrayList<>();
-
-        List<MultipartFile> productImages = images;
-        for (int iter = 0; iter < productImages.size(); ++iter) {
-            MultipartFile productImage = productImages.get(iter);
-            String uniqueFileName = FileUtils.generateUniqueFileNameForImage(String.valueOf(listingRequest.getSellCategory()),
-                    auctionSaleListing.getAuctionSaleListingID(), (iter + 1), FileUtils.getFileExtention(productImage));
-            int returnCode = uploadSingleImage(productImage, uniqueFileName);
-            if (returnCode == HttpStatusCode.OK) {
-                String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
-
-                AuctionSaleImage auctionSaleImage = AuctionSaleImage
-                        .builder()
-                        .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
-                        .imageURL(imageURL)
-                        .createdDate(createdDate)
-                        .build();
-                auctionSaleImages.add(auctionSaleImage);
-                imageURLs.add(imageURL);
-            } else {
-                throw new ImageUploadException("Error while Uploading image, Please try again later");
-            }
-        }
-
-
-        auctionSaleListingRepository.save(auctionSaleListing);
-        auctionSaleImageRepository.saveAll(auctionSaleImages);
-
-        return AuctionSaleListingCreationResponse
-                .builder()
-                .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
-                .productName(auctionSaleListing.getProductName())
-                .productDescription(auctionSaleListing.getProductDescription())
-                .startingBid(auctionSaleListing.getStartingBid())
-                .category(auctionSaleListing.getCategory())
-                .sellerEmail(auctionSaleListing.getSellerEmail())
-                .auctionSlot(auctionSaleListing.getAuctionSlot())
-                .imageURLs(imageURLs)
-                .active(auctionSaleListing.isActive())
-                .isApproved(auctionSaleListing.isApproved())
-                .isRejected(auctionSaleListing.isRejected())
-                .createdDate(auctionSaleListing.getCreatedDate())
-                .build();
-
-
+        immediateSaleImages.add(immediateSaleImage);
+        imageURLs.add(imageURL);
+      }
     }
 
-    /* Get single product for view */
-    @Override
-    public ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID) {
+    // Save Listing and image to database
+    immediateSaleListingRepository.save(immediateSaleListing);
+    immediateSaleImageRepository.saveAll(immediateSaleImages);
+
+    return ImmediateSaleListingCreationResponse.builder()
+        .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
+        .productName(immediateSaleListing.getProductName())
+        .productDescription(immediateSaleListing.getProductDescription())
+        .price(immediateSaleListing.getPrice())
+        .category(immediateSaleListing.getCategory())
+        .sellerEmail(immediateSaleListing.getSellerEmail())
+        .imageURLs(imageURLs)
+        .active(immediateSaleListing.isActive())
+        .isApproved(immediateSaleListing.isApproved())
+        .isRejected(immediateSaleListing.isRejected())
+        .createdDate(immediateSaleListing.getCreatedDate())
+        .build();
+  }
+
+  @Override
+  public AuctionSaleListingCreationResponse createAuctionSaleListing(
+      String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+    String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+
+    Date createdDate = DateUtil.getCurrentDate();
+    Date auctionSlot = DateUtil.getDateFromString(listingRequest.getAuctionSlot());
+
+    AuctionSaleListing auctionSaleListing =
+        AuctionSaleListing.builder()
+            .auctionSaleListingID(UUIDUtil.generateUUID())
+            .productName(listingRequest.getProductName())
+            .productDescription(listingRequest.getProductDescription())
+            .startingBid(listingRequest.getProductPrice())
+            .sellerEmail(userName)
+            .category(listingRequest.getProductCategory())
+            .auctionSlot(auctionSlot)
+            .createdDate(createdDate)
+            .updatedDate(createdDate)
+            .build();
+
+    List<AuctionSaleImage> auctionSaleImages = new ArrayList<>();
+    List<String> imageURLs = new ArrayList<>();
+
+    List<MultipartFile> productImages = images;
+    for (int iter = 0; iter < productImages.size(); ++iter) {
+      MultipartFile productImage = productImages.get(iter);
+      String uniqueFileName =
+          FileUtils.generateUniqueFileNameForImage(
+              String.valueOf(listingRequest.getSellCategory()),
+              auctionSaleListing.getAuctionSaleListingID(),
+              (iter + 1),
+              FileUtils.getFileExtention(productImage));
+      int returnCode = uploadSingleImage(productImage, uniqueFileName);
+      if (returnCode == HttpStatusCode.OK) {
+        String imageURL = FileUtils.generateImageURL(bucketName, region, uniqueFileName);
+
+        AuctionSaleImage auctionSaleImage =
+            AuctionSaleImage.builder()
+                .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+                .imageURL(imageURL)
+                .createdDate(createdDate)
+                .build();
+        auctionSaleImages.add(auctionSaleImage);
+        imageURLs.add(imageURL);
+      } else {
+        throw new ImageUploadException("Error while Uploading image, Please try again later");
+      }
+    }
+
+    auctionSaleListingRepository.save(auctionSaleListing);
+    auctionSaleImageRepository.saveAll(auctionSaleImages);
+
+    return AuctionSaleListingCreationResponse.builder()
+        .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+        .productName(auctionSaleListing.getProductName())
+        .productDescription(auctionSaleListing.getProductDescription())
+        .startingBid(auctionSaleListing.getStartingBid())
+        .category(auctionSaleListing.getCategory())
+        .sellerEmail(auctionSaleListing.getSellerEmail())
+        .auctionSlot(auctionSaleListing.getAuctionSlot())
+        .imageURLs(imageURLs)
+        .active(auctionSaleListing.isActive())
+        .isApproved(auctionSaleListing.isApproved())
+        .isRejected(auctionSaleListing.isRejected())
+        .createdDate(auctionSaleListing.getCreatedDate())
+        .build();
+  }
+
+  /* Get single product for view */
+  @Override
+  public ImmediateSaleListing findImmediateSaleListingByID(String immediateSaleListingID) {
     return immediateSaleListingRepository
         .findById(immediateSaleListingID)
         .orElseThrow(() -> new ListingNotFoundException("Product not found!"));
+  }
+
+  /* Get all product listing for admin */
+  @Override
+  public List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing() {
+    return ProductMapper.minifiedProductResponse(immediateSaleListingRepository.findAll());
+  }
+
+  @Override
+  public List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(
+      String authorizationHeader) {
+    String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+    return immediateSaleListingRepository.findAllBySellerEmail(sellerEmail);
+  }
+
+  @Override
+  public List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(
+      String authorizationHeader) {
+    String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+    return auctionSaleListingRepository.findAllBySellerEmail(sellerEmail);
+  }
+
+  @Override
+  public GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID) {
+    List<ImmediateSaleImage> productImages =
+        immediateSaleImageRepository.getAllByImmediateSaleListingID(listingID);
+    return GetListingImageResponse.builder()
+        .listingId(listingID)
+        .imageURLs(productImages.stream().map(ImmediateSaleImage::getImageURL).toList())
+        .build();
+  }
+
+  @Override
+  public GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID) {
+    List<AuctionSaleImage> productImages =
+        auctionSaleImageRepository.findAllByAuctionSaleListingID(listingID);
+    return GetListingImageResponse.builder()
+        .listingId(listingID)
+        .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+        .build();
+  }
+
+  /* Get all product listing from seller id */
+  @Override
+  public List<ImmediateSaleListing> findUserListingById(Integer sellerID) {
+    return immediateSaleListingRepository.findAllBySellerID(sellerID);
+  }
+
+  @Override
+  public List<ApprovedImmediateSaleListingForAdminResponse> findAllApprovedImmediateSaleListing() {
+
+    List<ImmediateSaleListing> immediateSaleListings =
+        immediateSaleListingRepository.findAllApprovedImmediateSaleListing();
+    List<ApprovedImmediateSaleListingForAdminResponse>
+        approvedImmediateSaleListingForAdminResponseList = new ArrayList<>();
+
+    for (ImmediateSaleListing immediateSale : immediateSaleListings) {
+      ApprovedImmediateSaleListingForAdminResponse approvedImmediateSaleListingForAdminResponse =
+          new ApprovedImmediateSaleListingForAdminResponse();
+
+      approvedImmediateSaleListingForAdminResponse.setImmediateSaleListingID(
+          immediateSale.getImmediateSaleListingID());
+      approvedImmediateSaleListingForAdminResponse.setProductName(immediateSale.getProductName());
+      approvedImmediateSaleListingForAdminResponse.setProductDescription(
+          immediateSale.getProductDescription());
+      approvedImmediateSaleListingForAdminResponse.setPrice(immediateSale.getPrice());
+      approvedImmediateSaleListingForAdminResponse.setCategory(immediateSale.getCategory());
+      approvedImmediateSaleListingForAdminResponse.setSellerEmail(immediateSale.getSellerEmail());
+      List<ImmediateSaleImage> productImages =
+          immediateSaleImageRepository.getAllByImmediateSaleListingID(
+              immediateSale.getImmediateSaleListingID());
+      approvedImmediateSaleListingForAdminResponse.setImageURLs(
+          productImages.stream().map(ImmediateSaleImage::getImageURL).toList());
+      approvedImmediateSaleListingForAdminResponse.setActive(immediateSale.isActive());
+      approvedImmediateSaleListingForAdminResponse.setApproved(immediateSale.isApproved());
+      approvedImmediateSaleListingForAdminResponse.setApproverEmail(
+          immediateSale.getApproverEmail());
+      approvedImmediateSaleListingForAdminResponse.setMessageFromApprover(
+          immediateSale.getMessageFromApprover());
+      approvedImmediateSaleListingForAdminResponse.setDateOfApproval(
+          immediateSale.getDateOfApproval());
+      approvedImmediateSaleListingForAdminResponse.setSold(immediateSale.isSold());
+
+      approvedImmediateSaleListingForAdminResponseList.add(
+          approvedImmediateSaleListingForAdminResponse);
     }
+    return approvedImmediateSaleListingForAdminResponseList;
+  }
 
-    /* Get all product listing for admin */
-    @Override
-    public List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing() {
-        return ProductMapper.minifiedProductResponse(immediateSaleListingRepository.findAll());
+  @Override
+  public List<DeniedImmediateSaleListingForAdminResponse> findAllDeniedImmediateSaleListing() {
+
+    List<ImmediateSaleListing> immediateSaleListings =
+        immediateSaleListingRepository.findAllDeniedImmediateSaleListing();
+    List<DeniedImmediateSaleListingForAdminResponse>
+        deniedImmediateSaleListingForAdminResponseList = new ArrayList<>();
+
+    for (ImmediateSaleListing immediateSale : immediateSaleListings) {
+      DeniedImmediateSaleListingForAdminResponse deniedImmediateSaleListingForAdminResponse =
+          new DeniedImmediateSaleListingForAdminResponse();
+
+      deniedImmediateSaleListingForAdminResponse.setImmediateSaleListingID(
+          immediateSale.getImmediateSaleListingID());
+      deniedImmediateSaleListingForAdminResponse.setProductName(immediateSale.getProductName());
+      deniedImmediateSaleListingForAdminResponse.setProductDescription(
+          immediateSale.getProductDescription());
+      deniedImmediateSaleListingForAdminResponse.setPrice(immediateSale.getPrice());
+      deniedImmediateSaleListingForAdminResponse.setCategory(immediateSale.getCategory());
+      deniedImmediateSaleListingForAdminResponse.setSellerEmail(immediateSale.getSellerEmail());
+      List<ImmediateSaleImage> productImages =
+          immediateSaleImageRepository.getAllByImmediateSaleListingID(
+              immediateSale.getImmediateSaleListingID());
+      deniedImmediateSaleListingForAdminResponse.setImageURLs(
+          productImages.stream().map(ImmediateSaleImage::getImageURL).toList());
+      deniedImmediateSaleListingForAdminResponse.setActive(immediateSale.isActive());
+      deniedImmediateSaleListingForAdminResponse.setRejected(immediateSale.isRejected());
+      deniedImmediateSaleListingForAdminResponse.setApproverEmail(immediateSale.getApproverEmail());
+      deniedImmediateSaleListingForAdminResponse.setMessageFromApprover(
+          immediateSale.getMessageFromApprover());
+      deniedImmediateSaleListingForAdminResponse.setDateOfApproval(
+          immediateSale.getDateOfApproval());
+      deniedImmediateSaleListingForAdminResponse.setSold(immediateSale.isSold());
+
+      deniedImmediateSaleListingForAdminResponseList.add(
+          deniedImmediateSaleListingForAdminResponse);
     }
+    return deniedImmediateSaleListingForAdminResponseList;
+  }
 
-    @Override
-    public List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader) {
-        String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
-        return immediateSaleListingRepository.findAllBySellerEmail(sellerEmail);
+  @Override
+  public List<ApprovedAuctionSaleListingForAdminResponse> findAllApprovedAuctionSaleListing() {
+
+    List<AuctionSaleListing> auctionSaleListings =
+        auctionSaleListingRepository.findAllApprovedAuctionSaleListing();
+    List<ApprovedAuctionSaleListingForAdminResponse>
+        approvedAuctionSaleListingForAdminResponseList = new ArrayList<>();
+
+    for (AuctionSaleListing auctionSale : auctionSaleListings) {
+      ApprovedAuctionSaleListingForAdminResponse approvedAuctionSaleListingForAdminResponse =
+          new ApprovedAuctionSaleListingForAdminResponse();
+
+      approvedAuctionSaleListingForAdminResponse.setAuctionSaleListingID(
+          auctionSale.getAuctionSaleListingID());
+      approvedAuctionSaleListingForAdminResponse.setProductName(auctionSale.getProductName());
+      approvedAuctionSaleListingForAdminResponse.setProductDescription(
+          auctionSale.getProductDescription());
+      approvedAuctionSaleListingForAdminResponse.setCategory(auctionSale.getCategory());
+      approvedAuctionSaleListingForAdminResponse.setSellerEmail(auctionSale.getSellerEmail());
+      List<AuctionSaleImage> productImages =
+          auctionSaleImageRepository.findAllByAuctionSaleListingID(
+              auctionSale.getAuctionSaleListingID());
+      approvedAuctionSaleListingForAdminResponse.setImageURLs(
+          productImages.stream().map(AuctionSaleImage::getImageURL).toList());
+      approvedAuctionSaleListingForAdminResponse.setActive(auctionSale.isActive());
+      approvedAuctionSaleListingForAdminResponse.setApproved(auctionSale.isApproved());
+      approvedAuctionSaleListingForAdminResponse.setApproverEmail(auctionSale.getApproverEmail());
+      approvedAuctionSaleListingForAdminResponse.setMessageFromApprover(
+          auctionSale.getMessageFromApprover());
+      approvedAuctionSaleListingForAdminResponse.setDateOfApproval(auctionSale.getDateOfApproval());
+      approvedAuctionSaleListingForAdminResponse.setSold(auctionSale.isSold());
+
+      approvedAuctionSaleListingForAdminResponseList.add(
+          approvedAuctionSaleListingForAdminResponse);
     }
+    return approvedAuctionSaleListingForAdminResponseList;
+  }
 
-    @Override
-    public List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader) {
-        String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
-        return auctionSaleListingRepository.findAllBySellerEmail(sellerEmail);
+  @Override
+  public List<DeniedAuctionSaleListingForAdminResponse> findAllDeniedAuctionSaleListing() {
+
+    List<AuctionSaleListing> auctionSaleListings =
+        auctionSaleListingRepository.findAllDeniedAuctionSaleListing();
+    List<DeniedAuctionSaleListingForAdminResponse> deniedAuctionSaleListingForAdminResponseList =
+        new ArrayList<>();
+
+    for (AuctionSaleListing auctionSale : auctionSaleListings) {
+      DeniedAuctionSaleListingForAdminResponse deniedAuctionSaleListingForAdminResponse =
+          new DeniedAuctionSaleListingForAdminResponse();
+
+      deniedAuctionSaleListingForAdminResponse.setAuctionSaleListingID(
+          auctionSale.getAuctionSaleListingID());
+      deniedAuctionSaleListingForAdminResponse.setProductName(auctionSale.getProductName());
+      deniedAuctionSaleListingForAdminResponse.setProductDescription(
+          auctionSale.getProductDescription());
+      deniedAuctionSaleListingForAdminResponse.setCategory(auctionSale.getCategory());
+      deniedAuctionSaleListingForAdminResponse.setSellerEmail(auctionSale.getSellerEmail());
+      List<AuctionSaleImage> productImages =
+          auctionSaleImageRepository.findAllByAuctionSaleListingID(
+              auctionSale.getAuctionSaleListingID());
+      deniedAuctionSaleListingForAdminResponse.setImageURLs(
+          productImages.stream().map(AuctionSaleImage::getImageURL).toList());
+      deniedAuctionSaleListingForAdminResponse.setActive(auctionSale.isActive());
+      deniedAuctionSaleListingForAdminResponse.setRejected(auctionSale.isRejected());
+      deniedAuctionSaleListingForAdminResponse.setApproverEmail(auctionSale.getApproverEmail());
+      deniedAuctionSaleListingForAdminResponse.setMessageFromApprover(
+          auctionSale.getMessageFromApprover());
+      deniedAuctionSaleListingForAdminResponse.setDateOfApproval(auctionSale.getDateOfApproval());
+      deniedAuctionSaleListingForAdminResponse.setSold(auctionSale.isSold());
+
+      deniedAuctionSaleListingForAdminResponseList.add(deniedAuctionSaleListingForAdminResponse);
     }
-
-    @Override
-    public GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID) {
-        List<ImmediateSaleImage> productImages = immediateSaleImageRepository
-                .getAllByImmediateSaleListingID(listingID);
-        return GetListingImageResponse
-                .builder()
-                .listingId(listingID)
-                .imageURLs(productImages.stream()
-                        .map(ImmediateSaleImage::getImageURL)
-                        .toList())
-                .build();
-    }
-
-    @Override
-    public GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID){
-        List<AuctionSaleImage> productImages = auctionSaleImageRepository
-                .findAllByAuctionSaleListingID(listingID);
-        return GetListingImageResponse
-                .builder()
-                .listingId(listingID)
-                .imageURLs(productImages.stream()
-                        .map(AuctionSaleImage::getImageURL)
-                        .toList())
-                .build();
-    }
-
-    /* Get all product listing from seller id */
-    @Override
-    public List<ImmediateSaleListing> findUserListingById(Integer sellerID) {
-        return immediateSaleListingRepository.findAllBySellerID(sellerID);
-    }
-
-
+    return deniedAuctionSaleListingForAdminResponseList;
+  }
 }
