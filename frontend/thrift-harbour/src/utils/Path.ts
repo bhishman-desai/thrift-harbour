@@ -37,5 +37,11 @@ export class Path {
     if (service === "auction-listing") {
       return "/users/listing/create-auctionsale-listing";
     }
+    if (service === "get-immediatesale-listing") {
+      return "/users/listing/get-immediatesale-listing";
+    }
+    if (service === "get-immediatesale-images") {
+      return "/users/listing/get-immediatesale-images";
+    }
   }
 }

@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { Credentials, ErrorResponse } from "../types/AuthTypes";
 import {
   AuctionListingResponse,
+  GetAllImmediateListingImagesResponse,
+  GetAllImmediateListingResponse,
   ImmediateListingResponse,
   ListingDataTypes,
 } from "../types/ListingTypes";
@@ -17,12 +19,10 @@ export class ListingService {
     const baseUrl = this.path.getBaseUrl();
     const immediateListUrl = this.path.getListingUrl("immediate-listing");
     const requestUrl = baseUrl + immediateListUrl;
-    console.log("requestParams", payload);
     try {
       const formData = new FormData();
 
       Object.entries(payload).forEach(([key, value]) => {
-        console.log("key value", key, value);
         if (key === "productImages") {
           value.forEach((file: any) => {
             formData.append(key, file);
@@ -38,8 +38,6 @@ export class ListingService {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      console.log("response in service", response);
 
       return [response.data, null];
     } catch (error: any) {
@@ -60,12 +58,10 @@ export class ListingService {
     const baseUrl = this.path.getBaseUrl();
     const auctionListUrl = this.path.getListingUrl("auction-listing");
     const requestUrl = baseUrl + auctionListUrl;
-    console.log("requestParams", payload);
     try {
       const formData = new FormData();
 
       Object.entries(payload).forEach(([key, value]) => {
-        console.log("key value", key, value);
         if (key === "productImages") {
           value.forEach((file: any) => {
             formData.append(key, file);
@@ -82,8 +78,6 @@ export class ListingService {
         },
       });
 
-      console.log("response in service", response);
-
       return [response.data, null];
     } catch (error: any) {
       return [
@@ -93,6 +87,57 @@ export class ListingService {
           message: error?.response.data.message,
         } as ErrorResponse,
       ];
+    }
+  }
+
+  async getImmediateListedProducts(
+    token?: string | null
+  ): Promise<[GetAllImmediateListingResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getImmediateListingtUrl = this.path.getListingUrl(
+      "get-immediatesale-listing"
+    );
+    const requestUrl = baseUrl + getImmediateListingtUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getImmediateListedProductsImages(
+    immediateListingId: string,
+    token?: string | null
+  ): Promise<
+    [GetAllImmediateListingImagesResponse | null, ErrorResponse | null]
+  > {
+    const baseUrl = this.path.getBaseUrl();
+    const getImmediateListingImagesUrl = this.path.getListingUrl(
+      "get-immediatesale-images"
+    );
+    const requestUrl =
+      baseUrl + getImmediateListingImagesUrl + `/${immediateListingId}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      console.error("Error fetching data:", error);
+      throw error;
     }
   }
 }

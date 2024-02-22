@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
+import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
@@ -83,6 +84,7 @@ const Navbar: React.FC<any> = () => {
       {currentSelected === "Contact us" && <ContactUs />} */}
       {currentSelected === "List Product" && <ProductListing />}
       {isProfileClicked && <Profilepopup />}
+      {currentSelected === "My Listed Products" && <ListedProducts />}
     </>
   );
 };
