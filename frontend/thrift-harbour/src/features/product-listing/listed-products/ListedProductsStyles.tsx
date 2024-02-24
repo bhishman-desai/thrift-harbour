@@ -105,29 +105,15 @@ interface TabProps {
 }
 
 export const Tab = style.div<TabProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 24px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  background-color: ${(props) => (props.selected ? "#749bc2" : "")};
-
-  &:hover {
-    background-color: #749bc2;
-    color: #fff;
-  }
-
-//   &:focus {
-//     outline: none;
-//     color: #fff;
-//   }
-
-  @media screen and (max-width: 768px) {
-    margin-top: 12px;
-    font-size: 16px;
-  }
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 12px 24px;
+color: ${(props) => (props.selected ? " #731DCF" : "")};
+font-size: 18px;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.3s ease-in-out;
+background-color: #fff;
+border-bottom: ${(props) => (props.selected ? "4px solid #731DCF" : "")};
 `;

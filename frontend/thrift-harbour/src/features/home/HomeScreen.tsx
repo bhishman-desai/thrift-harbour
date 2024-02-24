@@ -5,6 +5,8 @@ import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
 import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
 import Navbar from "../../components/ui-components/navbar/Navbar";
+import { LoginType } from "../../types/AuthTypes";
+import AdminDashboard from "../admin/AdminDashboard";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -12,28 +14,27 @@ const Home: React.FC = () => {
 
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
+  const [loginType, setLogintype] = useState("");
   const [error, setError] = useState(false);
 
-  const items: HamburgerMenuProps = {
-    menuItems: [
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-    ],
-  };
+  const navOptions = [
+    {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
+    {
+      key: "Dashboard",
+      value: "Dashboard",
+      isSelected: true,
+    },
+
+    {
+      key: "My Listed Products",
+      value: "My Listed Products",
+      isSelected: false,
+    },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -46,6 +47,22 @@ const Home: React.FC = () => {
           const [data, error] = await auth.getUser(token);
           if (data?.status === 200) {
             setAuthorized(true);
+            setLogintype("USER");
+          } else if (error) {
+            setError(true);
+            setAuthorized(false);
+          } else {
+            setError(true);
+          }
+        } catch (error) {
+          setError(true);
+        }
+
+        try {
+          const [data, error] = await auth.getAdmin(token);
+          if (data?.status === 200) {
+            setAuthorized(true);
+            setLogintype("ADMIN");
           } else if (error) {
             setError(true);
             setAuthorized(false);
@@ -59,32 +76,13 @@ const Home: React.FC = () => {
     })();
   }, [token]);
 
-  const toggleError = () => {
-    setError(false);
-    handleLogout && handleLogout();
-    navigate("/login");
-  };
-
-  const handleClick = () => {
-    handleLogout && handleLogout();
-    navigate("/login");
-  };
   return (
     <>
-      {/* {authorized && (
-        <HomeParent>
-          <h1>Hello from user!</h1>
-          <button onClick={() => handleClick()}>logout</button>
-        </HomeParent>
+      {authorized && loginType === "USER" ? (
+        <Navbar navOptions={navOptions} />
+      ) : (
+        <AdminDashboard />
       )}
-      {error && (
-        <Modal onClose={toggleError}>
-          <p style={{ color: "red" }}>Something went wrong try again!</p>
-        </Modal>
-      )} */}
-      <Navbar />
-
-      {/* <Hamburg menuItems={items.menuItems} /> */}
     </>
   );
 };

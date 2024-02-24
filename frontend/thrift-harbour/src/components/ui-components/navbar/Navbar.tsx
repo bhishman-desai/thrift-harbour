@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
+import { NavOptions } from "../../../types/AuthTypes";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
@@ -15,41 +16,13 @@ import {
   ProfileIconBg,
 } from "./NavbarStyles";
 
-const Navbar: React.FC<any> = () => {
-  const NavOptions = [
-    {
-      key: "List Product",
-      value: "List Product",
-      isSelected: false,
-    },
-    {
-      key: "Dashboard",
-      value: "Dashboard",
-      isSelected: true,
-    },
+interface NavbarProps {
+  navOptions: NavOptions[];
+}
 
-    {
-      key: "My Listed Products",
-      value: "My Listed Products",
-      isSelected: false,
-    },
-  ];
-
+const Navbar: React.FC<NavbarProps> = ({ navOptions }) => {
   const [currentSelected, setCurrentSelected] = useState("Dashboard");
   const [isProfileClicked, setIsProfileClicked] = useState(false);
-  // useEffect(() => {
-  //   const handleDocumentClick = () => {
-  //     setIsProfileBgHovered(false);
-  //   };
-
-  //   if (isProfileBgHovered) {
-  //     document.addEventListener("click", handleDocumentClick);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener("click", handleDocumentClick);
-  //   };
-  // }, [isProfileBgHovered]);
 
   const onClickOption = (key: string) => {
     setCurrentSelected(key);
@@ -61,7 +34,7 @@ const Navbar: React.FC<any> = () => {
         {/* <ReviewBoosterIcon height={"125"} width={"74"} /> */}
         <TabsOptionsContainer>
           <Tabs>
-            {NavOptions.map((option) => {
+            {navOptions.map((option) => {
               return (
                 <Option
                   style={{ color: "#ffffff" }}

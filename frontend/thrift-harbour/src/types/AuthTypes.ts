@@ -54,3 +54,14 @@ export interface ResetPasswordResponse {
   status: number;
   message: string;
 }
+
+export interface LoginType {
+  USER: string;
+  ADMIN: string;
+}
+
+export interface NavOptions {
+  key: string;
+  value: string;
+  isSelected: boolean;
+}

@@ -6,7 +6,7 @@ export class Path {
 
   getBaseUrl() {
     if (this.environment === "development") {
-      return "http://172.17.1.50:8080/api/v1";
+      return "http://localhost:8080/api/v1";
     } else {
       return "/thrift/api/v1";
     }
@@ -21,6 +21,9 @@ export class Path {
     }
     if (service === "getUser") {
       return "/user";
+    }
+    if (service === "getAdmin") {
+      return "/admin";
     }
     if (service === "forgot-password") {
       return "/auth/forgot-password";
