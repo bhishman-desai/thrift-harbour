@@ -2,6 +2,7 @@ package tech.group15.thriftharbour.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 
@@ -20,15 +21,21 @@ public interface ProductListingService {
     /* Gets all product listing for admin */
     List<ImmediateSaleMinifiedResponse> findAllImmediateSaleListing();
 
-
     List<ImmediateSaleListing> findAllImmediateSaleListingBySellerEmail(String authorizationHeader);
 
     List<AuctionSaleListing> findAllAuctionSaleListingBySellerEmail(String authorizationHeader);
 
-    GetListingImageResponse findAllImmediateSaleListingImagesByID(String listingID);
-
-    GetListingImageResponse findAllAuctionSaleListingImagesByID(String listingID);
+    GetListingImageResponse findAllImmediateSaleListingImagesByID(String ListingID);
 
     List<ImmediateSaleListing> findUserListingById(Integer sellerID);
 
-    }
+    GetListingImageResponse findAllAuctionSaleListingImagesByID(String ListingID);
+
+    List<ApprovedImmediateSaleListingForAdminResponse>findAllApprovedImmediateSaleListing();
+
+    List<DeniedImmediateSaleListingForAdminResponse>findAllDeniedImmediateSaleListing();
+
+    List<ApprovedAuctionSaleListingForAdminResponse>findAllApprovedAuctionSaleListing();
+
+    List<DeniedAuctionSaleListingForAdminResponse>findAllDeniedAuctionSaleListing();
+}

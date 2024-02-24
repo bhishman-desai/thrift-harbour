@@ -38,7 +38,7 @@ export const ModalTitle = styled.h2`
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 24px;
-  margin-top: 40px;
+  // margin-top: 40px;
   margin-bottom: 20px;
   color: green;
   display:flex;

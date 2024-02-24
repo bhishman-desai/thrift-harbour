@@ -13,28 +13,33 @@ import {
   UploadButtonContainer,
   UploadImageModal,
 } from "./ProductListingStyles";
-import ImageIcon from "../../assets/icons/ImageIcon";
-import EditIcon from "../../assets/icons/EditIcon";
+import ImageIcon from "../../../assets/icons/ImageIcon";
+import EditIcon from "../../../assets/icons/EditIcon";
 import {
   Field,
   Form,
   Label,
   RegisterButton,
-} from "../registration/RegistrationStyles";
+} from "../../registration/RegistrationStyles";
 import TextField from "@mui/material/TextField";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FormEvent, useRef, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { ClipLoader } from "react-spinners";
-import Modal from "../../components/ui-components/Modal/Modal";
+import Modal from "../../../components/ui-components/Modal/Modal";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { ListingDataTypes, TouchedFieldsType } from "../../types/ListingTypes";
-import { ListingService } from "../../services/Listing";
+import {
+  ListingDataTypes,
+  TouchedFieldsType,
+} from "../../../types/ListingTypes";
+import { ListingService } from "../../../services/Listing";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
-import { Dates } from "../../utils/Dates";
+import { Dates } from "../../../utils/Dates";
+import ErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import SuccessErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const ProductListing: React.FC = () => {
   const listingService = new ListingService();
@@ -48,7 +53,9 @@ const ProductListing: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [touchedFields, setTouchedFields] = useState({} as TouchedFieldsType);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
-  const [imageError, setImageError] = useState("");
+  const [imageError, setImageError] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [error, setError] = useState(false);
 
   const token = localStorage.getItem("token");
   const [listingData, setListingData] = useState({
@@ -109,20 +116,95 @@ const ProductListing: React.FC = () => {
     setShowModal(false);
   };
 
+  const emptyListingData = () => {
+    setThumbnailUrl(null);
+    setListingData({
+      productName: "",
+      productPrice: 0,
+      productDescription: "",
+      sellCategory: "",
+      productImages: [],
+      productCategory: "",
+      auctionSlot: "",
+    });
+  };
+
+  const setTouchedFalse = () => {
+    setTouchedFields({
+      productName: false,
+      productPrice: false,
+      productDescription: false,
+      sellCategory: false,
+      productCategory: false,
+      auctionSlot: false,
+    });
+  };
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (listingData.productImages.length === 0) {
+      setImageError(true);
+      return;
+    }
     console.log("formData =>", listingData);
+    setIsLoading(true);
 
-    try {
-      const [data, error] = await listingService.immediateListing(
-        listingData,
-        token
-      );
-      console.log("data", data);
-      if (data?.userID) {
+    if (listingData.sellCategory === "DIRECT") {
+      try {
+        const [data, error] = await listingService.immediateListing(
+          listingData,
+          token
+        );
+        console.log("data", data);
+        if (data?.immediateSaleListingID) {
+          setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
+          setError(false);
+          setOpenModal(true);
+        } else {
+          setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
+          setError(true);
+          setOpenModal(true);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        emptyListingData();
+        setTouchedFalse();
+        setError(true);
+        setOpenModal(true);
       }
-    } catch (error) {
-      setIsLoading(false);
+    }
+
+    if (listingData.sellCategory === "AUCTION") {
+      try {
+        const [data, error] = await listingService.auctionListing(
+          listingData,
+          token
+        );
+        console.log("data", data);
+        if (data?.auctionSaleListingID) {
+          setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
+          setError(false);
+          setOpenModal(true);
+        } else {
+          setIsLoading(false);
+          emptyListingData();
+          setTouchedFalse();
+          setError(true);
+          setOpenModal(true);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        emptyListingData();
+        setTouchedFalse();
+        setError(true);
+        setOpenModal(true);
+      }
     }
   };
   return (
@@ -146,9 +228,6 @@ const ProductListing: React.FC = () => {
               </ProductImage>
             )}
 
-            {imageError && (
-              <ImageError style={{ color: "red" }}>{imageError}</ImageError>
-            )}
             {/* <ProductImage>
               <ImageIcon height={24} width={24} />
             </ProductImage> */}
@@ -421,6 +500,26 @@ const ProductListing: React.FC = () => {
           </UploadButtonContainer>
         </Modal>
       )}
+
+      <SuccessErrorModal
+        type={error ? "ERROR" : "SUCCESS"}
+        message={
+          error
+            ? "Something went wrong please try again!"
+            : "Product listed successfully!"
+        }
+        open={openModal}
+        setOpen={setOpenModal}
+        title={error ? "error" : "Success"}
+      />
+
+      <SuccessErrorModal
+        type="ERROR"
+        message={"Please upload atleast one image!"}
+        open={imageError}
+        setOpen={setImageError}
+        title={"error"}
+      />
     </>
   );
 };

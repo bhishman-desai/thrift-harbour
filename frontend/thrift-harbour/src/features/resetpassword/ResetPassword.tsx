@@ -19,6 +19,7 @@ import useAuth from "../../hooks/useAuth";
 import { Auth } from "../../services/Auth";
 import { ClipLoader } from "react-spinners";
 import Modal from "../../components/ui-components/Modal/Modal";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const ResetPassword: React.FC = () => {
   const [inValidToken, setInValidToken] = useState(false);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const auth = new Auth();
 
@@ -82,6 +84,7 @@ const ResetPassword: React.FC = () => {
         } as ResetPasswordRequest);
         if (data?.status === 200) {
           setIsLoading(false);
+          setSuccess(true);
         } else if (error?.status === 500) {
           setInValidToken(true);
           setIsLoading(false);
@@ -100,6 +103,10 @@ const ResetPassword: React.FC = () => {
 
   const toggleError = () => {
     setError(!error);
+  };
+
+  const toggleSuccess = () => {
+    setSuccess(!success);
   };
 
   const toggleInvalidToken = () => {
@@ -176,6 +183,13 @@ const ResetPassword: React.FC = () => {
           </div>
         </Modal>
       )}
+      <SuccessErrorModal
+        type="SUCCESS"
+        message={"Password Changed Successfully!"}
+        open={success}
+        setOpen={setSuccess}
+        title={"Success"}
+      />
     </Container>
   );
 };
