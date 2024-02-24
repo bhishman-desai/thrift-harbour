@@ -28,6 +28,10 @@ interface TabProps {
   selected: boolean;
 }
 
+interface ValueProp {
+  approved?: boolean;
+}
+
 export const Tab = style.div<TabProps>`
   display: flex;
   justify-content: center;
@@ -50,28 +54,25 @@ export const Grid = style.div`
 `;
 
 export const ProductCard = style.div`
-display:flex;
-flex-direction:row;
+  display:flex;
+  flex-direction:row;
   box-sizing: border-box;
   padding:12px 12px 12px 12px;
-  border: 2px solid black;
+  border: 1px solid #e0e0e0;
   width: calc(33% - 10px);
-  height: 175px;
+  height: 125px;
   aspect-ratio: 1;
-  background-color: #fff;
+  background-color: #ffffff;
   flex-grow: 0;
 `;
 
 export const ImageContainer = style.div`
-  height:30%;
-  width:10%;
+  height:70%;
+  width:22%;
   display:flex;
   justify-content:center;
   align-items:center;
-  background-color:#f0f0f0;
-  border:1px solid red;
   border-radius: 8px;
-  padding: 12px;
 `;
 
 export const Image = style.div`
@@ -82,24 +83,22 @@ export const Image = style.div`
 `;
 
 export const Rest = style.div`
+
 display:flex;
 flex-direction:row;
 justify-content:space-between;
 width:100%;
 margin-left:12px;
-
 `;
 
 export const ProductNameAndDescription = style.div`
- display:flex;
- flex-direction:column;
+
  width:75%;
 `;
 
-export const ProductName = style.div`
+export const ProductInfo = style.div`
  display:flex;
- width:100%;
- align-items:center;
+ flex-direction: row;
 `;
 
 export const ProductDescription = style.div`
@@ -112,13 +111,11 @@ export const ProductDescription = style.div`
 export const ProductPrice = style.div`
  display:flex;
  width:100%;
- height:10%;
 `;
 
 export const ApproveStatus = style.div`
  display:flex;
  width:100%;
- height:10%;
 
 `;
 
@@ -129,4 +126,20 @@ export const ViewButtonContainer = style.div`
 //  justify-content:center;
 //  align-items:center;
 
+`;
+
+export const Title = style.div`
+ color:#212121;
+ font-family:inter;
+ font-size:16px;
+ line-height:20px;
+ font-weight:600;
+`;
+
+export const Value = style.div<ValueProp>`
+color:#616161;
+ font-family:inter;
+ line-height:20px;
+ font-size:16px;
+ font-weight:400;
 `;

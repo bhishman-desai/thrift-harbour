@@ -90,3 +90,18 @@ export interface GetAllAuctionListingResponse {
   status: number;
   data: AuctionListing[];
 }
+
+export interface AdminGetAllListingResponse {
+  status: number;
+  data: AdminGetAllListingResponseType[];
+}
+
+export interface AdminGetAllListingResponseType {
+  immediateSaleListingID: string;
+  productName: string;
+  price: number;
+  active: number;
+  approved: boolean;
+  rejected: boolean;
+  productImages: string[];
+}
