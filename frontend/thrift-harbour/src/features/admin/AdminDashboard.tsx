@@ -1,6 +1,19 @@
 import { useState } from "react";
 import Navbar from "../../components/ui-components/navbar/Navbar";
-import { Tab, TabsContainer } from "./AdminDashboardStyles";
+import { Button } from "../product-listing/listed-products/ListedProductsStyles";
+import {
+  Grid,
+  ImageContainer,
+  ProductCard,
+  Tab,
+  TabsContainer,
+  Image,
+  ProductNameAndDescription,
+  ProductDescription,
+  ProductName,
+  Rest,
+  ViewButtonContainer,
+} from "./AdminDashboardStyles";
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("All Listed Products");
@@ -31,6 +44,39 @@ const AdminDashboard: React.FC = () => {
     setActiveTab(key);
   };
 
+  const data = [
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+    {
+      key: "",
+    },
+  ];
+
   return (
     <>
       <Navbar navOptions={navOptions} />
@@ -50,6 +96,29 @@ const AdminDashboard: React.FC = () => {
           </Tab>
         ))}
       </TabsContainer>
+      <Grid>
+        {data.map((data) => {
+          return (
+            <ProductCard>
+              <ImageContainer>
+                <Image></Image>
+              </ImageContainer>
+              <Rest>
+                <ProductNameAndDescription>
+                  <ProductName>Name: Krutik</ProductName>
+                  <ProductDescription>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                    Distinctio numquam ab suscipit amet est aperiam
+                  </ProductDescription>
+                </ProductNameAndDescription>
+                <ViewButtonContainer>
+                  <Button>View</Button>
+                </ViewButtonContainer>
+              </Rest>
+            </ProductCard>
+          );
+        })}
+      </Grid>
     </>
   );
 };

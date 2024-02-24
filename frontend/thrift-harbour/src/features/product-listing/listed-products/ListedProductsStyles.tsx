@@ -19,7 +19,7 @@ export const ProductCard = style.div`
   box-sizing: border-box;
   padding:12px 12px 12px 12px;
   border: 2px solid black;
-  flex: 1  0 calc(25% - 10px); 
+  flex: 1  0 calc(24.6% - 10px); 
   aspect-ratio: 1;
   background-color: #fff;
   flex-grow: 0;
