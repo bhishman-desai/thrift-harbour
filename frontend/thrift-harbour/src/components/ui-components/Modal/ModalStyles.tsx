@@ -45,3 +45,11 @@ export const ModalTitle = styled.h2`
   justify-content:center;
   text-align-center;
 `;
+
+export const SliderContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%; /* Set the width as needed */
+`;

@@ -46,8 +46,10 @@ const Home: React.FC = () => {
         try {
           const [data, error] = await auth.getUser(token);
           if (data?.status === 200) {
+            console.log("in user");
             setAuthorized(true);
             setLogintype("USER");
+            return;
           } else if (error) {
             setError(true);
             setAuthorized(false);
@@ -61,6 +63,8 @@ const Home: React.FC = () => {
         try {
           const [data, error] = await auth.getAdmin(token);
           if (data?.status === 200) {
+            console.log("in admin");
+
             setAuthorized(true);
             setLogintype("ADMIN");
           } else if (error) {
@@ -83,6 +87,8 @@ const Home: React.FC = () => {
       ) : (
         <AdminDashboard />
       )}
+
+      {/* {authorized && loginType === "ADMIN" && <AdminDashboard />} */}
     </>
   );
 };

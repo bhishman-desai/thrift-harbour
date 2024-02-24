@@ -12,6 +12,7 @@ export interface ErrorModalProps {
   setOpen: (open: boolean) => void;
   type: "ERROR" | "SUCCESS";
   criteria?: boolean;
+  children?: React.ReactNode;
 }
 
 const SuccessErrorModal: React.FC<ErrorModalProps> = ({
@@ -21,6 +22,7 @@ const SuccessErrorModal: React.FC<ErrorModalProps> = ({
   setOpen,
   type,
   criteria,
+  children,
 }) => {
   return (
     <React.Fragment>
@@ -66,6 +68,7 @@ const SuccessErrorModal: React.FC<ErrorModalProps> = ({
           </Typography>
         </Sheet>
       </Modal>
+      {children && children}
     </React.Fragment>
   );
 };

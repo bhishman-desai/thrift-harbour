@@ -100,7 +100,7 @@ export interface AdminGetAllListingResponseType {
   immediateSaleListingID: string;
   productName: string;
   price: number;
-  active: number;
+  active: boolean;
   approved: boolean;
   rejected: boolean;
   productImages: string[];

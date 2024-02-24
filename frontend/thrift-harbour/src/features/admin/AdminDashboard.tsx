@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import ImageSlider from "../../components/ui-components/image-slider/ImageSlider";
+import { Container } from "../../components/ui-components/image-slider/ImageSliderStyles";
+import Modal from "../../components/ui-components/Modal/Modal";
 import Navbar from "../../components/ui-components/navbar/Navbar";
 import { AdminServices } from "../../services/Admin";
 import { ListingService } from "../../services/Listing";
@@ -7,6 +10,7 @@ import {
   AdminGetAllListingResponseType,
 } from "../../types/ListingTypes";
 import { Button } from "../product-listing/listed-products/ListedProductsStyles";
+import ViewProduct from "../product/ViewProduct";
 import {
   Grid,
   ImageContainer,
@@ -35,6 +39,18 @@ const AdminDashboard: React.FC = () => {
   >([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [viewProduct, setViewProduct] = useState(false);
+  const [currentProduct, setCurrentProduct] =
+    useState<AdminGetAllListingResponseType>({
+      immediateSaleListingID: "",
+      productName: "",
+      price: 0,
+      active: false,
+      approved: false,
+      rejected: false,
+      productImages: [],
+    });
+
   const navOptions = [
     {
       key: "Dashboard",
@@ -59,6 +75,9 @@ const AdminDashboard: React.FC = () => {
 
   const handleOnClick = (key: string) => {
     setActiveTab(key);
+  };
+  const toggleViewProduct = () => {
+    setViewProduct(!viewProduct);
   };
 
   useEffect(() => {
@@ -103,6 +122,18 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleViewClick = (product: AdminGetAllListingResponseType) => {
+    setCurrentProduct(product);
+    setViewProduct(true);
+  };
+
+  const newModalStyle: React.CSSProperties = {
+    width: "80%",
+    height: "80%",
+    maxWidth: "600px",
+    maxHeight: "600px",
+  };
+
   return (
     <>
       <Navbar navOptions={navOptions} />
@@ -127,6 +158,7 @@ const AdminDashboard: React.FC = () => {
       ) : (
         <Grid>
           {allListedProducts.map((product) => {
+            // setCurrentProduct(product);
             return (
               <ProductCard>
                 <ImageContainer>
@@ -167,13 +199,23 @@ const AdminDashboard: React.FC = () => {
                     </ProductInfo>
                   </ProductNameAndDescription>
                   <ViewButtonContainer>
-                    <Button>View</Button>
+                    <Button onClick={() => handleViewClick(product)}>
+                      View
+                    </Button>
                   </ViewButtonContainer>
                 </Rest>
               </ProductCard>
             );
           })}
         </Grid>
+      )}
+      {viewProduct && (
+        <Modal style={newModalStyle} onClose={toggleViewProduct}>
+          {/* <Container> */}
+          <ImageSlider images={currentProduct.productImages} />
+          {/* </Container> */}
+          <ViewProduct product={currentProduct} />
+        </Modal>
       )}
     </>
   );
