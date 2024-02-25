@@ -50,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
       throw new ListingNotFoundException(
           String.format(
               "No listing found with provided listing id:%s", reviewRequest.getListingId()));
-    else if (immediateSaleListing.isActive()) {
+    else if (!immediateSaleListing.isActive()) {
       throw new ListingNotActiveException("Not an active listing");
     }
 
@@ -90,7 +90,7 @@ public class AdminServiceImpl implements AdminService {
       throw new ListingNotFoundException(
           String.format(
               "No listing found with provided listing id:%s", reviewRequest.getListingId()));
-    else if (auctionSaleListing.isActive()) {
+    else if (!auctionSaleListing.isActive()) {
       throw new ListingNotActiveException("Not an active listing");
     }
 
