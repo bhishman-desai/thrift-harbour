@@ -64,5 +64,11 @@ export class Path {
     if (service === "review-request") {
       return "/admin/review-request";
     }
+    if (service === "get-approved-immediatesale-listing") {
+      return "/admin/get-approved-immediatesale-listing";
+    }
+    if (service === "get-denied-immediatesale-listing") {
+      return "/admin/get-denied-immediatesale-listing";
+    }
   }
 }

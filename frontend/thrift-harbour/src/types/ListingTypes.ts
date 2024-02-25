@@ -120,6 +120,7 @@ export interface AdminGetAllListingResponseType {
   approved: boolean;
   rejected: boolean;
   productImages: string[];
+  messageFromApprover?: string;
 }
 
 export interface SubmitReviewRequest {
@@ -136,5 +137,28 @@ export interface SubmitReviewResponse {
 
 export interface SubmitReviewResponsetype {
   data: SubmitReviewResponse;
+  status: number;
+}
+
+export interface ApprovedDeniedProducts {
+  immediateSaleListingID: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  category: string;
+  sellerEmail: string;
+  imageURLs: string[];
+  active: boolean;
+  approverEmail: string;
+  messageFromApprover: string;
+  dateOfApproval: string;
+  rejected: boolean;
+  sold: boolean;
+  approved: boolean;
+  productImages: string[];
+}
+
+export interface GetApprovedProductsResponsetype {
+  data: ApprovedDeniedProducts[];
   status: number;
 }

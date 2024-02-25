@@ -4,6 +4,7 @@ import {
   AdminGetAllListingResponse,
   AdminGetAllListingResponseType,
   AdminGetImmediateSaleProductById,
+  GetApprovedProductsResponsetype,
   SubmitReviewRequest,
   SubmitReviewResponsetype,
 } from "../types/ListingTypes";
@@ -78,6 +79,54 @@ export class AdminServices {
       });
       // Handle the response data
       return [response.data, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getApprovedListing(
+    token?: string | null
+  ): Promise<[GetApprovedProductsResponsetype | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getApprovedListingUrl = this.path.getAdminUrl(
+      "get-approved-immediatesale-listing"
+    );
+    const requestUrl = baseUrl + getApprovedListingUrl;
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getRejectedListing(
+    token?: string | null
+  ): Promise<[GetApprovedProductsResponsetype | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getRejectedListingUrl = this.path.getAdminUrl(
+      "get-denied-immediatesale-listing"
+    );
+    const requestUrl = baseUrl + getRejectedListingUrl;
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
     } catch (error) {
       // Handle errors
       throw error;
