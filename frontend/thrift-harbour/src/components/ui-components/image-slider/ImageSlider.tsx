@@ -21,7 +21,7 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   return (
     <Slider {...settings}>
       {images.map((image, index) => (
-        <img height={"250px"} width={"150px"} src={image} />
+        <img height={"200px"} width={"150px"} src={image} />
       ))}
     </Slider>
   );

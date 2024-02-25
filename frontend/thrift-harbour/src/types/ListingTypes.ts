@@ -111,6 +111,7 @@ export interface AdminGetImmediateSaleProductById {
   status: number;
   data: AdminGetImmediateSaleProductByIdType;
 }
+
 export interface AdminGetAllListingResponseType {
   immediateSaleListingID: string;
   productName: string;
@@ -119,4 +120,21 @@ export interface AdminGetAllListingResponseType {
   approved: boolean;
   rejected: boolean;
   productImages: string[];
+}
+
+export interface SubmitReviewRequest {
+  listingId: string;
+  status: string;
+  sellCategory: string;
+  message: string;
+}
+
+export interface SubmitReviewResponse {
+  listingId: string;
+  status: string;
+}
+
+export interface SubmitReviewResponsetype {
+  data: SubmitReviewResponse;
+  status: number;
 }

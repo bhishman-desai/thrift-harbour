@@ -4,6 +4,8 @@ import {
   AdminGetAllListingResponse,
   AdminGetAllListingResponseType,
   AdminGetImmediateSaleProductById,
+  SubmitReviewRequest,
+  SubmitReviewResponsetype,
 } from "../types/ListingTypes";
 import { Path } from "../utils/Path";
 
@@ -53,6 +55,29 @@ export class AdminServices {
       });
       // Handle the response data
       return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async submitReview(
+    payload: SubmitReviewRequest,
+    token?: string | null
+  ): Promise<[SubmitReviewResponsetype | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getSubmitReviewUrl = this.path.getAdminUrl("review-request");
+    const requestUrl = baseUrl + getSubmitReviewUrl;
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.post(requestUrl, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response.data, null];
     } catch (error) {
       // Handle errors
       throw error;

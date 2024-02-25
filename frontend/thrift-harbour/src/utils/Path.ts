@@ -61,5 +61,8 @@ export class Path {
     if (service === "get-immediatesale-product") {
       return "/admin/get-immediatesale-product";
     }
+    if (service === "review-request") {
+      return "/admin/review-request";
+    }
   }
 }

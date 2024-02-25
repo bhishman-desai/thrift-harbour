@@ -19,7 +19,7 @@ import {
 } from "./ViewProductsStyles";
 import { ProductInfo, Title, Value } from "../admin/AdminDashboardStyles";
 import { Helper } from "../../utils/Helper";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { AdminServices } from "../../services/Admin";
 import Select from "@mui/material/Select";
 import {
@@ -46,7 +46,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
   const [data, setData] = useState<any>();
   const [changeStatus, setChangeStatus] = useState("");
   const [denyComment, setDenyComment] = useState("");
-  const [isLoading, setIsLoadin] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     (async function () {
@@ -72,7 +72,36 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
     })();
   }, []);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setChangeStatus("");
+    setDenyComment("");
+    try {
+      setLoader(true);
+      const response = await admin.submitReview(
+        {
+          listingId: product.immediateSaleListingID,
+          status: changeStatus,
+          sellCategory: "DIRECT",
+          message: denyComment ? denyComment : "",
+        },
+        token
+      );
+
+      if (response[0]?.status === 200) {
+        setLoader(false);
+        const data = response[0].data;
+        setData(data);
+        console.log("data after if", data);
+      } else {
+        setError(true);
+        setLoader(false);
+      }
+    } catch (error) {
+      setLoader(false);
+      setError(true);
+    }
+  };
 
   return (
     <>
@@ -162,11 +191,11 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
                     setChangeStatus(e.target.value);
                   }}
                 >
-                  <MenuItem value={"Approve"}>Approve</MenuItem>
-                  <MenuItem value={"Deny"}>Deny</MenuItem>
+                  <MenuItem value={"APPROVED"}>APPROVE</MenuItem>
+                  <MenuItem value={"REJECTED"}>DENY</MenuItem>
                 </Select>
               </FormControl>
-              {changeStatus === "Deny" && (
+              {changeStatus === "REJECTED" && (
                 <FormControl sx={{ m: 1, width: "48%" }}>
                   <TextField
                     required={true}
@@ -181,8 +210,8 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
             </DropDown>
             <Button>
               <RegisterButton type="submit">
-                {isLoading ? (
-                  <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+                {loader ? (
+                  <ClipLoader color="#ffffff" loading={loader} size={20} />
                 ) : (
                   "Submit Review"
                 )}
