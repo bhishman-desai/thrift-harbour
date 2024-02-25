@@ -155,4 +155,28 @@ export class AdminServices {
       throw error;
     }
   }
+
+  async getSellerbyId(
+    id: number,
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getSellerByIdUrl = this.path.getAdminUrl("product-listing");
+    const requestUrl =
+      baseUrl + getSellerByIdUrl + `/${id}` + "/product-listing";
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
 }

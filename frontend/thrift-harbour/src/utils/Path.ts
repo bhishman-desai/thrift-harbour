@@ -73,5 +73,8 @@ export class Path {
     if (service === "get-all-sellers") {
       return "/admin/get-all-sellers";
     }
+    if (service === "product-listing") {
+      return "/admin/sellers";
+    }
   }
 }

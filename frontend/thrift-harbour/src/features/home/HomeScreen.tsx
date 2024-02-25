@@ -42,6 +42,11 @@ const Home: React.FC = () => {
       value: "Sellers",
       isSelected: true,
     },
+    {
+      key: "List By Sellers",
+      value: "List By Sellers",
+      isSelected: true,
+    },
   ];
 
   useEffect(() => {

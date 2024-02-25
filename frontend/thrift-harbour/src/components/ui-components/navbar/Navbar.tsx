@@ -4,6 +4,7 @@ import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import AdminDashboard from "../../../features/admin/AdminDashboard";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
+import ListedBySeller from "../../../features/product-listing/seller/ListedBySeller";
 import SellersList from "../../../features/Sellers/SellersList";
 import { NavOptions } from "../../../types/AuthTypes";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
@@ -60,7 +61,13 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions }) => {
       {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
       {currentSelected === "Dashboard" && <AdminDashboard />}
-      {currentSelected === "Sellers" && <SellersList />}
+      {currentSelected === "Sellers" && (
+        <SellersList
+          setCurrentSelected={setCurrentSelected}
+          currentSelected={currentSelected}
+        />
+      )}
+      {currentSelected === "List By Sellers" && <ListedBySeller />}
     </>
   );
 };

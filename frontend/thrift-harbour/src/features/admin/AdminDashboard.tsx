@@ -1,3 +1,4 @@
+import { truncate } from "fs/promises";
 import { useEffect, useState } from "react";
 import ProductList from "../../components/ProductList/ProductList";
 import ImageSlider from "../../components/ui-components/image-slider/ImageSlider";
@@ -223,6 +224,7 @@ const AdminDashboard: React.FC = () => {
                   <ProductList
                     product={product}
                     handleViewClick={handleViewClick}
+                    showViewButton={true}
                   />
                 );
               })}
@@ -242,6 +244,7 @@ const AdminDashboard: React.FC = () => {
                   <ProductList
                     product={product}
                     handleViewClick={handleViewClick}
+                    showViewButton={false}
                   />
                 );
               })}
@@ -261,6 +264,7 @@ const AdminDashboard: React.FC = () => {
                   <ProductList
                     product={product}
                     handleViewClick={handleViewClick}
+                    showViewButton={false}
                   />
                 );
               })}

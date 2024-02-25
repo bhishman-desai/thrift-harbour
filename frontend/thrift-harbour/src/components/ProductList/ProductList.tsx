@@ -19,11 +19,13 @@ import { Helper } from "../../utils/Helper";
 
 interface ProductListProps {
   product: AdminGetAllListingResponseType;
-  handleViewClick: (product: AdminGetAllListingResponseType) => void;
+  handleViewClick?: (product: AdminGetAllListingResponseType) => void;
+  showViewButton: boolean;
 }
 const ProductList: React.FC<ProductListProps> = ({
   product,
   handleViewClick,
+  showViewButton,
 }) => {
   const helper = new Helper();
   return (
@@ -76,10 +78,6 @@ const ProductList: React.FC<ProductListProps> = ({
                       ) === "Rejected" && <>Rejected</>}
                     </>
                   )}
-                  {/* product.messageFromApprover && (
-                    <>Rejected ( {product.messageFromApprover} )</>
-
-                  {/* {"Rejected" && <>Rejected</>} */}
                 </Value>
               }
               {helper.getListingStatus(product.approved, product.rejected) ===
@@ -90,9 +88,15 @@ const ProductList: React.FC<ProductListProps> = ({
               )}
             </ProductInfo>
           </ProductNameAndDescription>
-          <ViewButtonContainer>
-            <Button onClick={() => handleViewClick(product)}>View</Button>
-          </ViewButtonContainer>
+          {showViewButton && (
+            <ViewButtonContainer>
+              <Button
+                onClick={() => handleViewClick && handleViewClick(product)}
+              >
+                View
+              </Button>
+            </ViewButtonContainer>
+          )}
         </Rest>
       </ProductCard>
     </>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AdminServices } from "../../services/Admin";
 import { GetSellersResponse } from "../../types/ListingTypes";
 import {
@@ -16,7 +17,15 @@ import {
   UserId,
 } from "./SellersListStyles";
 
-const Dashboard: React.FC = () => {
+interface SllerListProps {
+  setCurrentSelected: (key: string) => void;
+  currentSelected: string;
+}
+const SellersList: React.FC<SllerListProps> = ({
+  setCurrentSelected,
+  currentSelected,
+}) => {
+  let navigate = useNavigate();
   const admin = new AdminServices();
   const token = localStorage.getItem("token");
   const [loading, setLoading] = useState(false);
@@ -57,7 +66,12 @@ const Dashboard: React.FC = () => {
         <>
           {sellers.map((seller) => {
             return (
-              <Parent>
+              <Parent
+                onClick={() => {
+                  localStorage.setItem("uId", String(seller.userID));
+                  setCurrentSelected("List By Sellers");
+                }}
+              >
                 <UserCard>
                   <AvatarContainer>
                     <Avatar>
@@ -85,4 +99,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default SellersList;
