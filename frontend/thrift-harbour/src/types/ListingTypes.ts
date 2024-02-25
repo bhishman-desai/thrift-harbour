@@ -162,3 +162,15 @@ export interface GetApprovedProductsResponsetype {
   data: ApprovedDeniedProducts[];
   status: number;
 }
+
+export interface GetSellersResponse {
+  userID: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface GetSellersResponsetype {
+  data: GetSellersResponse[];
+  status: number;
+}

@@ -70,5 +70,8 @@ export class Path {
     if (service === "get-denied-immediatesale-listing") {
       return "/admin/get-denied-immediatesale-listing";
     }
+    if (service === "get-all-sellers") {
+      return "/admin/get-all-sellers";
+    }
   }
 }

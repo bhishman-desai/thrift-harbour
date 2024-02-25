@@ -51,17 +51,41 @@ const ProductList: React.FC<ProductListProps> = ({
             <ProductInfo style={{ marginTop: "4px" }}>
               <Title>Status: </Title>
               {helper.getListingStatus(product.approved, product.rejected) ===
-              "Approved" ? (
-                <Value style={{ marginLeft: "4px", color: "green" }}>
-                  {helper.getListingStatus(product.approved, product.rejected)}
-                </Value>
-              ) : (
+                "Approved" && (
+                <>
+                  <Value style={{ marginLeft: "4px", color: "green" }}>
+                    {helper.getListingStatus(
+                      product.approved,
+                      product.rejected
+                    )}
+                  </Value>
+                </>
+              )}
+              {
                 <Value style={{ marginLeft: "4px", color: "red" }}>
-                  {product.messageFromApprover ? (
+                  {helper.getListingStatus(
+                    product.approved,
+                    product.rejected
+                  ) === "Rejected" && product.messageFromApprover ? (
                     <>Rejected ( {product.messageFromApprover} )</>
                   ) : (
-                    <>Rejected</>
+                    <>
+                      {helper.getListingStatus(
+                        product.approved,
+                        product.rejected
+                      ) === "Rejected" && <>Rejected</>}
+                    </>
                   )}
+                  {/* product.messageFromApprover && (
+                    <>Rejected ( {product.messageFromApprover} )</>
+
+                  {/* {"Rejected" && <>Rejected</>} */}
+                </Value>
+              }
+              {helper.getListingStatus(product.approved, product.rejected) ===
+                "Pending" && (
+                <Value style={{ marginLeft: "4px", color: "red" }}>
+                  Pending
                 </Value>
               )}
             </ProductInfo>

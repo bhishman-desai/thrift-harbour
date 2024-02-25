@@ -5,6 +5,7 @@ import {
   AdminGetAllListingResponseType,
   AdminGetImmediateSaleProductById,
   GetApprovedProductsResponsetype,
+  GetSellersResponsetype,
   SubmitReviewRequest,
   SubmitReviewResponsetype,
 } from "../types/ListingTypes";
@@ -117,6 +118,28 @@ export class AdminServices {
       "get-denied-immediatesale-listing"
     );
     const requestUrl = baseUrl + getRejectedListingUrl;
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getSellers(
+    token?: string | null
+  ): Promise<[GetSellersResponsetype | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getSellersUrl = this.path.getAdminUrl("get-all-sellers");
+    const requestUrl = baseUrl + getSellersUrl;
     console.log("requestUrl===>", requestUrl);
 
     try {
