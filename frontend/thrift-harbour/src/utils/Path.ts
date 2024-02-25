@@ -58,20 +58,8 @@ export class Path {
     if (service === "get-all-immediatesale-listing") {
       return "/admin/get-all-immediatesale-listing";
     }
-    if (service === "auction-listing") {
-      return "/users/listing/create-auctionsale-listing";
-    }
-    if (service === "get-immediatesale-listing") {
-      return "/users/listing/get-immediatesale-listing";
-    }
-    if (service === "get-immediatesale-images") {
-      return "/users/listing/get-immediatesale-images";
-    }
-    if (service === "get-auctionsale-listing") {
-      return "/users/listing/get-auctionsale-listing";
-    }
-    if (service === "get-auctionsale-images") {
-      return "/users/listing/get-auctionsale-images";
+    if (service === "get-immediatesale-product") {
+      return "/admin/get-immediatesale-product";
     }
   }
 }

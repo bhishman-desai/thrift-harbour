@@ -345,10 +345,10 @@ const ProductListing: React.FC = () => {
             {/* <Field style={{ width: "48%" }}> */}
             <FormControl
               sx={{ m: 1, width: "48%" }}
-              error={
-                listingData.productCategory.length === 0 &&
-                touchedFields.productCategory
-              }
+              // error={
+              //   listingData.productCategory.length === 0 &&
+              //   touchedFields.productCategory
+              // }
             >
               <InputLabel>Product category</InputLabel>
               <Select

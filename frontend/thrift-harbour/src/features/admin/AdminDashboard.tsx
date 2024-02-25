@@ -11,6 +11,7 @@ import {
 } from "../../types/ListingTypes";
 import { Button } from "../product-listing/listed-products/ListedProductsStyles";
 import ViewProduct from "../product/ViewProduct";
+import { UserInfo } from "../product/ViewProductsStyles";
 import {
   Grid,
   ImageContainer,
@@ -160,60 +161,68 @@ const AdminDashboard: React.FC = () => {
           {allListedProducts.map((product) => {
             // setCurrentProduct(product);
             return (
-              <ProductCard>
-                <ImageContainer>
-                  <Image>
-                    <img
-                      height={"100%"}
-                      width={"100%"}
-                      src={product.productImages && product.productImages[0]}
-                    />
-                  </Image>
-                </ImageContainer>
-                <Rest>
-                  <ProductNameAndDescription>
-                    <ProductInfo>
-                      <Title>Name: </Title>
-                      <Value style={{ marginLeft: "4px" }}>
-                        {product.productName}
-                      </Value>
-                    </ProductInfo>
-                    <ProductInfo style={{ marginTop: "4px" }}>
-                      <Title>Price: </Title>
-                      <Value style={{ marginLeft: "4px" }}>
-                        {"$" + product.price}
-                      </Value>
-                    </ProductInfo>
-                    <ProductInfo style={{ marginTop: "4px" }}>
-                      <Title>Status: </Title>
-                      {getListingStatus(product.approved, product.rejected) ===
-                      "Approved" ? (
-                        <Value style={{ marginLeft: "4px", color: "green" }}>
-                          {getListingStatus(product.approved, product.rejected)}
+              <>
+                <ProductCard>
+                  <ImageContainer>
+                    <Image>
+                      <img
+                        height={"100%"}
+                        width={"100%"}
+                        src={product.productImages && product.productImages[0]}
+                      />
+                    </Image>
+                  </ImageContainer>
+                  <Rest>
+                    <ProductNameAndDescription>
+                      <ProductInfo>
+                        <Title>Name: </Title>
+                        <Value style={{ marginLeft: "4px" }}>
+                          {product.productName}
                         </Value>
-                      ) : (
-                        <Value style={{ marginLeft: "4px", color: "red" }}>
-                          {getListingStatus(product.approved, product.rejected)}
+                      </ProductInfo>
+                      <ProductInfo style={{ marginTop: "4px" }}>
+                        <Title>Price: </Title>
+                        <Value style={{ marginLeft: "4px" }}>
+                          {"$" + product.price}
                         </Value>
-                      )}
-                    </ProductInfo>
-                  </ProductNameAndDescription>
-                  <ViewButtonContainer>
-                    <Button onClick={() => handleViewClick(product)}>
-                      View
-                    </Button>
-                  </ViewButtonContainer>
-                </Rest>
-              </ProductCard>
+                      </ProductInfo>
+                      <ProductInfo style={{ marginTop: "4px" }}>
+                        <Title>Status: </Title>
+                        {getListingStatus(
+                          product.approved,
+                          product.rejected
+                        ) === "Approved" ? (
+                          <Value style={{ marginLeft: "4px", color: "green" }}>
+                            {getListingStatus(
+                              product.approved,
+                              product.rejected
+                            )}
+                          </Value>
+                        ) : (
+                          <Value style={{ marginLeft: "4px", color: "red" }}>
+                            {getListingStatus(
+                              product.approved,
+                              product.rejected
+                            )}
+                          </Value>
+                        )}
+                      </ProductInfo>
+                    </ProductNameAndDescription>
+                    <ViewButtonContainer>
+                      <Button onClick={() => handleViewClick(product)}>
+                        View
+                      </Button>
+                    </ViewButtonContainer>
+                  </Rest>
+                </ProductCard>
+              </>
             );
           })}
         </Grid>
       )}
       {viewProduct && (
         <Modal style={newModalStyle} onClose={toggleViewProduct}>
-          {/* <Container> */}
           <ImageSlider images={currentProduct.productImages} />
-          {/* </Container> */}
           <ViewProduct product={currentProduct} />
         </Modal>
       )}

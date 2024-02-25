@@ -96,6 +96,21 @@ export interface AdminGetAllListingResponse {
   data: AdminGetAllListingResponseType[];
 }
 
+export interface AdminGetImmediateSaleProductByIdType {
+  immediateSaleListingID: string;
+  productName: string;
+  price: number;
+  active: boolean;
+  approved: boolean;
+  rejected: boolean;
+  productImages: string[];
+  productDescription: string;
+}
+
+export interface AdminGetImmediateSaleProductById {
+  status: number;
+  data: AdminGetImmediateSaleProductByIdType;
+}
 export interface AdminGetAllListingResponseType {
   immediateSaleListingID: string;
   productName: string;

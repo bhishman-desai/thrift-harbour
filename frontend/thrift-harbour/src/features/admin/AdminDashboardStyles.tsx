@@ -92,7 +92,6 @@ margin-left:12px;
 `;
 
 export const ProductNameAndDescription = style.div`
-
  width:75%;
 `;
 
