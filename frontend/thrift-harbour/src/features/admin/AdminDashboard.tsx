@@ -60,13 +60,6 @@ const AdminDashboard: React.FC = () => {
     ApprovedDeniedProducts[]
   >([]);
 
-  const navOptions = [
-    {
-      key: "Dashboard",
-      value: "Dashboard",
-      isSelected: true,
-    },
-  ];
   const tabs = [
     {
       key: "All Listed Products",
@@ -180,73 +173,6 @@ const AdminDashboard: React.FC = () => {
     })();
   }, []);
 
-  // const handleOnClick = async (key: string) => {
-  //   if (key === "Approved Products") {
-  //     setActiveTab(key);
-  //     console.log("1st if", activeTab);
-
-  //     setLoading(true);
-  //     try {
-  //       const response = await admin.getApprovedListing(token);
-
-  //       if (response[0]?.status === 200) {
-  //         setLoading(false);
-  //         const data = response[0].data;
-
-  //         data.map(async (product, index) => {
-  //           const imagesResponse =
-  //             await listing.getImmediateListedProductsImages(
-  //               product.immediateSaleListingID,
-  //               token
-  //             );
-  //           if (imagesResponse[0]?.status === 200) {
-  //             product.imageURLs = imagesResponse[0].data.imageURLs;
-  //           }
-  //           setApprovedListing([...data]);
-  //         });
-  //         console.log("data after if", data);
-  //       } else {
-  //         setError(true);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       setLoading(false);
-  //       setError(true);
-  //     }
-  //   }
-  //   if (key === "Rejected Products") {
-  //     console.log("2nd if", activeTab);
-
-  //     setLoading(true);
-  //     try {
-  //       const response = await admin.getRejectedListing(token);
-
-  //       if (response[0]?.status === 200) {
-  //         setLoading(false);
-  //         const data = response[0].data;
-
-  //         data.map(async (product, index) => {
-  //           const imagesResponse =
-  //             await listing.getImmediateListedProductsImages(
-  //               product.immediateSaleListingID,
-  //               token
-  //             );
-  //           if (imagesResponse[0]?.status === 200) {
-  //             product.imageURLs = imagesResponse[0].data.imageURLs;
-  //           }
-  //           setRejectedListing([...data]);
-  //         });
-  //         console.log("data after if", data);
-  //       } else {
-  //         setError(true);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       setLoading(false);
-  //       setError(true);
-  //     }
-  //   }
-  // };
   const toggleViewProduct = () => {
     setViewProduct(!viewProduct);
   };
@@ -269,7 +195,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <>
-      <Navbar navOptions={navOptions} />
+      {/* <Navbar navOptions={navOptions} /> */}
 
       <TabsContainer>
         {tabs.map((tab) => (

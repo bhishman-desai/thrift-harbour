@@ -17,22 +17,30 @@ const Home: React.FC = () => {
   const [loginType, setLogintype] = useState("");
   const [error, setError] = useState(false);
 
-  const navOptions = [
+  const navOptionsUsers = [
     {
       key: "List Product",
       value: "List Product",
       isSelected: false,
-    },
-    {
-      key: "Dashboard",
-      value: "Dashboard",
-      isSelected: true,
     },
 
     {
       key: "My Listed Products",
       value: "My Listed Products",
       isSelected: false,
+    },
+  ];
+
+  const navOptionsAdmin = [
+    {
+      key: "Dashboard",
+      value: "Dashboard",
+      isSelected: true,
+    },
+    {
+      key: "Sellers",
+      value: "Sellers",
+      isSelected: true,
     },
   ];
 
@@ -83,9 +91,12 @@ const Home: React.FC = () => {
   return (
     <>
       {authorized && loginType === "USER" ? (
-        <Navbar navOptions={navOptions} />
+        <Navbar navOptions={navOptionsUsers} />
       ) : (
-        <AdminDashboard />
+        <>
+          <Navbar navOptions={navOptionsAdmin} />
+        </>
+        // <AdminDashboard />
       )}
 
       {/* {authorized && loginType === "ADMIN" && <AdminDashboard />} */}

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
+import AdminDashboard from "../../../features/admin/AdminDashboard";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
+import SellersList from "../../../features/Sellers/SellersList";
 import { NavOptions } from "../../../types/AuthTypes";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
@@ -53,11 +55,12 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions }) => {
           </Profile>
         </TabsOptionsContainer>
       </NavContainer>
-      {/* {currentSelected === "Dashboard" && <Dashboard />}
-      {currentSelected === "Contact us" && <ContactUs />} */}
-      {currentSelected === "List Product" && <ProductListing />}
+
       {isProfileClicked && <Profilepopup />}
+      {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
+      {currentSelected === "Dashboard" && <AdminDashboard />}
+      {currentSelected === "Sellers" && <SellersList />}
     </>
   );
 };
