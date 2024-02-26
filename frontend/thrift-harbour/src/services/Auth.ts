@@ -76,6 +76,33 @@ export class Auth {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("user response", response);
+      return [{ status: response.status, message: response.data }, null];
+    } catch (error: any) {
+      return [
+        null,
+        {
+          status: error?.response.status,
+          message: error?.response.data.message,
+        } as ErrorResponse,
+      ];
+    }
+  }
+
+  async getAdmin(
+    token: string
+  ): Promise<[GetUserResponse | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getAdminUrl = this.path.getAuthUrl("getAdmin");
+    const requestUrl = baseUrl + getAdminUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("user response", response);
       return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [

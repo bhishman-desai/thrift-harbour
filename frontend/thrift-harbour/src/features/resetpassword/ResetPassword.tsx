@@ -167,7 +167,7 @@ const ResetPassword: React.FC = () => {
           </Button>
         </Form>
       </InputCard>
-      {error && (
+      {/* {error && (
         <Modal onClose={toggleError}>
           <div>
             <p style={{ color: "red" }}>
@@ -175,7 +175,14 @@ const ResetPassword: React.FC = () => {
             </p>
           </div>
         </Modal>
-      )}
+      )} */}
+      <SuccessErrorModal
+        type="ERROR"
+        message={"Something went wrong, please try again!"}
+        open={error}
+        setOpen={toggleError}
+        title={"Success"}
+      />
       {inValidToken && (
         <Modal onClose={toggleInvalidToken}>
           <div>

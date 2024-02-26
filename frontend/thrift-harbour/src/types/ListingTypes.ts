@@ -90,3 +90,87 @@ export interface GetAllAuctionListingResponse {
   status: number;
   data: AuctionListing[];
 }
+
+export interface AdminGetAllListingResponse {
+  status: number;
+  data: AdminGetAllListingResponseType[];
+}
+
+export interface AdminGetImmediateSaleProductByIdType {
+  immediateSaleListingID: string;
+  productName: string;
+  price: number;
+  active: boolean;
+  approved: boolean;
+  rejected: boolean;
+  productImages: string[];
+  productDescription: string;
+}
+
+export interface AdminGetImmediateSaleProductById {
+  status: number;
+  data: AdminGetImmediateSaleProductByIdType;
+}
+
+export interface AdminGetAllListingResponseType {
+  immediateSaleListingID: string;
+  productName: string;
+  price: number;
+  active: boolean;
+  approved: boolean;
+  rejected: boolean;
+  productImages: string[];
+  messageFromApprover?: string;
+}
+
+export interface SubmitReviewRequest {
+  listingId: string;
+  status: string;
+  sellCategory: string;
+  message: string;
+}
+
+export interface SubmitReviewResponse {
+  listingId: string;
+  status: string;
+}
+
+export interface SubmitReviewResponsetype {
+  data: SubmitReviewResponse;
+  status: number;
+}
+
+export interface ApprovedDeniedProducts {
+  immediateSaleListingID: string;
+  productName: string;
+  productDescription: string;
+  price: number;
+  category: string;
+  sellerEmail: string;
+  imageURLs: string[];
+  active: boolean;
+  approverEmail: string;
+  messageFromApprover: string;
+  dateOfApproval: string;
+  rejected: boolean;
+  sold: boolean;
+  approved: boolean;
+  productImages: string[];
+}
+
+export interface GetApprovedProductsResponsetype {
+  data: ApprovedDeniedProducts[];
+  status: number;
+}
+
+export interface GetSellersResponse {
+  userID: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface GetSellersResponsetype {
+  data: GetSellersResponse[];
+  status: number;
+}

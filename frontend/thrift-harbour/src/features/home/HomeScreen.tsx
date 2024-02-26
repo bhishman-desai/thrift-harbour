@@ -5,6 +5,8 @@ import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
 import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
 import Navbar from "../../components/ui-components/navbar/Navbar";
+import { LoginType } from "../../types/AuthTypes";
+import AdminDashboard from "../admin/AdminDashboard";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -12,28 +14,40 @@ const Home: React.FC = () => {
 
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
+  const [loginType, setLogintype] = useState<string | null>();
   const [error, setError] = useState(false);
 
-  const items: HamburgerMenuProps = {
-    menuItems: [
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-      {
-        id: 1,
-        label: "List Product",
-      },
-    ],
-  };
+  const navOptionsUsers = [
+    {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
+
+    {
+      key: "My Listed Products",
+      value: "My Listed Products",
+      isSelected: false,
+    },
+  ];
+
+  const navOptionsAdmin = [
+    {
+      key: "Dashboard",
+      value: "Dashboard",
+      isSelected: true,
+    },
+    {
+      key: "Sellers",
+      value: "Sellers",
+      isSelected: true,
+    },
+    {
+      key: "List By Sellers",
+      value: "List By Sellers",
+      isSelected: true,
+    },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -45,7 +59,27 @@ const Home: React.FC = () => {
         try {
           const [data, error] = await auth.getUser(token);
           if (data?.status === 200) {
+            console.log("in user");
             setAuthorized(true);
+            setLogintype("USER");
+            return;
+          } else if (error) {
+            setError(true);
+            setAuthorized(false);
+          } else {
+            setError(true);
+          }
+        } catch (error) {
+          setError(true);
+        }
+
+        try {
+          const [data, error] = await auth.getAdmin(token);
+          if (data?.status === 200) {
+            console.log("in admin");
+
+            setAuthorized(true);
+            setLogintype("ADMIN");
           } else if (error) {
             setError(true);
             setAuthorized(false);
@@ -59,32 +93,22 @@ const Home: React.FC = () => {
     })();
   }, [token]);
 
-  const toggleError = () => {
-    setError(false);
-    handleLogout && handleLogout();
-    navigate("/login");
-  };
-
-  const handleClick = () => {
-    handleLogout && handleLogout();
-    navigate("/login");
-  };
   return (
     <>
-      {/* {authorized && (
-        <HomeParent>
-          <h1>Hello from user!</h1>
-          <button onClick={() => handleClick()}>logout</button>
-        </HomeParent>
+      {authorized && loginType === "ADMIN" ? (
+        <Navbar navOptions={navOptionsAdmin} loginType={loginType} />
+      ) : (
+        <>
+          {authorized && loginType === "USER" ? (
+            <Navbar navOptions={navOptionsUsers} loginType={loginType} />
+          ) : (
+            <></>
+          )}
+        </>
+        // <AdminDashboard />
       )}
-      {error && (
-        <Modal onClose={toggleError}>
-          <p style={{ color: "red" }}>Something went wrong try again!</p>
-        </Modal>
-      )} */}
-      <Navbar />
 
-      {/* <Hamburg menuItems={items.menuItems} /> */}
+      {/* {authorized && loginType === "ADMIN" && <AdminDashboard />} */}
     </>
   );
 };

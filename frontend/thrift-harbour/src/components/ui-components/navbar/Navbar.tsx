@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
+import AdminDashboard from "../../../features/admin/AdminDashboard";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
+import ListedBySeller from "../../../features/product-listing/seller/ListedBySeller";
+import SellersList from "../../../features/Sellers/SellersList";
+import { NavOptions } from "../../../types/AuthTypes";
 import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
@@ -15,41 +19,16 @@ import {
   ProfileIconBg,
 } from "./NavbarStyles";
 
-const Navbar: React.FC<any> = () => {
-  const NavOptions = [
-    {
-      key: "List Product",
-      value: "List Product",
-      isSelected: false,
-    },
-    {
-      key: "Dashboard",
-      value: "Dashboard",
-      isSelected: true,
-    },
+interface NavbarProps {
+  navOptions: NavOptions[];
+  loginType: string;
+}
 
-    {
-      key: "My Listed Products",
-      value: "My Listed Products",
-      isSelected: false,
-    },
-  ];
-
-  const [currentSelected, setCurrentSelected] = useState("Dashboard");
+const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
+  const [currentSelected, setCurrentSelected] = useState(
+    loginType === "ADMIN" ? "Dashboard" : "List Product"
+  );
   const [isProfileClicked, setIsProfileClicked] = useState(false);
-  // useEffect(() => {
-  //   const handleDocumentClick = () => {
-  //     setIsProfileBgHovered(false);
-  //   };
-
-  //   if (isProfileBgHovered) {
-  //     document.addEventListener("click", handleDocumentClick);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener("click", handleDocumentClick);
-  //   };
-  // }, [isProfileBgHovered]);
 
   const onClickOption = (key: string) => {
     setCurrentSelected(key);
@@ -61,7 +40,7 @@ const Navbar: React.FC<any> = () => {
         {/* <ReviewBoosterIcon height={"125"} width={"74"} /> */}
         <TabsOptionsContainer>
           <Tabs>
-            {NavOptions.map((option) => {
+            {navOptions.map((option) => {
               return (
                 <Option
                   style={{ color: "#ffffff" }}
@@ -80,11 +59,20 @@ const Navbar: React.FC<any> = () => {
           </Profile>
         </TabsOptionsContainer>
       </NavContainer>
-      {/* {currentSelected === "Dashboard" && <Dashboard />}
-      {currentSelected === "Contact us" && <ContactUs />} */}
-      {currentSelected === "List Product" && <ProductListing />}
+
       {isProfileClicked && <Profilepopup />}
+      {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
+      {currentSelected === "Dashboard" && loginType === "ADMIN" && (
+        <AdminDashboard />
+      )}
+      {currentSelected === "Sellers" && (
+        <SellersList
+          setCurrentSelected={setCurrentSelected}
+          currentSelected={currentSelected}
+        />
+      )}
+      {currentSelected === "List By Sellers" && <ListedBySeller />}
     </>
   );
 };
