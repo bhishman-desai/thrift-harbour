@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
-  const [loginType, setLogintype] = useState("");
+  const [loginType, setLogintype] = useState<string | null>();
   const [error, setError] = useState(false);
 
   const navOptionsUsers = [
@@ -95,11 +95,15 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {authorized && loginType === "USER" ? (
-        <Navbar navOptions={navOptionsUsers} />
+      {authorized && loginType === "ADMIN" ? (
+        <Navbar navOptions={navOptionsAdmin} loginType={loginType} />
       ) : (
         <>
-          <Navbar navOptions={navOptionsAdmin} />
+          {authorized && loginType === "USER" ? (
+            <Navbar navOptions={navOptionsUsers} loginType={loginType} />
+          ) : (
+            <></>
+          )}
         </>
         // <AdminDashboard />
       )}

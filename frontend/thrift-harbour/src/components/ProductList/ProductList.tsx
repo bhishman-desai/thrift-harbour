@@ -41,7 +41,7 @@ const ProductList: React.FC<ProductListProps> = ({
               src={
                 product.productImages && product.productImages[0]
                   ? product.productImages[0]
-                  : product.imageURLs[0]
+                  : product.imageURLs && product.imageURLs[0]
               }
             />
           </Image>
