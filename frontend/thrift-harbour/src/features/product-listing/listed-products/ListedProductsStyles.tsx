@@ -84,22 +84,6 @@ export const NoListing = style.div`
   align-items:center;
 `;
 
-export const TabsContainer = style.div`
-  margin-top: 10px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: #f6f4eb;
-  padding: 16px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
 interface TabProps {
   selected: boolean;
 }

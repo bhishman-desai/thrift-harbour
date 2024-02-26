@@ -79,7 +79,7 @@ export class AdminServices {
         },
       });
       // Handle the response data
-      return [response.data, null];
+      return [response, null];
     } catch (error) {
       // Handle errors
       throw error;

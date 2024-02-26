@@ -18,7 +18,7 @@ import {
 import { Helper } from "../../utils/Helper";
 
 interface ProductListProps {
-  product: AdminGetAllListingResponseType;
+  product: any;
   handleViewClick?: (product: AdminGetAllListingResponseType) => void;
   showViewButton: boolean;
 }
@@ -27,6 +27,8 @@ const ProductList: React.FC<ProductListProps> = ({
   handleViewClick,
   showViewButton,
 }) => {
+  console.log("auction listing", product);
+
   const helper = new Helper();
   return (
     <>
@@ -36,7 +38,11 @@ const ProductList: React.FC<ProductListProps> = ({
             <img
               height={"100%"}
               width={"100%"}
-              src={product.productImages && product.productImages[0]}
+              src={
+                product.productImages && product.productImages[0]
+                  ? product.productImages[0]
+                  : product.imageURLs[0]
+              }
             />
           </Image>
         </ImageContainer>
@@ -48,7 +54,11 @@ const ProductList: React.FC<ProductListProps> = ({
             </ProductInfo>
             <ProductInfo style={{ marginTop: "4px" }}>
               <Title>Price: </Title>
-              <Value style={{ marginLeft: "4px" }}>{"$" + product.price}</Value>
+              <Value style={{ marginLeft: "4px" }}>
+                {product.price
+                  ? `$${product.price}`
+                  : `$${product.startingBid}`}
+              </Value>
             </ProductInfo>
             <ProductInfo style={{ marginTop: "4px" }}>
               <Title>Status: </Title>

@@ -31,6 +31,7 @@ import {
 } from "@mui/material";
 import { Button, RegisterButton } from "../registration/RegistrationStyles";
 import { ClipLoader } from "react-spinners";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 // import ExampleCarouselImage from "components/ExampleCarouselImage";
 
 interface ViewProductsProps {
@@ -47,6 +48,8 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
   const [changeStatus, setChangeStatus] = useState("");
   const [denyComment, setDenyComment] = useState("");
   const [loader, setLoader] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [errorInReview, setErrorInReview] = useState(false);
 
   useEffect(() => {
     (async function () {
@@ -55,19 +58,22 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
           product.immediateSaleListingID,
           token
         );
-
+        console.log("response[0]?.status", response[0]?.status);
         if (response[0]?.status === 200) {
           setLoading(false);
+          setError(false);
           const data = response[0].data;
           setData(data);
           console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
+          setOpenModal(true);
         }
       } catch (error) {
         setLoading(false);
         setError(true);
+        setOpenModal(true);
       }
     })();
   }, []);
@@ -90,16 +96,22 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
 
       if (response[0]?.status === 200) {
         setLoader(false);
+        setErrorInReview(false);
+
         const data = response[0].data;
         setData(data);
         console.log("data after if", data);
+        setOpenModal(true);
       } else {
-        setError(true);
+        console.log("in e;se");
+        setErrorInReview(true);
         setLoader(false);
+        setOpenModal(true);
       }
     } catch (error) {
       setLoader(false);
-      setError(true);
+      setErrorInReview(true);
+      setOpenModal(true);
     }
   };
 
@@ -220,6 +232,28 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
           </ChangeStatus>
         </>
       )}
+      <SuccessErrorModal
+        type={errorInReview ? "ERROR" : "SUCCESS"}
+        message={
+          errorInReview
+            ? "Something went wrong please try again!"
+            : "Product listed successfully!"
+        }
+        open={openModal}
+        setOpen={setOpenModal}
+        title={error ? "error" : "Success"}
+      />
+      {/* <SuccessErrorModal
+        type={error ? "ERROR" : "SUCCESS"}
+        message={
+          error
+            ? "Something went wrong please try again!"
+            : "Product listed successfully!"
+        }
+        open={openModal}
+        setOpen={setOpenModal}
+        title={error ? "error" : "Success"}
+      /> */}
     </>
   );
 };
