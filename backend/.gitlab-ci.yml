@@ -53,7 +53,7 @@ publish-be:
     - docker build -t docker.io/group15/backend:$CI_COMMIT_SHORT_SHA .
     - docker push docker.io/group15/backend:$CI_COMMIT_SHORT_SHA
   only:
-    - development
+    - main
 
 deploy-be:
   image: alpine:latest
@@ -71,4 +71,4 @@ deploy-be:
     name: production
     url: http://172.17.1.50:8080
   only:
-    - development
+    - main

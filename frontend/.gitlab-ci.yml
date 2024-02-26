@@ -23,7 +23,7 @@ publish-fe:
     - docker build -t docker.io/group15/frontend:$CI_COMMIT_SHORT_SHA .
     - docker push docker.io/group15/frontend:$CI_COMMIT_SHORT_SHA
   only:
-    - development
+    - main
 
 deploy-fe:
   image: alpine:latest
@@ -41,4 +41,4 @@ deploy-fe:
     name: production
     url: http://172.17.1.50:3000
   only:
-    - development
+    - main
