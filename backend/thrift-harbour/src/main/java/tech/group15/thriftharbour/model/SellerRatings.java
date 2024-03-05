@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "buyer_ratings")
-public class BuyerRatings {
+@Table(name = "seller_ratings")
+public class SellerRatings {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int buyerRatingID;
+  private int sellerRatingID;
 
   private int ratingToUserId;
 
   private int ratingFromUserId;
 
-  private int buyerRatings;
+  private int sellerRatings;
 }

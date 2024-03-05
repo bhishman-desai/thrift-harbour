@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.SellerRatingsRequest;
 import tech.group15.thriftharbour.service.RatingsService;
 
 @RestController
@@ -23,9 +24,17 @@ public class UserController {
 
   @PostMapping("/add-buyer-ratings")
   public ResponseEntity<String> addBuyerRatings(
-          @Valid @RequestHeader("Authorization") String authorizationHeader,
-          @RequestBody BuyerRatingsRequest buyerRatingsRequest) {
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @RequestBody BuyerRatingsRequest buyerRatingsRequest) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(ratingsService.addBuyerRatings(authorizationHeader, buyerRatingsRequest));
+  }
+
+  @PostMapping("/add-seller-ratings")
+  public ResponseEntity<String> addSellerRatings(
+      @Valid @RequestHeader("Authorization") String authorizationHeader,
+      @RequestBody SellerRatingsRequest sellerRatingsRequest) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(ratingsService.addSellerRatings(authorizationHeader, sellerRatingsRequest));
   }
 }

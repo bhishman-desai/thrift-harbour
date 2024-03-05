@@ -1,7 +1,9 @@
 package tech.group15.thriftharbour.mapper;
 
 import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.SellerRatingsRequest;
 import tech.group15.thriftharbour.model.BuyerRatings;
+import tech.group15.thriftharbour.model.SellerRatings;
 
 public class RatingsMapper {
   private RatingsMapper() {}
@@ -15,5 +17,16 @@ public class RatingsMapper {
     buyerRatings.setBuyerRatings(buyerRatingsRequest.getBuyerRatings());
 
     return buyerRatings;
+  }
+
+  public static SellerRatings convertSellerRatingsRequestToSellerRatingsModel(
+      SellerRatingsRequest sellerRatingsRequest, int fromUserId) {
+    SellerRatings sellerRatings = new SellerRatings();
+
+    sellerRatings.setRatingToUserId(sellerRatingsRequest.getRatingToUserId());
+    sellerRatings.setRatingFromUserId(fromUserId);
+    sellerRatings.setSellerRatings(sellerRatingsRequest.getSellerRatings());
+
+    return sellerRatings;
   }
 }
