@@ -45,7 +45,10 @@ public class RatingsServiceImpl implements RatingsService {
 
     buyerRatingsRepository.save(buyerRatings);
 
-    return "Ratings Added Successfully";
+    userRepository.updateBuyerRatings(
+        buyerRatingsRepository.findAvgBuyerRatings(user.getUserID()), user.getUserID());
+
+    return "Buyer Ratings Added Successfully";
   }
 
   @Override
@@ -65,6 +68,9 @@ public class RatingsServiceImpl implements RatingsService {
 
     sellerRatingsRepository.save(sellerRatings);
 
-    return "Ratings Added Successfully";
+    userRepository.updateSellerRatings(
+            sellerRatingsRepository.findAvgSellerRatings(user.getUserID()), user.getUserID());
+
+    return "Seller Ratings Added Successfully";
   }
 }
