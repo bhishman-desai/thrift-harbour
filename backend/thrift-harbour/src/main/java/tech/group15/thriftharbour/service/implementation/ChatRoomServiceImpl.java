@@ -13,6 +13,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
   private final ChatRoomRepository chatRoomRepository;
 
+  /**
+   * Gets the chat room ID for the given sender and recipient users. Optionally, creates a new chat
+   * room if it doesn't exist.
+   *
+   * @param senderId The ID of the sender user.
+   * @param recipientId The ID of the recipient user.
+   * @param createNewRoomIfNotExists If true, creates a new chat room if it doesn't exist.
+   * @return An optional containing the chat room ID if found or created, otherwise empty.
+   */
   @Override
   public Optional<String> getChatRoomId(
       String senderId, String recipientId, boolean createNewRoomIfNotExists) {
@@ -30,6 +39,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             });
   }
 
+  /**
+   * Creates a new chat room ID based on the sender and recipient IDs. Also, saves two ChatRoom
+   * entities for bidirectional association.
+   *
+   * @param senderId The ID of the sender user.
+   * @param recipientId The ID of the recipient user.
+   * @return The created chat room ID.
+   */
   private String createChatId(String senderId, String recipientId) {
     var chatId = String.format("%s_%s", senderId, recipientId); // sender_receiver
     ChatRoom senderRecipient =
