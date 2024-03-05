@@ -1,7 +1,6 @@
 package tech.group15.thriftharbour.service.implementation;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
