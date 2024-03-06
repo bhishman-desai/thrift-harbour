@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tech.group15.thriftharbour.dto.SellerResponse;
+import tech.group15.thriftharbour.dto.response.SellerResponse;
 import tech.group15.thriftharbour.mapper.UserMapper;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.repository.UserRepository;
