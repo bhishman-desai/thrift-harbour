@@ -11,4 +11,5 @@ public interface UserService {
 
   List<SellerResponse> findAllSellers();
   User findUserById(Integer userID);
+  List<User> findRecipientBySenderId(String senderID);
 }

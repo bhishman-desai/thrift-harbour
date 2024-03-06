@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.UserService;
 
+import java.util.List;
+
 /** Controller class for handling user-related endpoints. */
 @RestController
 @RequestMapping("/api/v1/user")
@@ -33,5 +35,16 @@ public class UserController {
   @GetMapping("/users/{userID}")
   public ResponseEntity<User> getUserById(@PathVariable Integer userID) {
     return ResponseEntity.ok(userService.findUserById(userID));
+  }
+
+  /**
+   * Retrieves the recipient(s) associated with the specified sender ID.
+   *
+   * @param senderId The unique identifier of the sender.
+   * @return {@code ResponseEntity} containing a list of User objects representing the recipient(s).
+   */
+  @GetMapping("/{senderId}/recipients")
+  public ResponseEntity<List<User>> getRecipientFromSenderId(@PathVariable String senderId) {
+    return ResponseEntity.ok(userService.findRecipientBySenderId(senderId));
   }
 }

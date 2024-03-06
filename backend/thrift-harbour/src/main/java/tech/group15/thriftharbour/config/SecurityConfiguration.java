@@ -50,7 +50,8 @@ public class SecurityConfiguration {
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-ui.html",
-                        "/ws/**")
+                        "/ws/**",
+                        "/messages/**")
                     .permitAll()
                     /* Requiring ADMIN authority for requests to "/api/v1/admin" */
                     .requestMatchers("/api/v1/admin/**")
