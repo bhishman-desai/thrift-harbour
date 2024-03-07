@@ -9,6 +9,6 @@ import tech.group15.thriftharbour.model.ChatMessage;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Integer> {
   List<ChatMessage> findByChatId(String chatId);
 
-  @Query("SELECT DISTINCT c.recipientId FROM ChatMessage c WHERE c.senderId = :senderId")
-  List<Integer> findDistinctRecipientIdsBySenderId(@Param("senderId") String senderId);
+  @Query("SELECT DISTINCT c.senderId FROM ChatMessage c WHERE c.recipientId = :recipientId")
+  List<Integer> findDistinctSenderIdsByRecipientId(@Param("recipientId") String recipientId);
 }

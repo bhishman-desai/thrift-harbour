@@ -51,12 +51,12 @@ public class ChatMessageServiceImpl implements ChatMessageService {
   /**
    * Retrieves a list of recipient ids of messages sent by the specified sender.
    *
-   * @param senderId The unique identifier of the sender whose recipients are to be found.
+   * @param recipientID The unique identifier of the sender whose recipients are to be found.
    * @return A List of recipient ids representing the recipients of messages sent by the specified
    *     sender.
    */
   @Override
-  public List<Integer> findRecipientBySenderId(String senderId) {
-    return new ArrayList<>(chatMessageRepository.findDistinctRecipientIdsBySenderId(senderId));
+  public List<Integer> findSenderByRecipientId(String recipientID) {
+    return new ArrayList<>(chatMessageRepository.findDistinctSenderIdsByRecipientId(recipientID));
   }
 }

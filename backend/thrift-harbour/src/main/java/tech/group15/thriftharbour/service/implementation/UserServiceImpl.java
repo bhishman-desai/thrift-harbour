@@ -58,18 +58,18 @@ public class UserServiceImpl implements UserService {
   /**
    * Retrieves a list of User objects representing recipients based on the sender's ID.
    *
-   * @param senderID The ID of the sender for whom recipients need to be found.
+   * @param recipientID The ID of the sender for whom recipients need to be found.
    * @return A List of User objects representing recipients associated with the given sender ID.
    */
   @Override
-  public List<User> findRecipientBySenderId(String senderID) {
-    List<Integer> recipientIds = chatMessageService.findRecipientBySenderId(senderID);
-    List<User> recipients = new ArrayList<>();
+  public List<User> findSenderByRecipientId(String recipientID) {
+    List<Integer> senderIds = chatMessageService.findSenderByRecipientId(recipientID);
+    List<User> senders = new ArrayList<>();
 
-    for (Integer recipientId : recipientIds) {
-      recipients.add(findUserById(recipientId));
+    for (Integer senderId : senderIds) {
+      senders.add(findUserById(senderId));
     }
 
-    return recipients;
+    return senders;
   }
 }

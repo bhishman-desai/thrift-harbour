@@ -8,5 +8,5 @@ public interface ChatMessageService {
   ChatMessage save(ChatMessage chatMessage);
 
   List<ChatMessage> findChatMessages(String senderId, String recipientId);
-  List<Integer> findRecipientBySenderId(String senderId);
+  List<Integer> findSenderByRecipientId(String recipientID);
 }
