@@ -7,11 +7,35 @@ import {
   GetAllImmediateListingResponse,
   ImmediateListingResponse,
   ListingDataTypes,
+  ImmediateListing,
 } from "../types/ListingTypes";
+import { ImmediateSaleProductDetail } from "../types/ProductSaleDetails";
 import { Path } from "../utils/Path";
 
 export class ListingService {
   path = new Path(process.env.NODE_ENV);
+
+
+  async immediateSaleProductDetail(immediateSaleListingID: string | null,
+     token?: string | null
+     ): Promise<ImmediateSaleProductDetail>{
+    const baseUrl = this.path.getBaseUrl();
+    const immediateListUrl = this.path.getUserUrl("immediatesale-product-detail");
+    const requestUrl = baseUrl + immediateListUrl + `${immediateSaleListingID}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("response from service", response);
+      return response.data as ImmediateSaleProductDetail;
+    }
+    catch(error){
+      throw error;
+    }
+  };
 
   async immediateListing(
     payload: ListingDataTypes,
