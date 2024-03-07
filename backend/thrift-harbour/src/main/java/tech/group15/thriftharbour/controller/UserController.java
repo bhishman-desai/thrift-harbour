@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
 import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
+import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
+import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.service.RatingsService;
 import tech.group15.thriftharbour.service.UserService;
 
@@ -19,6 +21,7 @@ import tech.group15.thriftharbour.service.UserService;
 public class UserController {
   private final RatingsService ratingsService;
   private final UserService userService;
+  private final ProductListingService productListingService;
 
   @GetMapping
   public ResponseEntity<String> hi() {
@@ -44,5 +47,12 @@ public class UserController {
   @GetMapping("/get-user-details/{id}")
   public ResponseEntity<User> getUserDetails(@PathVariable Integer id) {
     return ResponseEntity.ok(userService.findUserById(id));
+  }
+
+  @GetMapping("/get-immediate-sale-product/{id}")
+  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
+          (@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findImmediateSaleListingByID(id));
   }
 }
