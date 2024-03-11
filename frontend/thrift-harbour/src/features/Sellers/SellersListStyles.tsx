@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button } from "@material-ui/core";
 
 export const SellersContainer = styled.div`
   // height: 100vh;
@@ -98,4 +99,8 @@ export const UserId = styled.div`
   font-size: 18px;
   line-height: 16px;
   overflow: hidden;
+`;
+
+export const ChatButton = styled(Button)`
+  margin-left: auto;
 `;

@@ -1,12 +1,13 @@
 export class Path {
   environment: string;
+
   constructor(environment: string) {
     this.environment = environment;
   }
 
   getBaseUrl() {
     if (this.environment === "development") {
-      return "http://172.17.1.50:3000/api/v1";
+      return "http://localhost:8080/api/v1";
     } else {
       return "/thrift/api/v1";
     }
@@ -75,6 +76,13 @@ export class Path {
     }
     if (service === "product-listing") {
       return "/admin/sellers";
+    }
+  }
+
+  getChatUrl() {
+    if (this.environment === "development") {
+      return "http://localhost:8080";
+    } else {
     }
   }
 }
