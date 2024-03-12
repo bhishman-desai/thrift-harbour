@@ -1,5 +1,6 @@
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   Grid,
@@ -13,6 +14,8 @@ import {
 } from "./BuyProductsStyles";
 
 const BuyProducts: React.FC = () => {
+  const navigate = useNavigate();
+
   const auctionListedProducts = [
     {
       productName: "chair",
@@ -21,6 +24,7 @@ const BuyProducts: React.FC = () => {
       productImages: [
         "https://mymitsandboxbucket.s3.ca-central-1.amazonaws.com/DIRECT/fe516a57-e098-4fdc-a7ee-371e6f911ec2/productImage1.png",
       ],
+      id: "1",
     },
     {
       productName: "chair",
@@ -29,6 +33,7 @@ const BuyProducts: React.FC = () => {
       productImages: [
         "https://mymitsandboxbucket.s3.ca-central-1.amazonaws.com/DIRECT/fe516a57-e098-4fdc-a7ee-371e6f911ec2/productImage1.png",
       ],
+      id: "2",
     },
     {
       productName: "chair",
@@ -37,6 +42,7 @@ const BuyProducts: React.FC = () => {
       productImages: [
         "https://mymitsandboxbucket.s3.ca-central-1.amazonaws.com/DIRECT/fe516a57-e098-4fdc-a7ee-371e6f911ec2/productImage1.png",
       ],
+      id: "3",
     },
     {
       productName: "chair",
@@ -45,8 +51,13 @@ const BuyProducts: React.FC = () => {
       productImages: [
         "https://mymitsandboxbucket.s3.ca-central-1.amazonaws.com/DIRECT/fe516a57-e098-4fdc-a7ee-371e6f911ec2/productImage1.png",
       ],
+      id: "4",
     },
   ];
+
+  const handleOnProductClick = (id: string) => {
+    navigate(`/immediatesal-product-detail/${id}`);
+  };
   return (
     <>
       <Header>Products</Header>
@@ -55,7 +66,7 @@ const BuyProducts: React.FC = () => {
         {auctionListedProducts.map((product) => {
           return (
             <>
-              <Card>
+              <Card onClick={() => handleOnProductClick(product.id)}>
                 <ImageContainer>
                   <Image>
                     <img
