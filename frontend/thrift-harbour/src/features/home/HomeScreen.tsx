@@ -29,6 +29,11 @@ const Home: React.FC = () => {
       value: "My Listed Products",
       isSelected: false,
     },
+    {
+      key: "Buy Products",
+      value: "Buy Products",
+      isSelected: false,
+    },
   ];
 
   const navOptionsAdmin = [
