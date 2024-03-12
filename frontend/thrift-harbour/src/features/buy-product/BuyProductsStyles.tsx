@@ -1,11 +1,7 @@
 import style from "styled-components";
 
-export const Container = style.div`
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #091c7a;
+export const Main = style.div`
+display:flex;
 `;
 
 export const Header = style.div`

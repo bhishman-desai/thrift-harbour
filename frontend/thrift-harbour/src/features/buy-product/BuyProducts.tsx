@@ -1,12 +1,18 @@
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/ui-components/Modal/Modal";
+import { ViewButtonContainer } from "../admin/AdminDashboardStyles";
+import { Button } from "../product-listing/listed-products/ListedProductsStyles";
+import UserProfile from "../user-profile/UserProfile";
 import {
   Card,
   Grid,
   Header,
   Image,
   ImageContainer,
+  Main,
   Name,
   NamePrice,
   Price,
@@ -15,6 +21,18 @@ import {
 
 const BuyProducts: React.FC = () => {
   const navigate = useNavigate();
+  const [viewProfile, setViewProfile] = useState(false);
+
+  const newModalStyle: React.CSSProperties = {
+    width: "80%",
+    height: "80%",
+    maxWidth: "600px",
+    maxHeight: "600px",
+  };
+
+  const toggleViewProfile = () => {
+    setViewProfile(!viewProfile);
+  };
 
   const auctionListedProducts = [
     {
@@ -66,8 +84,10 @@ const BuyProducts: React.FC = () => {
         {auctionListedProducts.map((product) => {
           return (
             <>
-              <Card onClick={() => handleOnProductClick(product.id)}>
-                <ImageContainer>
+              <Card>
+                <ImageContainer
+                  onClick={() => handleOnProductClick(product.id)}
+                >
                   <Image>
                     <img
                       src={product.productImages[0]}
@@ -90,7 +110,16 @@ const BuyProducts: React.FC = () => {
                   <Name> {product.productName}</Name>
                   <Price>$ {product.price}</Price>
                 </NamePrice>
+                <ViewButtonContainer>
+                  <Button onClick={() => setViewProfile(true)}>View</Button>
+                </ViewButtonContainer>
               </Card>
+
+              {viewProfile && (
+                <Modal style={newModalStyle} onClose={toggleViewProfile}>
+                  <UserProfile />
+                </Modal>
+              )}
             </>
           );
         })}
