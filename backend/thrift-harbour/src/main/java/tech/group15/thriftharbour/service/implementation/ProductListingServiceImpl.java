@@ -255,6 +255,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return immediateSaleListingRepository.findAllBySellerID(sellerID);
   }
 
+  /**
+   * Fetches all listings that are marked as approved for immediate sale.
+   *
+   * @return A List of {@code ApprovedImmediateSaleListingForAdminResponse} objects, each representing an approved immediate sale listing.
+   */
   @Override
   public List<ApprovedImmediateSaleListingForAdminResponse> findAllApprovedImmediateSaleListing() {
 
@@ -296,6 +301,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return approvedImmediateSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as rejected for immediate sale.
+   *
+   * @return A List of {@code DeniedImmediateSaleListingForAdminResponse} objects, each representing a rejected immediate sale listing.
+   */
   @Override
   public List<DeniedImmediateSaleListingForAdminResponse> findAllDeniedImmediateSaleListing() {
 
@@ -336,6 +346,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return deniedImmediateSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as approved for auction sale.
+   *
+   * @return A List of {@code ApprovedAuctionSaleListingForAdminResponse} objects, each representing an approved auction sale listing.
+   */
   @Override
   public List<ApprovedAuctionSaleListingForAdminResponse> findAllApprovedAuctionSaleListing() {
 
@@ -374,6 +389,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return approvedAuctionSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as rejected for auction sale.
+   *
+   * @return A List of {@code DeniedAuctionSaleListingForAdminResponse} objects, each representing a rejected auction sale listing.
+   */
   @Override
   public List<DeniedAuctionSaleListingForAdminResponse> findAllDeniedAuctionSaleListing() {
 

@@ -14,6 +14,13 @@ import tech.group15.thriftharbour.service.EmailService;
 public class EmailServiceImpl implements EmailService {
   private final JavaMailSender mailSender;
 
+  /**
+   * Sends an email to the specified user with the given subject and a message containing the provided URL.
+   *
+   * @param to The email address of the recipient.
+   * @param subject The subject of the email.
+   * @param url The URL of reset password page.
+   */
   public void sendEmail(String to, String subject, String url) {
 
     try {
