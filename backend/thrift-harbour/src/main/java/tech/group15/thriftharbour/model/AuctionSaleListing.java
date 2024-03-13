@@ -23,6 +23,7 @@ public class AuctionSaleListing {
 
     private String productName;
 
+    @Column(columnDefinition = "text")
     private String productDescription;
 
     private double startingBid;

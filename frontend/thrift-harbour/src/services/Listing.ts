@@ -29,7 +29,6 @@ export class ListingService {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response from service", response);
       return response.data as ImmediateSaleProductDetail;
     }
     catch(error){

@@ -10,8 +10,6 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
-import "./ImmediateListingSale.css"
-
 import { Card, CardContent, Toolbar, Typography, Button, Box, CardHeader } from "@mui/material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -40,7 +38,7 @@ const ImmediateListingSale = () => {
     const [loginType, setLogintype] = useState<string | null>();
 
     const { id } = useParams();
-    const [isFavorite, setIsFavorite] = useState(false);
+    let [isFavorite, setIsFavorite] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -79,10 +77,9 @@ const ImmediateListingSale = () => {
         (async function () {
             try {
                 const response = await listing.immediateSaleProductDetail(id!, token);
-                console.log("from useeffect", response);
 
                 const imgresponse = await listing.getImmediateListedProductsImages(id!, token)
-                console.log("from img useeffect", imgresponse[0]?.data.imageURLs);
+
                 const imageUrls = imgresponse[0]?.data.imageURLs;
 
                 const productWithImages = { ...response, imageUrl: imageUrls };
@@ -166,7 +163,7 @@ const ImmediateListingSale = () => {
                             </CardContent>
                             <CardContent>
                                 <Toolbar sx={{ fontSize: 20 }}>
-                                    <span>Seller Quoted Price: &#36;{immediateSaleProductDetail!.price}</span>
+                                    <span>Seller Quoted Price: <span>&#36; </span>{immediateSaleProductDetail!.price}</span>
                                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                         <Button onClick={handleFav}>
                                             {isFavorite ? <FavoriteIcon sx={{ color: red[500] }} /> : <FavoriteBorderIcon />}
@@ -189,6 +186,7 @@ const ImmediateListingSale = () => {
                                             <Card sx={{ bgcolor: "whitesmoke", borderColor: "divided", boxShadow: 3 }}>
                                                 <CardContent>
                                                     <Typography>
+                                                    <h3>Product Description:</h3>
                                                         {immediateSaleProductDetail?.productDescription}
                                                     </Typography>
                                                 </CardContent>
