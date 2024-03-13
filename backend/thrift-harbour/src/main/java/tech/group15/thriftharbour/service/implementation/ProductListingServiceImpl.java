@@ -430,4 +430,33 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
     return deniedAuctionSaleListingForAdminResponseList;
   }
+
+  @Override
+  public AuctionSaleProductResponse findAuctionSaleProductDetailsById(String auctionSaleListingID) {
+    AuctionSaleListing auctionSaleListing = auctionSaleListingRepository.findAuctionSaleProductByID(auctionSaleListingID);
+
+    if (auctionSaleListing == null)
+      throw new ListingNotFoundException(
+              String.format(
+                      "No listing found with provided listing id:%s", auctionSaleListingID));
+
+    List<AuctionSaleImage> productImages =
+            auctionSaleImageRepository.findAllByAuctionSaleListingID(
+                    auctionSaleListingID);
+
+    User seller =
+            userRepository
+                    .findByEmail(auctionSaleListing.getSellerEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+
+    return AuctionSaleProductResponse.builder()
+            .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+            .productName(auctionSaleListing.getProductName())
+            .productDescription(auctionSaleListing.getProductDescription())
+            .startingBid(auctionSaleListing.getStartingBid())
+            .highestBid(auctionSaleListing.getHighestBid())
+            .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+            .sellerName(seller.getFirstName() + " " + seller.getLastName())
+            .build();
+  }
 }
