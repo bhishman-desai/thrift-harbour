@@ -5,10 +5,14 @@ import { Auth } from "../../../services/Auth";
 import { useParams } from "react-router-dom";
 import { ImmediateSaleProductDetail } from "../../../types/ProductSaleDetails";
 import { ListingService } from "../../../services/Listing";
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 import "./ImmediateListingSale.css"
 
-import { Card, CardContent, Toolbar, Typography, Button } from "@mui/material";
+import { Card, CardContent, Toolbar, Typography, Button, Box } from "@mui/material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
@@ -17,6 +21,8 @@ import Rating from '@mui/material/Rating';
 
 import Carousel from "../../../components/ui-components/carousel/Carousel";
 import Navbar from "../../../components/ui-components/navbar/Navbar";
+import Footer from "../../../components/ui-components/footer/Footer";
+
 
 const ImmediateListingSale = () => {
 
@@ -24,6 +30,8 @@ const ImmediateListingSale = () => {
     const auth = new Auth();
 
     const navigate = useNavigate();
+
+    const [value, setValue] = useState("1");
 
     const { token, handleLogout } = useAuth();
     const [authorized, setAuthorized] = useState(false);
@@ -33,6 +41,8 @@ const ImmediateListingSale = () => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+
+    const [immediateSaleProductDetail, setImmediateSaleProductDetail] = useState<ImmediateSaleProductDetail>();
 
     const navOptionsUsers = [
         {
@@ -58,7 +68,10 @@ const ImmediateListingSale = () => {
         setIsFavorite((prevIsFav) => !prevIsFav);
     }
 
-    const [immediateSaleProductDetail, setImmediateSaleProductDetail] = useState<ImmediateSaleProductDetail>();
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+    };
+
 
     useEffect(() => {
         (async function () {
@@ -127,6 +140,7 @@ const ImmediateListingSale = () => {
         })();
     }, [token]);
 
+
     return (
         <>
             {loading ? ("Loading...") :
@@ -136,18 +150,21 @@ const ImmediateListingSale = () => {
                     ) : (
                         <></>
                     )}
-                    <div style={{ margin: "0.55%", padding: 0, borderRadius: 10 }}>
-                        <Card style={{ backgroundColor: "#FFFFFF" }}>
+                    <div style={{ height: '100%', padding: 0, borderRadius: 10 }}>
+                        <Card style={{ backgroundColor: "whitesmoke" }}>
                             <Typography
                                 sx={{ textAlign: "left", marginLeft: "1%", marginTop: "1%", fontSize: 24 }}>
                                 <b>{immediateSaleProductDetail!.productName}</b>
+                            </Typography>
+                            <Typography sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14}}>
+                                by {immediateSaleProductDetail?.category}
                             </Typography>
                             <CardContent>
                                 <Carousel imageUrls={immediateSaleProductDetail?.imageUrl}></Carousel>
                             </CardContent>
                             <CardContent>
-                                <Toolbar>
-                                    <span>Price: {immediateSaleProductDetail!.price} &#36;</span>
+                                <Toolbar sx ={{fontSize: 20}}>
+                                    <span>Seller Quoted Price: &#36;{immediateSaleProductDetail!.price}</span>
                                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                         <Button onClick={handleFav}>
                                             {isFavorite ? <FavoriteIcon sx={{ color: red[500] }} /> : <FavoriteBorderIcon />}
@@ -156,28 +173,39 @@ const ImmediateListingSale = () => {
                                     <Button className="chat-button" style={{ background: blue[400], color: "white" }}>Chat</Button>
                                 </Toolbar>
                             </CardContent>
-                            <CardContent>
-                                <Typography>
-                                    Product Description: <br />
-                                </Typography>
-                                <Typography>
-                                    {immediateSaleProductDetail?.productDescription}
-                                </Typography>
-                            </CardContent>
-                            <CardContent>
-                                <Toolbar>
-                                    <Typography>
-                                        Sold by:      
-                                        {immediateSaleProductDetail?.seller.firstName} {immediateSaleProductDetail?.seller.lastName} <br />
-                                        <div>
-                                        <Typography component="legend">Rating as Seller</Typography>
-                                        <Rating name="read-only" value={immediateSaleProductDetail?.seller.avgSellerRatings} precision={0.5} readOnly />
-                                        </div>
-                                    </Typography>
-                                </Toolbar>
+                            <CardContent >
+                                <Box sx={{ width: '100%', borderRadius: 2, bgcolor: "whitesmoke"}}>
+                                    <TabContext value={value} >
+                                        <Box sx={{ borderBottom: 1, borderRadius: 1, borderColor: 'divider'}}>
+                                            <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                                <Tab label="Description" value="1" />
+                                                <Tab label="Seller Details" value="2" />
+                                                <Tab label="How Buying works in Thrift Harbour" value="3" />
+                                            </TabList>
+                                        </Box>
+                                        <TabPanel value="1">
+                                            <Typography>
+                                                {immediateSaleProductDetail?.productDescription}
+                                            </Typography>
+                                        </TabPanel>
+                                        <TabPanel value="2">
+                                            <Typography>
+                                                Sold by:
+                                                {immediateSaleProductDetail?.seller.firstName} {immediateSaleProductDetail?.seller.lastName} <br />
+                                                <div>
+                                                    <Typography component="legend">Rating as Seller</Typography>
+                                                    <Rating name="read-only" value={immediateSaleProductDetail?.seller.avgSellerRatings} precision={0.5} readOnly />
+                                                </div>
+                                            </Typography>
+                                        </TabPanel>
+                                        <TabPanel value="3">We make it work in Thrifthrabour</TabPanel>
+                                    </TabContext>
+                                </Box>
+                                <br />
                             </CardContent>
                         </Card>
                     </div>
+                    <Footer />
                 </>
             }
         </>
