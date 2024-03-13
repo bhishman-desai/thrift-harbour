@@ -1,6 +1,5 @@
 package tech.group15.thriftharbour.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;

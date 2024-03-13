@@ -3,10 +3,7 @@ package tech.group15.thriftharbour.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +24,6 @@ import tech.group15.thriftharbour.dto.ApprovedAuctionSaleListingForAdminResponse
 import tech.group15.thriftharbour.dto.ApprovedImmediateSaleListingForAdminResponse;
 import tech.group15.thriftharbour.dto.DeniedAuctionSaleListingForAdminResponse;
 import tech.group15.thriftharbour.dto.DeniedImmediateSaleListingForAdminResponse;
-import tech.group15.thriftharbour.service.ProductListingService;
 
 @RestController
 @RequestMapping("/api/v1/admin")
