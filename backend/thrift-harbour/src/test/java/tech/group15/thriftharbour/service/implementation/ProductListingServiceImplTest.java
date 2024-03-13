@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.enums.RoleEnum;
+import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.model.*;
 import tech.group15.thriftharbour.repository.*;
 
@@ -16,6 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 class ProductListingServiceImplTest {
     @Mock
@@ -44,5 +47,23 @@ class ProductListingServiceImplTest {
         verify(auctionSaleListingRepository, times(1)).findAuctionSaleProductByID("auctionSaleListingID");
         verify(auctionSaleImageRepository, times(1)).findAllByAuctionSaleListingID("auctionSaleListingID");
         verify(userRepository, times(1)).findByEmail(anyString());
+    }
+
+    @Test
+    void testFindAuctionSaleProductDetailsById_ProductNotFound() {
+        when(auctionSaleListingRepository.findAuctionSaleProductByID(anyString())).thenReturn(null);
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(new AuctionSaleImage(0, "auctionSaleListingID", "imageURL", new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime())));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User(1, "firstName", "lastName", "email", "password", RoleEnum.USER, 4.0, 5.0)));
+
+        assertThrows(ListingNotFoundException.class, () -> productListingServiceImpl.findAuctionSaleProductDetailsById("auctionSaleListingID"));
+    }
+
+    @Test
+    void testFindAuctionSaleProductDetailsById_SellerNotFound() {
+        when(auctionSaleListingRepository.findAuctionSaleProductByID(anyString())).thenReturn(new AuctionSaleListing("auctionSaleListingID", "productName", "productDescription", 0d, 0d, "currentHighestBidUserMail", "category", "sellerEmail", new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), true, true, true, "approverEmail", "messageFromApprover", true, new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime()));
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(new AuctionSaleImage(0, "auctionSaleListingID", "imageURL", new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime())));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> productListingServiceImpl.findAuctionSaleProductDetailsById("auctionSaleListingID"));
     }
 }
