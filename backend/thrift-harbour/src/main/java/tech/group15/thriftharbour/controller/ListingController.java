@@ -74,6 +74,12 @@ public class ListingController {
         .body(productListingService.findAllAuctionSaleListingImagesByID(id));
   }
 
+  /**
+   * Retrieves the details of an auction sale product by its ID.
+   *
+   * @param id The unique id of the auction sale product.
+   * @return A {@code ResponseEntity} containing the {@code AuctionSaleProductResponse} object.
+   */
   @GetMapping("/get-auctionsale-product/{id}")
   public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(
           @PathVariable String id) {

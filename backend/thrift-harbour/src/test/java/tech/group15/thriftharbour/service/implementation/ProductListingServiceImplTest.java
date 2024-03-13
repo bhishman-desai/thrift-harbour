@@ -35,6 +35,9 @@ class ProductListingServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Tests the retrieval of auction sale product details by its listing ID.
+     */
     @Test
     void testFindAuctionSaleProductDetailsById(){
         when(auctionSaleListingRepository.findAuctionSaleProductByID(anyString())).thenReturn(new AuctionSaleListing("auctionSaleListingID", "productName", "productDescription", 0d, 0d, "currentHighestBidUserMail", "category", "sellerEmail", new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), true, true, true, "approverEmail", "messageFromApprover", true, new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime()));
@@ -49,6 +52,9 @@ class ProductListingServiceImplTest {
         verify(userRepository, times(1)).findByEmail(anyString());
     }
 
+    /**
+     * Tests the behavior of retrieval of auction sale product details when the specified product listing is not found.
+     */
     @Test
     void testFindAuctionSaleProductDetailsById_ProductNotFound() {
         when(auctionSaleListingRepository.findAuctionSaleProductByID(anyString())).thenReturn(null);
@@ -58,6 +64,9 @@ class ProductListingServiceImplTest {
         assertThrows(ListingNotFoundException.class, () -> productListingServiceImpl.findAuctionSaleProductDetailsById("auctionSaleListingID"));
     }
 
+    /**
+     * Tests the behavior of retrieval of auction sale product details when the specified seller is not found.
+     */
     @Test
     void testFindAuctionSaleProductDetailsById_SellerNotFound() {
         when(auctionSaleListingRepository.findAuctionSaleProductByID(anyString())).thenReturn(new AuctionSaleListing("auctionSaleListingID", "productName", "productDescription", 0d, 0d, "currentHighestBidUserMail", "category", "sellerEmail", new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), true, true, true, "approverEmail", "messageFromApprover", true, new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime()));

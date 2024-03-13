@@ -431,6 +431,12 @@ public class ProductListingServiceImpl implements ProductListingService {
     return deniedAuctionSaleListingForAdminResponseList;
   }
 
+  /**
+   * Finds and retrieves details of an auction sale product by its listing ID.
+   *
+   * @param auctionSaleListingID The id of the auction sale listing.
+   * @return n {@code AuctionSaleProductResponse} object containing information of the auction sale product.
+   */
   @Override
   public AuctionSaleProductResponse findAuctionSaleProductDetailsById(String auctionSaleListingID) {
     AuctionSaleListing auctionSaleListing = auctionSaleListingRepository.findAuctionSaleProductByID(auctionSaleListingID);
