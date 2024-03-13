@@ -12,7 +12,7 @@ import TabPanel from '@mui/lab/TabPanel';
 
 import "./ImmediateListingSale.css"
 
-import { Card, CardContent, Toolbar, Typography, Button, Box } from "@mui/material";
+import { Card, CardContent, Toolbar, Typography, Button, Box, CardHeader } from "@mui/material";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +22,8 @@ import Rating from '@mui/material/Rating';
 import Carousel from "../../../components/ui-components/carousel/Carousel";
 import Navbar from "../../../components/ui-components/navbar/Navbar";
 import Footer from "../../../components/ui-components/footer/Footer";
+import AboutImmediateSale from "../../../components/ui-components/thrift-harbour-immediatesale-about/AboutImmediateSale";
+
 
 
 const ImmediateListingSale = () => {
@@ -156,14 +158,14 @@ const ImmediateListingSale = () => {
                                 sx={{ textAlign: "left", marginLeft: "1%", marginTop: "1%", fontSize: 24 }}>
                                 <b>{immediateSaleProductDetail!.productName}</b>
                             </Typography>
-                            <Typography sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14}}>
+                            <Typography sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14 }}>
                                 by {immediateSaleProductDetail?.category}
                             </Typography>
                             <CardContent>
                                 <Carousel imageUrls={immediateSaleProductDetail?.imageUrl}></Carousel>
                             </CardContent>
                             <CardContent>
-                                <Toolbar sx ={{fontSize: 20}}>
+                                <Toolbar sx={{ fontSize: 20 }}>
                                     <span>Seller Quoted Price: &#36;{immediateSaleProductDetail!.price}</span>
                                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                         <Button onClick={handleFav}>
@@ -174,9 +176,9 @@ const ImmediateListingSale = () => {
                                 </Toolbar>
                             </CardContent>
                             <CardContent >
-                                <Box sx={{ width: '100%', borderRadius: 2, bgcolor: "whitesmoke"}}>
+                                <Box sx={{ width: '100%', borderRadius: 2, bgcolor: "whitesmoke" }}>
                                     <TabContext value={value} >
-                                        <Box sx={{ borderBottom: 1, borderRadius: 1, borderColor: 'divider'}}>
+                                        <Box sx={{ borderBottom: 1, borderRadius: 1, borderColor: 'divider' }}>
                                             <TabList onChange={handleChange} aria-label="lab API tabs example">
                                                 <Tab label="Description" value="1" />
                                                 <Tab label="Seller Details" value="2" />
@@ -184,21 +186,41 @@ const ImmediateListingSale = () => {
                                             </TabList>
                                         </Box>
                                         <TabPanel value="1">
-                                            <Typography>
-                                                {immediateSaleProductDetail?.productDescription}
-                                            </Typography>
+                                            <Card sx={{ bgcolor: "whitesmoke", borderColor: "divided", boxShadow: 3 }}>
+                                                <CardContent>
+                                                    <Typography>
+                                                        {immediateSaleProductDetail?.productDescription}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card>
+
                                         </TabPanel>
                                         <TabPanel value="2">
-                                            <Typography>
-                                                Sold by:
-                                                {immediateSaleProductDetail?.seller.firstName} {immediateSaleProductDetail?.seller.lastName} <br />
-                                                <div>
-                                                    <Typography component="legend">Rating as Seller</Typography>
-                                                    <Rating name="read-only" value={immediateSaleProductDetail?.seller.avgSellerRatings} precision={0.5} readOnly />
-                                                </div>
-                                            </Typography>
+                                            <Card sx={{ bgcolor: "whitesmoke", borderColor: "divided", boxShadow: 3 }}>
+                                                <CardContent>
+                                                    <Typography variant="h5" component="div">
+                                                        {immediateSaleProductDetail?.seller.firstName} {immediateSaleProductDetail?.seller.lastName}
+                                                    </Typography>
+                                                    <div>
+                                                        <Rating name="read-only" value={immediateSaleProductDetail?.seller.avgSellerRatings} precision={0.5} readOnly />
+                                                    </div>
+                                                    <Typography sx={{ paddingLeft: "2px" }}>
+                                                        ({immediateSaleProductDetail?.seller.avgSellerRatings} of 5 stars)
+                                                        {immediateSaleProductDetail?.seller.avgSellerRatings === 0
+                                                            ?
+                                                            <>
+                                                                <span> No Reviews</span><br />
+                                                            </>
+                                                            :
+                                                            <>
+                                                            </>}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card>
                                         </TabPanel>
-                                        <TabPanel value="3">We make it work in Thrifthrabour</TabPanel>
+                                        <TabPanel value="3">
+                                            <AboutImmediateSale />
+                                        </TabPanel>
                                     </TabContext>
                                 </Box>
                                 <br />
