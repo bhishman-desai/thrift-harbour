@@ -84,6 +84,9 @@ class ProductListingServiceImplTest {
         assertThrows(UsernameNotFoundException.class, () -> productListingServiceImpl.findAuctionSaleProductDetailsById("auctionSaleListingID"));
     }
 
+    /**
+     * Tests the retrieval of all immediate sale product details list for authorized user.
+     */
     @Test
     void testFindAllImmediateListing(){
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn("sellerEmail");
@@ -101,6 +104,9 @@ class ProductListingServiceImplTest {
         verify(userRepository).findByEmail("sellerEmail");
     }
 
+    /**
+     * Tests the behavior of all immediate sale product details list when the specified seller is not found.
+     */
     @Test
     void testFindAllImmediateListing_SellerNotFound() {
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn("sellerEmail");
