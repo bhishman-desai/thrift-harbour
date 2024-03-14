@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.group15.thriftharbour.dto.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.GetListingImageResponse;
-import tech.group15.thriftharbour.dto.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -75,5 +72,18 @@ public class ListingController {
       @PathVariable String id) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllAuctionSaleListingImagesByID(id));
+  }
+
+  /**
+   * Retrieves the details of an auction sale product by its ID.
+   *
+   * @param id The unique id of the auction sale product.
+   * @return A {@code ResponseEntity} containing the {@code AuctionSaleProductResponse} object.
+   */
+  @GetMapping("/get-auctionsale-product/{id}")
+  public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(
+          @PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findAuctionSaleProductDetailsById(id));
   }
 }
