@@ -139,28 +139,28 @@ const BuyProducts: React.FC = () => {
                     />
                   </Image>
                 </ImageContainer>
-                <Ratings>
+                {/* <Ratings>
                   <Stack spacing={1}>
                     <Rating
                       name="half-rating-read"
-                      defaultValue={product.seller.avgSellerRatings}
+                      defaultValue={5}
                       precision={0.5}
                       readOnly
                     />
                   </Stack>
-                </Ratings>
+                </Ratings> */}
                 <NamePrice>
                   <Name> {product.productName}</Name>
                   <Price>$ {product.price}</Price>
                 </NamePrice>
-                <ViewButtonContainer>
+                {/* <ViewButtonContainer>
                   <Button onClick={() => setViewProfile(true)}>View</Button>
                   {viewProfile && (
                     <Modal style={newModalStyle} onClose={toggleViewProfile}>
                       <UserProfile id={product.seller.userID} />
                     </Modal>
                   )}
-                </ViewButtonContainer>
+                </ViewButtonContainer> */}
               </Card>
             </>
           );

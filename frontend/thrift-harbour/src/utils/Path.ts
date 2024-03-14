@@ -70,6 +70,9 @@ export class Path {
     if (service === "get-auctionsale-images") {
       return "/users/listing/get-auctionsale-images";
     }
+    if (service === "get-all-immediate-listing") {
+      return "/users/listing/get-all-immediate-listing";
+    }
   }
 
   getAdminUrl(service: string) {
@@ -93,12 +96,6 @@ export class Path {
     }
     if (service === "product-listing") {
       return "/admin/sellers";
-    }
-  }
-
-  getProductsUrl(service: string) {
-    if (service === "get-all-products") {
-      return "/users/listing/get-immediatesale-listing";
     }
   }
 }

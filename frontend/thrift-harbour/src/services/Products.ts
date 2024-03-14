@@ -10,7 +10,7 @@ export class ProductsService {
     token?: string | null
   ): Promise<[any | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
-    const getAllProducts = this.path.getProductsUrl("get-all-products");
+    const getAllProducts = this.path.getListingUrl("get-all-immediate-listing");
     const requestUrl = baseUrl + getAllProducts;
 
     try {

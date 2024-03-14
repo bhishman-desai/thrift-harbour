@@ -26,7 +26,7 @@ export const Card = style.div`
   box-sizing: border-box;
   padding:12px 12px 12px 12px;
   width: calc(24.6% - 10px);
-  height: 300px;
+  height: 250px;
   aspect-ratio: 1;
   background-color: #FAFAFA;
   flex-grow: 0;
@@ -66,6 +66,7 @@ export const Name = style.div`
 `;
 
 export const Price = style.div`
+  margin-top:8px;
   font-family: "Work Sans";
   font-style: normal;
   font-weight: 400;
