@@ -47,7 +47,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ id }) => {
         { ratingToUserId: id, sellerRatings: sellerRating },
         token
       );
-      console.log("response in if", response);
       if (response[0] === 200) {
         setErrorInReview(false);
         setOpenModal(true);
