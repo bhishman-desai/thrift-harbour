@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
-import tech.group15.thriftharbour.dto.ListingReviewRequest;
-import tech.group15.thriftharbour.dto.ListingReviewResponse;
+import tech.group15.thriftharbour.dto.request.ListingReviewRequest;
+import tech.group15.thriftharbour.dto.response.ListingReviewResponse;
 import tech.group15.thriftharbour.service.AdminService;
-import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
-import tech.group15.thriftharbour.dto.SellerResponse;
+import tech.group15.thriftharbour.dto.response.ImmediateSaleMinifiedResponse;
+import tech.group15.thriftharbour.dto.response.SellerResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -20,10 +20,10 @@ import tech.group15.thriftharbour.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.group15.thriftharbour.dto.ApprovedAuctionSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.ApprovedImmediateSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.DeniedAuctionSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.DeniedImmediateSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.response.ApprovedAuctionSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.response.ApprovedImmediateSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.response.DeniedAuctionSaleListingForAdminResponse;
+import tech.group15.thriftharbour.dto.response.DeniedImmediateSaleListingForAdminResponse;
 
 @RestController
 @RequestMapping("/api/v1/admin")

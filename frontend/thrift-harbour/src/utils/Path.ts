@@ -6,9 +6,20 @@ export class Path {
 
   getBaseUrl() {
     if (this.environment === "development") {
-      return "http://172.17.1.50:3000/api/v1";
-    } else {
+      // return "http://172.17.1.50:3000/api/v1";
+      return "http://localhost:8080/api/v1";
+      
+    } else if(this.environment === "local"){
+      return "http://localhost:8080/api/v1";
+    }
+    else {
       return "/thrift/api/v1";
+    }
+  }
+
+  getUserUrl(service: string) {
+    if (service === "immediatesale-product-detail"){
+      return "/user/get-immediate-sale-product/"
     }
   }
 

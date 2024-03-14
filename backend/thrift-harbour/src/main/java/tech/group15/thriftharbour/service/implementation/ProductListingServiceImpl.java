@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.AuctionSaleProductResponse;
+import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.mapper.ProductMapper;
@@ -58,7 +60,7 @@ public class ProductListingServiceImpl implements ProductListingService {
   // Method to create an immediate sale listing
   @Override
   public ImmediateSaleListingCreationResponse createImmediateSaleListing(
-      String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+          String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
     String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
     /* Fetch the User entity based on the seller's email */

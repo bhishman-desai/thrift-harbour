@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
-import tech.group15.thriftharbour.dto.SellerRatingsRequest;
+import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
+import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
+import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.service.RatingsService;
 import tech.group15.thriftharbour.service.UserService;
 
@@ -25,6 +27,7 @@ import tech.group15.thriftharbour.service.UserService;
 public class UserController {
   private final RatingsService ratingsService;
   private final UserService userService;
+  private final ProductListingService productListingService;
 
   @GetMapping
   public ResponseEntity<String> hi() {
@@ -93,5 +96,12 @@ public class UserController {
   @GetMapping("/senders/{recipientID}")
   public ResponseEntity<List<User>> getSendersFromRecipientId(@PathVariable String recipientID) {
     return ResponseEntity.ok(userService.findSenderByRecipientId(recipientID));
+  }
+
+  @GetMapping("/get-immediate-sale-product/{id}")
+  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
+          (@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findImmediateSaleListingByID(id));
   }
 }

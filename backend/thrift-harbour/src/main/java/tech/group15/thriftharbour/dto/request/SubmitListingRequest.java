@@ -1,4 +1,4 @@
-package tech.group15.thriftharbour.dto;
+package tech.group15.thriftharbour.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

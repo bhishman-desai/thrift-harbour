@@ -177,13 +177,13 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Seller Email: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + product.immediateSaleListingID}
                 </Value>
               </ProductInfo>
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Sold: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + product.active}
                 </Value>
               </ProductInfo>
             </UserInfo>
