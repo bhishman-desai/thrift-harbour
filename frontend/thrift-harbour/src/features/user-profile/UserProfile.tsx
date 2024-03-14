@@ -18,6 +18,8 @@ import Rating from "@mui/material/Rating";
 import ProfileIcon from "../../assets/icons/ProfileIcon";
 import { UsersService } from "../../services/Users";
 import { UserDetails } from "../../types/ProductSaleDetails";
+import { Button, RegisterButton } from "../registration/RegistrationStyles";
+import { ClipLoader } from "react-spinners";
 
 interface UserProfileProps {
   id: number;
@@ -31,6 +33,31 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
   const [user, setUser] = useState({} as UserDetails);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sellerRating, setSellerRating] = useState<number | null>();
+  const [buyerRating, setBuyerRating] = useState<number | null>();
+  const [loader, setLoader] = useState(false);
+
+  const onSubmitReview = async () => {
+    setLoader(true);
+    try {
+      const response = await users.reviewSeller(
+        { ratingToUserId: id, sellerRatings: sellerRating },
+        token
+      );
+
+      if (response[0]?.status === 200) {
+        const data = response[0].data;
+        console.log("data of user", data);
+        setUser(data);
+      } else {
+        setError(true);
+        setLoading(false);
+        setLoader(false);
+      }
+    } catch (error) {
+      setLoader(false);
+    }
+  };
 
   useEffect(() => {
     (async function () {
@@ -86,32 +113,47 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
           <Title>Email:</Title>
           <Value style={{ marginLeft: "4px" }}>{user.email}</Value>
         </UserInfo>
-        <RatingContainer>
-          <Title>Ratings as buyer:</Title>
+        {/* <RatingContainer>
+          <Title>Rateas buyer:</Title>
           <Value style={{ marginLeft: "4px" }}>
             <Stack spacing={1}>
               <Rating
+                value={user.avgSellerRatings}
                 name="half-rating-read"
-                defaultValue={4.5}
+                // defaultValue={4.5}
                 precision={0.5}
-                readOnly
+                onChange={(event, newValue) => {
+                  setBuyerRating(newValue);
+                }}
+              />
+            </Stack>
+          </Value>
+        </RatingContainer> */}
+        <RatingContainer>
+          <Title>Rate as seller:</Title>
+          <Value style={{ marginLeft: "4px" }}>
+            <Stack spacing={1}>
+              <Rating
+                value={user.avgSellerRatings}
+                name="half-rating-read"
+                // defaultValue={4.5}
+                precision={0.5}
+                onChange={(event, newValue) => {
+                  setSellerRating(newValue);
+                }}
               />
             </Stack>
           </Value>
         </RatingContainer>
-        <RatingContainer>
-          <Title>Ratings as seller:</Title>
-          <Value style={{ marginLeft: "4px" }}>
-            <Stack spacing={1}>
-              <Rating
-                name="half-rating-read"
-                defaultValue={4.5}
-                precision={0.5}
-                readOnly
-              />
-            </Stack>
-          </Value>
-        </RatingContainer>
+        <Button onClick={() => onSubmitReview()}>
+          <RegisterButton type="submit">
+            {loader ? (
+              <ClipLoader color="#ffffff" loading={loader} size={20} />
+            ) : (
+              "Submit Review"
+            )}
+          </RegisterButton>
+        </Button>
       </InfoContainer>
     </>
   );
