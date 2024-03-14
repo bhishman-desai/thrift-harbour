@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { Auth } from "../../../services/Auth";
 import { useParams } from "react-router-dom";
-import { ImmediateSaleProductDetail } from "../../../types/ProductSaleDetails";
+import {
+  ImmediateSaleProductDetail,
+  UserDetails,
+} from "../../../types/ProductSaleDetails";
 import { ListingService } from "../../../services/Listing";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -32,6 +35,9 @@ import AboutImmediateSale from "../../../components/ui-components/thrift-harbour
 import { ProfileLink } from "./ImmediatesaleStyles";
 import Modal from "../../../components/ui-components/Modal/Modal";
 import UserProfile from "../../user-profile/UserProfile";
+import ChatWindow from "../../chat/ChatWindow";
+import { GetSellersResponse } from "../../../types/ListingTypes";
+import { UsersService } from "../../../services/Users";
 
 const ImmediateListingSale = () => {
   const listing = new ListingService();
@@ -45,12 +51,18 @@ const ImmediateListingSale = () => {
 
   const [authorized, setAuthorized] = useState(false);
   const [loginType, setLogintype] = useState<string | null>();
+  const [selectedUser, setSelectedUser] = useState<GetSellersResponse>(
+    {} as GetSellersResponse
+  );
   const [viewProfile, setViewProfile] = useState(false);
+  const [openChat, setOpenChat] = useState(false);
+  const [user, setUser] = useState({} as UserDetails);
 
   const { id } = useParams();
   let [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const users = new UsersService();
 
   const [immediateSaleProductDetail, setImmediateSaleProductDetail] =
     useState<ImmediateSaleProductDetail>();
@@ -98,7 +110,7 @@ const ImmediateListingSale = () => {
     (async function () {
       try {
         const response = await listing.immediateSaleProductDetail(id!, token);
-
+        console.log("response", response);
         const imgresponse = await listing.getImmediateListedProductsImages(
           id!,
           token
@@ -109,10 +121,34 @@ const ImmediateListingSale = () => {
         const productWithImages = { ...response, imageUrl: imageUrls };
 
         setImmediateSaleProductDetail(productWithImages);
+        setSelectedUser({
+          userID: response?.seller.userID || 1,
+          email: response?.sellerEmail || "",
+          firstName: response?.seller.firstName || "",
+          lastName: response?.seller.lastName || "",
+        });
         setLoading(false);
       } catch (error) {
         console.log(error);
         throw error;
+      }
+      try {
+        const response = await users.getUserData(
+          Number(localStorage.getItem("uId")),
+          token
+        );
+
+        if (response[0]?.status === 200) {
+          const data = response[0].data;
+          console.log("data of user", data);
+          setUser(data);
+        } else {
+          setError(true);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
       }
     })();
   }, []);
@@ -210,6 +246,7 @@ const ImmediateListingSale = () => {
                     </Button>
                   </Typography>
                   <Button
+                    onClick={() => setOpenChat(true)}
                     className="chat-button"
                     style={{ background: blue[400], color: "white" }}
                   >
@@ -317,6 +354,13 @@ const ImmediateListingSale = () => {
             </Card>
           </div>
           <Footer />
+
+          <ChatWindow
+            open={openChat}
+            sender={user as any}
+            recipient={selectedUser}
+            onClose={() => setOpenChat(false)}
+          />
 
           {viewProfile && (
             <Modal style={newModalStyle} onClose={toggleViewProfile}>

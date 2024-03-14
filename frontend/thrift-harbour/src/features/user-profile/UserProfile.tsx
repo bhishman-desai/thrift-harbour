@@ -25,7 +25,7 @@ import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/
 interface UserProfileProps {
   id: number;
 }
-const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ id }) => {
   const navigate = useNavigate();
   const users = new UsersService();
   const token = localStorage.getItem("token");
@@ -178,4 +178,4 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
   );
 };
 
-export default BuyProducts;
+export default UserProfile;

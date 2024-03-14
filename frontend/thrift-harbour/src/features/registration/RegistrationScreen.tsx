@@ -104,6 +104,7 @@ const Registration: React.FC = () => {
       });
       try {
         const [data, error] = await auth.signUpUser(credentials as Credentials);
+        localStorage.setItem("uId", String(data?.userID));
         if (data?.userID) {
           const [data, error] = await auth.signInUser({
             email: credentials.email,

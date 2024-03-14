@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Auth } from "../../services/Auth";
 import Navbar from "../../components/ui-components/navbar/Navbar";
+import { UserChatType } from "../../types/ChatTypes";
+import { ChatService } from "../../services/ChatService";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
