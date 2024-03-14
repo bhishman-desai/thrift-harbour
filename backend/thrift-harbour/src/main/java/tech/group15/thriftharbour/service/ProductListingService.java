@@ -1,6 +1,7 @@
 package tech.group15.thriftharbour.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import tech.group15.thriftharbour.dto.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.model.AuctionSaleListing;

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
+import tech.group15.thriftharbour.dto.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
