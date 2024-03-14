@@ -49,8 +49,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ id }) => {
       );
       console.log("response in if", response);
       if (response[0] === 200) {
-        const data = response[0].data;
-        console.log("data of user", data);
         setErrorInReview(false);
         setOpenModal(true);
         setLoader(false);
