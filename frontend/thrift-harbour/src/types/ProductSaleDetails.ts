@@ -6,7 +6,7 @@ export interface UserDetails {
     email: string;
     avgBuyerRatings: number;
     avgSellerRatings: number;
-    username: number;
+    username: string;
 }
 
 export interface ImmediateSaleProductDetail {
@@ -15,6 +15,25 @@ export interface ImmediateSaleProductDetail {
     productName: string;
     productDescription: string;
     price: number;
+    category: string;
+    sellerEmail: string;
+    active: boolean;
+    approverEmail: string;
+    messageFromApprover: string;
+    approved: boolean;
+    rejected: boolean;
+    sold: boolean;
+    seller: UserDetails;
+    imageUrl?: string[] | undefined;
+}
+
+
+export interface AuctionSaleProductDetail {
+    auctionSaleListingID: string,
+    productName: string,
+    productDescription: string,
+    startingBid: number,
+    highestBid: number,
     category: string;
     sellerEmail: string;
     active: boolean;
