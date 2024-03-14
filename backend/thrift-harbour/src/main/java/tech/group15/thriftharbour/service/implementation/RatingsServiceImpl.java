@@ -27,6 +27,13 @@ public class RatingsServiceImpl implements RatingsService {
 
   private final SellerRatingsRepository sellerRatingsRepository;
 
+  /**
+   * Adds a rating for a buyer based on the provided request details.
+   *
+   * @param authorizationHeader The Authorization token used for authenticating the request.
+   * @param buyerRatingsRequest The request containing the details of the buyer rating.
+   * @return A String message indicating that the buyer ratings have been added successfully.
+   */
   @Override
   public String addBuyerRatings(
       String authorizationHeader, BuyerRatingsRequest buyerRatingsRequest) {
@@ -50,6 +57,13 @@ public class RatingsServiceImpl implements RatingsService {
     return "Buyer Ratings Added Successfully";
   }
 
+  /**
+   * Adds a rating for a seller based on the provided request details.
+   *
+   * @param authorizationHeader The Authorization token used for authenticating the request.
+   * @param sellerRatingsRequest The request containing the details of the seller rating.
+   * @return A String message indicating that the seller ratings have been added successfully.
+   */
   @Override
   public String addSellerRatings(
       String authorizationHeader, SellerRatingsRequest sellerRatingsRequest) {

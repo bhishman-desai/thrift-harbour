@@ -38,4 +38,6 @@ public interface ProductListingService {
     List<ApprovedAuctionSaleListingForAdminResponse>findAllApprovedAuctionSaleListing();
 
     List<DeniedAuctionSaleListingForAdminResponse>findAllDeniedAuctionSaleListing();
+
+    AuctionSaleProductResponse findAuctionSaleProductDetailsById(String auctionSaleListingID);
 }
