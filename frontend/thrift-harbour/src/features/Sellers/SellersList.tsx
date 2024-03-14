@@ -4,7 +4,7 @@ import { AdminServices } from "../../services/Admin";
 import { GetSellersResponse } from "../../types/ListingTypes";
 import {
   Avatar,
-  AvatarContainer,
+  AvatarContainer, ChatButton,
   Email,
   Header,
   Id,
@@ -17,10 +17,13 @@ import {
   UserId,
 } from "./SellersListStyles";
 
+import ChatWindow from "../chat/ChatWindow";
+
 interface SllerListProps {
   setCurrentSelected: (key: string) => void;
   currentSelected: string;
 }
+
 const SellersList: React.FC<SllerListProps> = ({
   setCurrentSelected,
   currentSelected,
@@ -31,6 +34,10 @@ const SellersList: React.FC<SllerListProps> = ({
   const [loading, setLoading] = useState(false);
   const [sellers, setSellers] = useState<GetSellersResponse[]>([]);
   const [error, setError] = useState(false);
+  const [openChat, setOpenChat] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<GetSellersResponse>(
+    {} as GetSellersResponse,
+  );
 
   const list = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
   {
@@ -67,6 +74,7 @@ const SellersList: React.FC<SllerListProps> = ({
           {sellers.map((seller) => {
             return (
               <Parent
+                key={seller.userID}
                 onClick={() => {
                   localStorage.setItem("uId", String(seller.userID));
                   setCurrentSelected("List By Sellers");
@@ -84,6 +92,17 @@ const SellersList: React.FC<SllerListProps> = ({
                     </Name>
                     <Email>{seller.email}</Email>
                   </NameEmail>
+                  <ChatButton
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the Parent onClick
+                      setSelectedUser(seller);
+                      setOpenChat(true);
+                    }}
+                  >
+                    Chat
+                  </ChatButton>
                 </UserCard>
                 <Id>
                   <UserId>User Id: {seller.userID}</UserId>
@@ -95,6 +114,20 @@ const SellersList: React.FC<SllerListProps> = ({
       ) : (
         <>"Loading</>
       )}
+
+      <ChatWindow
+        open={openChat}
+        sender={
+          {
+            userID: 1,
+            firstName: "admin",
+            lastName: "",
+            email: "admin@dal.ca",
+          } as GetSellersResponse
+        }
+        recipient={selectedUser}
+        onClose={() => setOpenChat(false)}
+      />
     </SellersContainer>
   );
 };

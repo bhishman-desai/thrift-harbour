@@ -1,5 +1,6 @@
 export class Path {
   environment: string;
+
   constructor(environment: string) {
     this.environment = environment;
   }
@@ -96,6 +97,13 @@ export class Path {
     }
     if (service === "product-listing") {
       return "/admin/sellers";
+    }
+  }
+
+  getChatUrl() {
+    if (this.environment === "development") {
+      return "http://localhost:8080";
+    } else {
     }
   }
 }
