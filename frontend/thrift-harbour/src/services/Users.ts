@@ -42,7 +42,8 @@ export class UsersService {
           "Content-Type": "application/json",
         },
       });
-      return [response.data, null];
+      console.log("in service response", response);
+      return [response.status, null];
     } catch (error: any) {
       return [
         null,

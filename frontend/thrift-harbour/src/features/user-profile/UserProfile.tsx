@@ -20,6 +20,7 @@ import { UsersService } from "../../services/Users";
 import { UserDetails } from "../../types/ProductSaleDetails";
 import { Button, RegisterButton } from "../registration/RegistrationStyles";
 import { ClipLoader } from "react-spinners";
+import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 
 interface UserProfileProps {
   id: number;
@@ -36,6 +37,8 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
   const [sellerRating, setSellerRating] = useState<number | null>();
   const [buyerRating, setBuyerRating] = useState<number | null>();
   const [loader, setLoader] = useState(false);
+  const [errorInReview, setErrorInReview] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const onSubmitReview = async () => {
     setLoader(true);
@@ -44,18 +47,22 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
         { ratingToUserId: id, sellerRatings: sellerRating },
         token
       );
-
-      if (response[0]?.status === 200) {
+      console.log("response in if", response);
+      if (response[0] === 200) {
         const data = response[0].data;
         console.log("data of user", data);
-        setUser(data);
-      } else {
-        setError(true);
-        setLoading(false);
+        setErrorInReview(false);
+        setOpenModal(true);
         setLoader(false);
+      } else {
+        setErrorInReview(true);
+        setLoader(false);
+        setOpenModal(true);
       }
     } catch (error) {
+      setErrorInReview(true);
       setLoader(false);
+      setOpenModal(true);
     }
   };
 
@@ -155,6 +162,18 @@ const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
           </RegisterButton>
         </Button>
       </InfoContainer>
+
+      <SuccessErrorModal
+        type={errorInReview ? "ERROR" : "SUCCESS"}
+        message={
+          errorInReview
+            ? "Something went wrong please try again!"
+            : "Review submitted successfully!"
+        }
+        open={openModal}
+        setOpen={setOpenModal}
+        title={error ? "error" : "Success"}
+      />
     </>
   );
 };
