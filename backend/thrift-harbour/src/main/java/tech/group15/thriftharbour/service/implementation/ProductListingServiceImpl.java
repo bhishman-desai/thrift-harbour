@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.AuctionSaleProductResponse;
+import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
@@ -466,5 +466,49 @@ public class ProductListingServiceImpl implements ProductListingService {
             .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
             .sellerName(seller.getFirstName() + " " + seller.getLastName())
             .build();
+  }
+
+  /**
+   * Retrieves all immediate sale listings with its seller details.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @return A list of {@code ImmediateSaleListingCreationResponse} objects representing all immediate sale listings details.
+   */
+  @Override
+  public List<ImmediateSaleListingCreationResponse> findAllImmediateListing(
+      String authorizationHeader) {
+
+    String sellerEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
+    List<ImmediateSaleListing> immediateSaleListingList = immediateSaleListingRepository.findAllImmediateSaleListing(sellerEmail);
+    List<ImmediateSaleListingCreationResponse> immediateSaleListingCreationResponsesList = new ArrayList<>();
+
+    for(ImmediateSaleListing immediateSaleListing : immediateSaleListingList)
+    {
+      List<ImmediateSaleImage> productImages =
+              immediateSaleImageRepository.getAllByImmediateSaleListingID(
+                      immediateSaleListing.getImmediateSaleListingID());
+
+      User seller =
+              userRepository
+                      .findByEmail(immediateSaleListing.getSellerEmail())
+                      .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+
+      immediateSaleListingCreationResponsesList.add(ImmediateSaleListingCreationResponse.builder()
+              .immediateSaleListingID(immediateSaleListing.getImmediateSaleListingID())
+              .productName(immediateSaleListing.getProductName())
+              .productDescription(immediateSaleListing.getProductDescription())
+              .price(immediateSaleListing.getPrice())
+              .category(immediateSaleListing.getCategory())
+              .sellerEmail(seller.getEmail())
+              .imageURLs(productImages.stream().map(ImmediateSaleImage::getImageURL).toList())
+              .active(immediateSaleListing.isActive())
+              .isApproved(immediateSaleListing.isApproved())
+              .isRejected(immediateSaleListing.isRejected())
+              .createdDate(immediateSaleListing.getCreatedDate())
+              .sellerID(seller.getUserID())
+              .build());
+
+    }
+    return immediateSaleListingCreationResponsesList;
   }
 }

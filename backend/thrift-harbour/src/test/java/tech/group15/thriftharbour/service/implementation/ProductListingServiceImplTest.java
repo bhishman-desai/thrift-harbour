@@ -7,11 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
+import tech.group15.thriftharbour.dto.response.ImmediateSaleListingCreationResponse;
 import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.model.*;
 import tech.group15.thriftharbour.repository.*;
+import tech.group15.thriftharbour.service.JWTService;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -27,6 +29,12 @@ class ProductListingServiceImplTest {
     AuctionSaleImageRepository auctionSaleImageRepository;
     @Mock
     UserRepository userRepository;
+    @Mock
+    JWTService jwtService;
+    @Mock
+    ImmediateSaleListingRepository immediateSaleListingRepository;
+    @Mock
+    ImmediateSaleImageRepository immediateSaleImageRepository;
     @InjectMocks
     ProductListingServiceImpl productListingServiceImpl;
 
@@ -74,5 +82,38 @@ class ProductListingServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> productListingServiceImpl.findAuctionSaleProductDetailsById("auctionSaleListingID"));
+    }
+
+    /**
+     * Tests the retrieval of all immediate sale product details list for authorized user.
+     */
+    @Test
+    void testFindAllImmediateListing(){
+        when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn("sellerEmail");
+        when(immediateSaleListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, true, true, "approverEmail", "messageFromApprover", true, new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime())));
+        when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(new ImmediateSaleImage(0, "immediateSaleListingID", "imageURL", new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime())));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User(1, "firstName", "lastName", "email", "password", RoleEnum.USER, 4.0, 5.0)));
+
+        List<ImmediateSaleListingCreationResponse> result = productListingServiceImpl.findAllImmediateListing("authorizationHeader");
+        Assertions.assertNotNull(result);
+
+        verify(jwtService).extractUserNameFromRequestHeaders("authorizationHeader");
+        verify(immediateSaleListingRepository).findAllImmediateSaleListing("sellerEmail");
+        immediateSaleListingRepository.findAllImmediateSaleListing("sellerEmail").forEach(listing ->
+                verify(immediateSaleImageRepository).getAllByImmediateSaleListingID(listing.getImmediateSaleListingID()));
+        verify(userRepository).findByEmail("sellerEmail");
+    }
+
+    /**
+     * Tests the behavior of all immediate sale product details list when the specified seller is not found.
+     */
+    @Test
+    void testFindAllImmediateListing_SellerNotFound() {
+        when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn("sellerEmail");
+        when(immediateSaleListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, true, true, "approverEmail", "messageFromApprover", true, new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime())));
+        when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(new ImmediateSaleImage(0, "immediateSaleListingID", "imageURL", new GregorianCalendar(2024, Calendar.MARCH, 14, 12, 35).getTime())));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> productListingServiceImpl.findAllImmediateListing("authorizationHeader"));
     }
 }
