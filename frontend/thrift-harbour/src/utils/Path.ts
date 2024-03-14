@@ -86,4 +86,10 @@ export class Path {
       return "/admin/sellers";
     }
   }
+
+  getProductsUrl(service: string) {
+    if (service === "get-all-products") {
+      return "/users/listing/get-immediatesale-listing";
+    }
+  }
 }

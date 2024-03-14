@@ -1,8 +1,10 @@
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../../components/ui-components/Modal/Modal";
+import { ListingService } from "../../services/Listing";
+import { ProductsService } from "../../services/Products";
 import { ViewButtonContainer } from "../admin/AdminDashboardStyles";
 import { Button } from "../product-listing/listed-products/ListedProductsStyles";
 import UserProfile from "../user-profile/UserProfile";
@@ -21,7 +23,15 @@ import {
 
 const BuyProducts: React.FC = () => {
   const navigate = useNavigate();
+  const products = new ProductsService();
+  const listing = new ListingService();
+
   const [viewProfile, setViewProfile] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [productsList, setProductsList] = useState<any[]>([]);
+  const [error, setError] = useState(false);
+
+  const token = localStorage.getItem("token");
 
   const newModalStyle: React.CSSProperties = {
     width: "80%",
@@ -73,6 +83,37 @@ const BuyProducts: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await products.getAllListedProducts(token);
+
+        if (response[0]?.status === 200) {
+          const data = response[0].data;
+
+          data.map(async (product: any) => {
+            const imagesResponse =
+              await listing.getImmediateListedProductsImages(
+                product.immediateSaleListingID,
+                token
+              );
+            if (imagesResponse[0]?.status === 200) {
+              product.imageURLs = imagesResponse[0].data.imageURLs;
+            }
+            setProductsList([...data]);
+          });
+          console.log("data after if", data);
+        } else {
+          setError(true);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
+    })();
+  }, []);
+
   const handleOnProductClick = (id: string) => {
     navigate(`/immediatesal-product-detail/${id}`);
   };
@@ -81,7 +122,7 @@ const BuyProducts: React.FC = () => {
       <Header>Products</Header>
 
       <Grid>
-        {auctionListedProducts.map((product) => {
+        {productsList.map((product) => {
           return (
             <>
               <Card>
@@ -90,7 +131,7 @@ const BuyProducts: React.FC = () => {
                 >
                   <Image>
                     <img
-                      src={product.productImages[0]}
+                      src={product.imageURLs && product.imageURLs[0]}
                       height={"100%"}
                       width={"100%"}
                     />
@@ -100,7 +141,7 @@ const BuyProducts: React.FC = () => {
                   <Stack spacing={1}>
                     <Rating
                       name="half-rating-read"
-                      defaultValue={4.5}
+                      defaultValue={product.seller.avgSellerRatings}
                       precision={0.5}
                       readOnly
                     />
