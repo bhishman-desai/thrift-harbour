@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageIcon from "../../assets/icons/ImageIcon";
 import Modal from "../../components/ui-components/Modal/Modal";
@@ -16,10 +16,41 @@ import {
 import Stack from "@mui/material/Stack";
 import Rating from "@mui/material/Rating";
 import ProfileIcon from "../../assets/icons/ProfileIcon";
+import { UsersService } from "../../services/Users";
+import { UserDetails } from "../../types/ProductSaleDetails";
 
-const BuyProducts: React.FC = () => {
+interface UserProfileProps {
+  id: number;
+}
+const BuyProducts: React.FC<UserProfileProps> = ({ id }) => {
   const navigate = useNavigate();
+  const users = new UsersService();
+  const token = localStorage.getItem("token");
+
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [user, setUser] = useState({} as UserDetails);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await users.getUserData(id, token);
+
+        if (response[0]?.status === 200) {
+          const data = response[0].data;
+          console.log("data of user", data);
+          setUser(data);
+        } else {
+          setError(true);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -45,17 +76,15 @@ const BuyProducts: React.FC = () => {
       <InfoContainer>
         <UserInfo>
           <Title>First Name:</Title>
-          <Value style={{ marginLeft: "4px" }}>Krutik</Value>
+          <Value style={{ marginLeft: "4px" }}>{user?.firstName}</Value>
         </UserInfo>
         <UserInfo>
           <Title>Last Name:</Title>
-          <Value style={{ marginLeft: "4px" }}>Kulkarni</Value>
+          <Value style={{ marginLeft: "4px" }}>{user?.lastName}</Value>
         </UserInfo>
         <UserInfo>
           <Title>Email:</Title>
-          <Value style={{ marginLeft: "4px" }}>
-            Kulkarnikrutik2000@gmail.com
-          </Value>
+          <Value style={{ marginLeft: "4px" }}>{user.email}</Value>
         </UserInfo>
         <RatingContainer>
           <Title>Ratings as buyer:</Title>

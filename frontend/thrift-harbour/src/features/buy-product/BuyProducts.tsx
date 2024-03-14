@@ -115,7 +115,7 @@ const BuyProducts: React.FC = () => {
   }, []);
 
   const handleOnProductClick = (id: string) => {
-    navigate(`/immediatesal-product-detail/${id}`);
+    navigate(`/immediatesale-product-detail/${id}`);
   };
   return (
     <>
@@ -127,7 +127,9 @@ const BuyProducts: React.FC = () => {
             <>
               <Card>
                 <ImageContainer
-                  onClick={() => handleOnProductClick(product.id)}
+                  onClick={() =>
+                    handleOnProductClick(product.immediateSaleListingID)
+                  }
                 >
                   <Image>
                     <img
@@ -153,14 +155,13 @@ const BuyProducts: React.FC = () => {
                 </NamePrice>
                 <ViewButtonContainer>
                   <Button onClick={() => setViewProfile(true)}>View</Button>
+                  {viewProfile && (
+                    <Modal style={newModalStyle} onClose={toggleViewProfile}>
+                      <UserProfile id={product.seller.userID} />
+                    </Modal>
+                  )}
                 </ViewButtonContainer>
               </Card>
-
-              {viewProfile && (
-                <Modal style={newModalStyle} onClose={toggleViewProfile}>
-                  <UserProfile />
-                </Modal>
-              )}
             </>
           );
         })}

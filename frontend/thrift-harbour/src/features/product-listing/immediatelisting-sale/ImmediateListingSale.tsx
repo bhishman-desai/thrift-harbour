@@ -29,6 +29,9 @@ import Carousel from "../../../components/ui-components/carousel/Carousel";
 import Navbar from "../../../components/ui-components/navbar/Navbar";
 import Footer from "../../../components/ui-components/footer/Footer";
 import AboutImmediateSale from "../../../components/ui-components/thrift-harbour-immediatesale-about/AboutImmediateSale";
+import { ProfileLink } from "./ImmediatesaleStyles";
+import Modal from "../../../components/ui-components/Modal/Modal";
+import UserProfile from "../../user-profile/UserProfile";
 
 const ImmediateListingSale = () => {
   const listing = new ListingService();
@@ -41,6 +44,7 @@ const ImmediateListingSale = () => {
   const { token, handleLogout } = useAuth();
   const [authorized, setAuthorized] = useState(false);
   const [loginType, setLogintype] = useState<string | null>();
+  const [viewProfile, setViewProfile] = useState(false);
 
   const { id } = useParams();
   let [isFavorite, setIsFavorite] = useState(false);
@@ -49,6 +53,13 @@ const ImmediateListingSale = () => {
 
   const [immediateSaleProductDetail, setImmediateSaleProductDetail] =
     useState<ImmediateSaleProductDetail>();
+
+  const newModalStyle: React.CSSProperties = {
+    width: "80%",
+    height: "80%",
+    maxWidth: "600px",
+    maxHeight: "600px",
+  };
 
   const navOptionsUsers = [
     {
@@ -76,6 +87,10 @@ const ImmediateListingSale = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const toggleViewProfile = () => {
+    setViewProfile(!viewProfile);
   };
 
   useEffect(() => {
@@ -151,11 +166,11 @@ const ImmediateListingSale = () => {
         "Loading..."
       ) : (
         <>
-          {authorized && loginType === "USER" ? (
+          {/* {authorized && loginType === "USER" ? (
             <Navbar navOptions={navOptionsUsers} loginType={loginType} />
           ) : (
             <></>
-          )}
+          )} */}
           <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
             <Card style={{ backgroundColor: "whitesmoke" }}>
               <Typography
@@ -250,10 +265,16 @@ const ImmediateListingSale = () => {
                         }}
                       >
                         <CardContent>
-                          <Typography variant="h5" component="div">
-                            {immediateSaleProductDetail?.seller.firstName}{" "}
-                            {immediateSaleProductDetail?.seller.lastName}
-                          </Typography>
+                          <ProfileLink onClick={() => setViewProfile(true)}>
+                            <Typography
+                              style={{ color: "#731DCF" }}
+                              variant="h5"
+                              component="div"
+                            >
+                              {immediateSaleProductDetail?.seller.firstName}{" "}
+                              {immediateSaleProductDetail?.seller.lastName}
+                            </Typography>
+                          </ProfileLink>
                           <div>
                             <Rating
                               name="read-only"
@@ -295,6 +316,18 @@ const ImmediateListingSale = () => {
             </Card>
           </div>
           <Footer />
+
+          {viewProfile && (
+            <Modal style={newModalStyle} onClose={toggleViewProfile}>
+              <UserProfile
+                id={
+                  immediateSaleProductDetail
+                    ? immediateSaleProductDetail?.seller.userID
+                    : 0
+                }
+              />
+            </Modal>
+          )}
         </>
       )}
     </>
