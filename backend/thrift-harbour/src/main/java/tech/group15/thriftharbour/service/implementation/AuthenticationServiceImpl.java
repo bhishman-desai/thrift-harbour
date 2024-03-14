@@ -9,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.request.*;
+import tech.group15.thriftharbour.dto.response.ForgotPassResponse;
+import tech.group15.thriftharbour.dto.response.SignInResponse;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
 import tech.group15.thriftharbour.mapper.UserMapper;
 import tech.group15.thriftharbour.model.PasswordResetToken;
@@ -67,6 +69,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return null;
   }
 
+  /**
+   * This method will verify user's email then it will send reset password link to registered email id.
+   *
+   * @param forgotPassRequest The request includes the user's email id.
+   * @return A {@code ForgotPassResponse} object containing the response message.
+   */
   public ForgotPassResponse forgotPassword(ForgotPassRequest forgotPassRequest) {
     User user =
         userRepository
@@ -91,6 +99,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
   }
 
+  /**
+   * Verifies the expiry of a password reset token.
+   *
+   * @param token The password reset token to be verified.
+   * @return The url of reset password page if token is valid otherwise url of login page.
+   */
   public Object resetPassTokenVerify(String token) {
     PasswordResetToken passResetToken =
         passwordResetTokenRepository
@@ -105,6 +119,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return "http://172.17.1.50:3000/login" + "?msg=Link Expired";
   }
 
+  /**
+   * The method will reset password of the user.
+   *
+   * @param resetPassRequest A {@code ResetPassRequest} object containing all necessary information to reset the password.
+   * @return A {@code Object} object containing the response message.
+   */
   public Object resetPassword(ResetPassRequest resetPassRequest) {
     PasswordResetToken passResetToken =
         passwordResetTokenRepository

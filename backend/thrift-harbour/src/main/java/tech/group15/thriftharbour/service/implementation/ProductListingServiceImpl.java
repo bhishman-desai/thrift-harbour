@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.AuctionSaleProductResponse;
+import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.mapper.ProductMapper;
@@ -21,11 +23,6 @@ import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +60,7 @@ public class ProductListingServiceImpl implements ProductListingService {
   // Method to create an immediate sale listing
   @Override
   public ImmediateSaleListingCreationResponse createImmediateSaleListing(
-      String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
+          String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> images) {
     String userName = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
     /* Fetch the User entity based on the seller's email */
@@ -260,6 +257,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return immediateSaleListingRepository.findAllBySellerID(sellerID);
   }
 
+  /**
+   * Fetches all listings that are marked as approved for immediate sale.
+   *
+   * @return A List of {@code ApprovedImmediateSaleListingForAdminResponse} objects, each representing an approved immediate sale listing.
+   */
   @Override
   public List<ApprovedImmediateSaleListingForAdminResponse> findAllApprovedImmediateSaleListing() {
 
@@ -301,6 +303,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return approvedImmediateSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as rejected for immediate sale.
+   *
+   * @return A List of {@code DeniedImmediateSaleListingForAdminResponse} objects, each representing a rejected immediate sale listing.
+   */
   @Override
   public List<DeniedImmediateSaleListingForAdminResponse> findAllDeniedImmediateSaleListing() {
 
@@ -341,6 +348,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return deniedImmediateSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as approved for auction sale.
+   *
+   * @return A List of {@code ApprovedAuctionSaleListingForAdminResponse} objects, each representing an approved auction sale listing.
+   */
   @Override
   public List<ApprovedAuctionSaleListingForAdminResponse> findAllApprovedAuctionSaleListing() {
 
@@ -379,6 +391,11 @@ public class ProductListingServiceImpl implements ProductListingService {
     return approvedAuctionSaleListingForAdminResponseList;
   }
 
+  /**
+   * Fetches all listings that are marked as rejected for auction sale.
+   *
+   * @return A List of {@code DeniedAuctionSaleListingForAdminResponse} objects, each representing a rejected auction sale listing.
+   */
   @Override
   public List<DeniedAuctionSaleListingForAdminResponse> findAllDeniedAuctionSaleListing() {
 
@@ -414,5 +431,40 @@ public class ProductListingServiceImpl implements ProductListingService {
       deniedAuctionSaleListingForAdminResponseList.add(deniedAuctionSaleListingForAdminResponse);
     }
     return deniedAuctionSaleListingForAdminResponseList;
+  }
+
+  /**
+   * Finds and retrieves details of an auction sale product by its listing ID.
+   *
+   * @param auctionSaleListingID The id of the auction sale listing.
+   * @return n {@code AuctionSaleProductResponse} object containing information of the auction sale product.
+   */
+  @Override
+  public AuctionSaleProductResponse findAuctionSaleProductDetailsById(String auctionSaleListingID) {
+    AuctionSaleListing auctionSaleListing = auctionSaleListingRepository.findAuctionSaleProductByID(auctionSaleListingID);
+
+    if (auctionSaleListing == null)
+      throw new ListingNotFoundException(
+              String.format(
+                      "No listing found with provided listing id:%s", auctionSaleListingID));
+
+    List<AuctionSaleImage> productImages =
+            auctionSaleImageRepository.findAllByAuctionSaleListingID(
+                    auctionSaleListingID);
+
+    User seller =
+            userRepository
+                    .findByEmail(auctionSaleListing.getSellerEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+
+    return AuctionSaleProductResponse.builder()
+            .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+            .productName(auctionSaleListing.getProductName())
+            .productDescription(auctionSaleListing.getProductDescription())
+            .startingBid(auctionSaleListing.getStartingBid())
+            .highestBid(auctionSaleListing.getHighestBid())
+            .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+            .sellerName(seller.getFirstName() + " " + seller.getLastName())
+            .build();
   }
 }

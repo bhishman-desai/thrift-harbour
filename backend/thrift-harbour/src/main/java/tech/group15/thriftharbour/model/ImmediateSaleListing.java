@@ -21,6 +21,7 @@ public class ImmediateSaleListing {
 
     private String productName;
 
+    @Column(columnDefinition = "text")
     private String productDescription;
 
     private double price;

@@ -1,4 +1,4 @@
-package tech.group15.thriftharbour.dto;
+package tech.group15.thriftharbour.dto.response;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class DeniedImmediateSaleListingForAdminResponse {
+public class ApprovedImmediateSaleListingForAdminResponse {
     private String immediateSaleListingID;
 
     private String productName;
@@ -23,7 +23,7 @@ public class DeniedImmediateSaleListingForAdminResponse {
 
     private boolean active;
 
-    private boolean isRejected;
+    private boolean isApproved;
 
     private String approverEmail;
 
@@ -32,4 +32,5 @@ public class DeniedImmediateSaleListingForAdminResponse {
     private Date dateOfApproval;
 
     private boolean isSold;
+
 }

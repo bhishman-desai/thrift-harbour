@@ -8,6 +8,7 @@ import ForgotPassword from "./features/forgotpassword/ForgotPassword";
 import ResetPassword from "./features/resetpassword/ResetPassword";
 import ProductListing from "./features/product-listing/add-listing/ProductListing";
 import ListedBySeller from "./features/product-listing/seller/ListedBySeller";
+import ImmediateListingSale from "./features/product-listing/immediatelisting-sale/ImmediateListingSale";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/reset-password/*" element={<ResetPassword />} />
           <Route path="/listing" element={<ProductListing />} />
           <Route path="/seller" element={<ListedBySeller />} />
+          <Route path="/immediatesale-product-detail/:id" element={< ImmediateListingSale />}/>
         </Routes>
       </Router>
     </AuthWrapper>

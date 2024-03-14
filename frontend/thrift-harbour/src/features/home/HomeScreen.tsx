@@ -1,8 +1,12 @@
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
+import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
 import Navbar from "../../components/ui-components/navbar/Navbar";
+import { LoginType } from "../../types/AuthTypes";
+import AdminDashboard from "../admin/AdminDashboard";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +32,12 @@ const Home: React.FC = () => {
     {
       key: "Chats",
       value: "Chats",
+      isSelected: false,
+    },
+
+    {
+      key: "Buy Products",
+      value: "Buy Products",
       isSelected: false,
     },
   ];

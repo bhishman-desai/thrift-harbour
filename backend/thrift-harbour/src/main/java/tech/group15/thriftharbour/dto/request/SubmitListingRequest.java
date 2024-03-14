@@ -1,11 +1,10 @@
-package tech.group15.thriftharbour.dto;
+package tech.group15.thriftharbour.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 import tech.group15.thriftharbour.enums.SellCategoryEnum;
 
-import java.util.List;
 
 @Data
 public class SubmitListingRequest {
