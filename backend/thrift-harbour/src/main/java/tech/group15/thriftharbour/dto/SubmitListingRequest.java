@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.lang.Nullable;
 import tech.group15.thriftharbour.enums.SellCategoryEnum;
 
-import java.util.List;
 
 @Data
 public class SubmitListingRequest {
