@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import AdminDashboard from "../../../features/admin/AdminDashboard";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
@@ -7,17 +6,17 @@ import ListedProducts from "../../../features/product-listing/listed-products/Li
 import ListedBySeller from "../../../features/product-listing/seller/ListedBySeller";
 import SellersList from "../../../features/Sellers/SellersList";
 import { NavOptions } from "../../../types/AuthTypes";
-import { HamburgerMenuProps } from "../../../types/ListingTypes";
 import Profilepopup from "../Profilepopup/Profilepopup";
 
 import {
   NavContainer,
-  TabsOptionsContainer,
   Option,
-  Tabs,
   Profile,
   ProfileIconBg,
+  Tabs,
+  TabsOptionsContainer,
 } from "./NavbarStyles";
+import ChatScreen from "../../../features/chat/ChatScreen";
 
 interface NavbarProps {
   navOptions: NavOptions[];
@@ -26,7 +25,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   const [currentSelected, setCurrentSelected] = useState(
-    loginType === "ADMIN" ? "Dashboard" : "List Product"
+    loginType === "ADMIN" ? "Dashboard" : "List Product",
   );
   const [isProfileClicked, setIsProfileClicked] = useState(false);
 
@@ -73,6 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
         />
       )}
       {currentSelected === "List By Sellers" && <ListedBySeller />}
+      {currentSelected === "Chats" && <ChatScreen />}
     </>
   );
 };
