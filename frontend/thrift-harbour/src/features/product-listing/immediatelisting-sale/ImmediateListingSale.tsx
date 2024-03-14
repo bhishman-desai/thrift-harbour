@@ -74,26 +74,6 @@ const ImmediateListingSale = () => {
     maxHeight: "600px",
   };
 
-  const navOptionsUsers = [
-    {
-      key: "List Product",
-      value: "List Product",
-      isSelected: false,
-    },
-
-    {
-      key: "My Listed Products",
-      value: "My Listed Products",
-      isSelected: false,
-    },
-
-    {
-      key: "Buy Products",
-      value: "Buy Products",
-      isSelected: false,
-    },
-  ];
-
   const handleFav = () => {
     setIsFavorite((prevIsFav) => !prevIsFav);
   };
@@ -153,225 +133,189 @@ const ImmediateListingSale = () => {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-
-  //   (async () => {
-  //     if (!token) {
-  //       navigate("/login");
-  //     } else {
-  //       try {
-  //         const [data, error] = await auth.getUser(token);
-  //         if (data?.status === 200) {
-  //           console.log("in user");
-  //           setAuthorized(true);
-  //           setLogintype("USER");
-  //           return;
-  //         } else if (error) {
-  //           setError(true);
-  //           setAuthorized(false);
-  //         } else {
-  //           setError(true);
-  //         }
-  //       } catch (error) {
-  //         setError(true);
-  //       }
-
-  //       try {
-  //         const [data, error] = await auth.getAdmin(token);
-  //         if (data?.status === 200) {
-  //           console.log("in admin");
-
-  //           setAuthorized(true);
-  //           setLogintype("ADMIN");
-  //         } else if (error) {
-  //           setError(true);
-  //           setAuthorized(false);
-  //         } else {
-  //           setError(true);
-  //         }
-  //       } catch (error) {
-  //         setError(true);
-  //       }
-  //     }
-  //   })();
-  // }, [token]);
-
   return (
     <>
       {loading ? (
         "Loading..."
       ) : (
         <>
-          {/* {authorized && loginType === "USER" ? (
-            <Navbar navOptions={navOptionsUsers} loginType={loginType} />
-          ) : (
-            <></>
-          )} */}
-          <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
-            <Card style={{ backgroundColor: "whitesmoke" }}>
-              <Typography
-                sx={{
-                  textAlign: "left",
-                  marginLeft: "1%",
-                  marginTop: "1%",
-                  fontSize: 24,
-                }}
-              >
-                <b>{immediateSaleProductDetail!.productName}</b>
-              </Typography>
-              <Typography
-                sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14 }}
-              >
-                by {immediateSaleProductDetail?.category}
-              </Typography>
-              <CardContent>
-                <Carousel
-                  imageUrls={immediateSaleProductDetail?.imageUrl}
-                ></Carousel>
-              </CardContent>
-              <CardContent>
-                <Toolbar sx={{ fontSize: 20 }}>
-                  <span>
-                    Seller Quoted Price: <span>&#36; </span>
-                    {immediateSaleProductDetail!.price}
-                  </span>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    <Button onClick={handleFav}>
-                      {isFavorite ? (
-                        <FavoriteIcon sx={{ color: red[500] }} />
-                      ) : (
-                        <FavoriteBorderIcon />
-                      )}
-                    </Button>
-                  </Typography>
-                  <Button
-                    onClick={() => setOpenChat(true)}
-                    className="chat-button"
-                    style={{ background: blue[400], color: "white" }}
+          {" "}
+          {immediateSaleProductDetail && (
+            <>
+              <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
+                <Card style={{ backgroundColor: "whitesmoke" }}>
+                  <Typography
+                    sx={{
+                      textAlign: "left",
+                      marginLeft: "1%",
+                      marginTop: "1%",
+                      fontSize: 24,
+                    }}
                   >
-                    Chat
-                  </Button>
-                </Toolbar>
-              </CardContent>
-              <CardContent>
-                <Box
-                  sx={{ width: "100%", borderRadius: 2, bgcolor: "whitesmoke" }}
-                >
-                  <TabContext value={value}>
+                    <b>{immediateSaleProductDetail!.productName}</b>
+                  </Typography>
+                  <Typography
+                    sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14 }}
+                  >
+                    by {immediateSaleProductDetail?.category}
+                  </Typography>
+                  <CardContent>
+                    <Carousel
+                      imageUrls={immediateSaleProductDetail?.imageUrl}
+                    ></Carousel>
+                  </CardContent>
+                  <CardContent>
+                    <Toolbar sx={{ fontSize: 20 }}>
+                      <span>
+                        Seller Quoted Price: <span>&#36; </span>
+                        {immediateSaleProductDetail!.price}
+                      </span>
+                      <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{ flexGrow: 1 }}
+                      >
+                        <Button onClick={handleFav}>
+                          {isFavorite ? (
+                            <FavoriteIcon sx={{ color: red[500] }} />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
+                        </Button>
+                      </Typography>
+                      <Button
+                        onClick={() => setOpenChat(true)}
+                        className="chat-button"
+                        style={{ background: blue[400], color: "white" }}
+                      >
+                        Chat
+                      </Button>
+                    </Toolbar>
+                  </CardContent>
+                  <CardContent>
                     <Box
                       sx={{
-                        borderBottom: 1,
-                        borderRadius: 1,
-                        borderColor: "divider",
+                        width: "100%",
+                        borderRadius: 2,
+                        bgcolor: "whitesmoke",
                       }}
                     >
-                      <TabList
-                        onChange={handleChange}
-                        aria-label="lab API tabs example"
-                      >
-                        <Tab label="Description" value="1" />
-                        <Tab label="Seller Details" value="2" />
-                        <Tab
-                          label="How Buying works in Thrift Harbour"
-                          value="3"
-                        />
-                      </TabList>
-                    </Box>
-                    <TabPanel value="1">
-                      <Card
-                        sx={{
-                          bgcolor: "whitesmoke",
-                          borderColor: "divided",
-                          boxShadow: 3,
-                        }}
-                      >
-                        <CardContent>
-                          <Typography>
-                            <h3>Product Description:</h3>
-                            {immediateSaleProductDetail?.productDescription}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </TabPanel>
-                    <TabPanel value="2">
-                      <Card
-                        sx={{
-                          bgcolor: "whitesmoke",
-                          borderColor: "divided",
-                          boxShadow: 3,
-                        }}
-                      >
-                        <CardContent>
-                          <ProfileLink onClick={() => setViewProfile(true)}>
-                            <Typography
-                              style={{ color: "#731DCF" }}
-                              variant="h5"
-                              component="div"
-                            >
-                              {immediateSaleProductDetail?.seller.firstName}{" "}
-                              {immediateSaleProductDetail?.seller.lastName}
-                            </Typography>
-                          </ProfileLink>
-                          <div>
-                            <Rating
-                              name="read-only"
-                              value={
-                                immediateSaleProductDetail?.seller
-                                  .avgSellerRatings
-                              }
-                              precision={0.5}
-                              readOnly
+                      <TabContext value={value}>
+                        <Box
+                          sx={{
+                            borderBottom: 1,
+                            borderRadius: 1,
+                            borderColor: "divider",
+                          }}
+                        >
+                          <TabList
+                            onChange={handleChange}
+                            aria-label="lab API tabs example"
+                          >
+                            <Tab label="Description" value="1" />
+                            <Tab label="Seller Details" value="2" />
+                            <Tab
+                              label="How Buying works in Thrift Harbour"
+                              value="3"
                             />
-                          </div>
-                          <Typography sx={{ paddingLeft: "2px" }}>
-                            (
-                            {
-                              immediateSaleProductDetail?.seller
-                                .avgSellerRatings
-                            }{" "}
-                            of 5 stars)
-                            {immediateSaleProductDetail?.seller
-                              .avgSellerRatings === 0 ? (
-                              <>
-                                <span> No Reviews</span>
-                                <br />
-                              </>
-                            ) : (
-                              <></>
-                            )}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </TabPanel>
-                    <TabPanel value="3">
-                      <AboutImmediateSale />
-                    </TabPanel>
-                  </TabContext>
-                </Box>
-                <br />
-              </CardContent>
-            </Card>
-          </div>
-          <Footer />
+                          </TabList>
+                        </Box>
+                        <TabPanel value="1">
+                          <Card
+                            sx={{
+                              bgcolor: "whitesmoke",
+                              borderColor: "divided",
+                              boxShadow: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <Typography>
+                                <h3>Product Description:</h3>
+                                {immediateSaleProductDetail?.productDescription}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        </TabPanel>
+                        <TabPanel value="2">
+                          <Card
+                            sx={{
+                              bgcolor: "whitesmoke",
+                              borderColor: "divided",
+                              boxShadow: 3,
+                            }}
+                          >
+                            <CardContent>
+                              <ProfileLink onClick={() => setViewProfile(true)}>
+                                <Typography
+                                  style={{ color: "#731DCF" }}
+                                  variant="h5"
+                                  component="div"
+                                >
+                                  {immediateSaleProductDetail?.seller.firstName}{" "}
+                                  {immediateSaleProductDetail?.seller.lastName}
+                                </Typography>
+                              </ProfileLink>
+                              <div>
+                                <Rating
+                                  name="read-only"
+                                  value={
+                                    immediateSaleProductDetail?.seller
+                                      .avgSellerRatings
+                                  }
+                                  precision={0.5}
+                                  readOnly
+                                />
+                              </div>
+                              <Typography sx={{ paddingLeft: "2px" }}>
+                                (
+                                {
+                                  immediateSaleProductDetail?.seller
+                                    .avgSellerRatings
+                                }{" "}
+                                of 5 stars)
+                                {immediateSaleProductDetail?.seller
+                                  .avgSellerRatings === 0 ? (
+                                  <>
+                                    <span> No Reviews</span>
+                                    <br />
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        </TabPanel>
+                        <TabPanel value="3">
+                          <AboutImmediateSale />
+                        </TabPanel>
+                      </TabContext>
+                    </Box>
+                    <br />
+                  </CardContent>
+                </Card>
+              </div>
+              <Footer />
 
-          <ChatWindow
-            open={openChat}
-            sender={user as any}
-            recipient={selectedUser}
-            onClose={() => setOpenChat(false)}
-          />
-
-          {viewProfile && (
-            <Modal style={newModalStyle} onClose={toggleViewProfile}>
-              <UserProfile
-                id={
-                  immediateSaleProductDetail
-                    ? immediateSaleProductDetail?.seller.userID
-                    : 0
-                }
+              <ChatWindow
+                open={openChat}
+                sender={user as any}
+                recipient={selectedUser}
+                onClose={() => setOpenChat(false)}
               />
-            </Modal>
+
+              {viewProfile && (
+                <Modal style={newModalStyle} onClose={toggleViewProfile}>
+                  <UserProfile
+                    id={
+                      immediateSaleProductDetail
+                        ? immediateSaleProductDetail?.seller.userID
+                        : 0
+                    }
+                  />
+                </Modal>
+              )}
+            </>
           )}
         </>
       )}
