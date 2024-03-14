@@ -41,7 +41,8 @@ const ImmediateListingSale = () => {
 
   const [value, setValue] = useState("1");
 
-  const { token, handleLogout } = useAuth();
+  const token = localStorage.getItem("token");
+
   const [authorized, setAuthorized] = useState(false);
   const [loginType, setLogintype] = useState<string | null>();
   const [viewProfile, setViewProfile] = useState(false);
@@ -116,49 +117,49 @@ const ImmediateListingSale = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
 
-    (async () => {
-      if (!token) {
-        navigate("/login");
-      } else {
-        try {
-          const [data, error] = await auth.getUser(token);
-          if (data?.status === 200) {
-            console.log("in user");
-            setAuthorized(true);
-            setLogintype("USER");
-            return;
-          } else if (error) {
-            setError(true);
-            setAuthorized(false);
-          } else {
-            setError(true);
-          }
-        } catch (error) {
-          setError(true);
-        }
+  //   (async () => {
+  //     if (!token) {
+  //       navigate("/login");
+  //     } else {
+  //       try {
+  //         const [data, error] = await auth.getUser(token);
+  //         if (data?.status === 200) {
+  //           console.log("in user");
+  //           setAuthorized(true);
+  //           setLogintype("USER");
+  //           return;
+  //         } else if (error) {
+  //           setError(true);
+  //           setAuthorized(false);
+  //         } else {
+  //           setError(true);
+  //         }
+  //       } catch (error) {
+  //         setError(true);
+  //       }
 
-        try {
-          const [data, error] = await auth.getAdmin(token);
-          if (data?.status === 200) {
-            console.log("in admin");
+  //       try {
+  //         const [data, error] = await auth.getAdmin(token);
+  //         if (data?.status === 200) {
+  //           console.log("in admin");
 
-            setAuthorized(true);
-            setLogintype("ADMIN");
-          } else if (error) {
-            setError(true);
-            setAuthorized(false);
-          } else {
-            setError(true);
-          }
-        } catch (error) {
-          setError(true);
-        }
-      }
-    })();
-  }, [token]);
+  //           setAuthorized(true);
+  //           setLogintype("ADMIN");
+  //         } else if (error) {
+  //           setError(true);
+  //           setAuthorized(false);
+  //         } else {
+  //           setError(true);
+  //         }
+  //       } catch (error) {
+  //         setError(true);
+  //       }
+  //     }
+  //   })();
+  // }, [token]);
 
   return (
     <>
