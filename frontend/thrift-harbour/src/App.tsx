@@ -23,9 +23,9 @@ function App() {
           <Route path="/listing" element={<ProductListing />} />
           <Route path="/seller" element={<ListedBySeller />} />
           <Route
-            path="/immediatesal-product-detail/*"
+            path="/immediatesale-product-detail/:id"
             element={<ImmediateListingSale />}
-          ></Route>
+          />
         </Routes>
       </Router>
     </AuthWrapper>
