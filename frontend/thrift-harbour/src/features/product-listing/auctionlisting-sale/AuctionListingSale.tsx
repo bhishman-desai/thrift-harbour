@@ -164,7 +164,7 @@ const AuctionListingSale = () => {
                                 <b>{a?.productName}</b>
                             </Typography>
                             <Typography sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14 }}>
-                                by <b>{a?.category}</b> starting at &#36;{a.startingBid}
+                                by <b>{a?.category}</b>, starting at &#36;{a.startingBid}
                             </Typography>
                             <CardContent>
                                 <Carousel imageUrls={a?.imageUrl}></Carousel>
