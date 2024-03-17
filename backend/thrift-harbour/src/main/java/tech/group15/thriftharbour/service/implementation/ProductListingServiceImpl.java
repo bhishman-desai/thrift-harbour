@@ -452,20 +452,29 @@ public class ProductListingServiceImpl implements ProductListingService {
             auctionSaleImageRepository.findAllByAuctionSaleListingID(
                     auctionSaleListingID);
 
-    User seller =
+    User user =
             userRepository
                     .findByEmail(auctionSaleListing.getSellerEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
 
+    User sellerRequiredInfo = new User();
+    sellerRequiredInfo.setUserID(user.getUserID());
+    sellerRequiredInfo.setFirstName(user.getFirstName());
+    sellerRequiredInfo.setLastName(user.getLastName());
+    sellerRequiredInfo.setEmail(user.getEmail());
+    sellerRequiredInfo.setRole(user.getRole());
+    sellerRequiredInfo.setAvgBuyerRatings(user.getAvgBuyerRatings());
+    sellerRequiredInfo.setAvgSellerRatings(user.getAvgSellerRatings());
+
     return AuctionSaleProductResponse.builder()
-            .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
-            .productName(auctionSaleListing.getProductName())
-            .productDescription(auctionSaleListing.getProductDescription())
-            .startingBid(auctionSaleListing.getStartingBid())
-            .highestBid(auctionSaleListing.getHighestBid())
-            .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
-            .sellerName(seller.getFirstName() + " " + seller.getLastName())
-            .build();
+        .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+        .productName(auctionSaleListing.getProductName())
+        .productDescription(auctionSaleListing.getProductDescription())
+        .startingBid(auctionSaleListing.getStartingBid())
+        .highestBid(auctionSaleListing.getHighestBid())
+        .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+        .seller(sellerRequiredInfo)
+        .build();
   }
 
   /**
