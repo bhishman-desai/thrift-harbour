@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
 import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
+import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -103,5 +104,18 @@ public class UserController {
           (@PathVariable String id) {
     return ResponseEntity.status(HttpStatus.OK)
             .body(productListingService.findImmediateSaleListingByID(id));
+  }
+
+  /**
+   * Retrieves the details of an auction sale product by its ID.
+   *
+   * @param id The unique id of the auction sale product.
+   * @return A {@code ResponseEntity} containing the {@code AuctionSaleProductResponse} object.
+   */
+  @GetMapping("/get-auction-sale-product/{id}")
+  public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(
+          @PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(productListingService.findAuctionSaleProductDetailsById(id));
   }
 }
