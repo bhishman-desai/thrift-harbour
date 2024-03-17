@@ -39,6 +39,9 @@ class UserServiceImplTest {
         user = new User(1, "firstName", "lastName", userEmail, "password", RoleEnum.USER, 4.0, 5.0);
     }
 
+    /**
+     * Tests the fetching user details.
+     */
     @Test
     void testUserDetailsService(){
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
@@ -51,6 +54,9 @@ class UserServiceImplTest {
         verify(userRepository).findByEmail(userEmail);
     }
 
+    /**
+     * Tests user not found while fetching user details.
+     */
     @Test
     void userDetailsService_UserNotFound() {
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.empty());
@@ -61,6 +67,9 @@ class UserServiceImplTest {
         verify(userRepository).findByEmail(userEmail);
     }
 
+    /**
+     * Tests the find all sellers details.
+     */
     @Test
     void testFindAllSellers(){
         when(userRepository.findAllSellers()).thenReturn(List.of(user));
@@ -72,6 +81,9 @@ class UserServiceImplTest {
         verify(userRepository).findAllSellers();
     }
 
+    /**
+     * Tests the fetching user details by user id.
+     */
     @Test
     void testFindUserById(){
         int userId = 1;
@@ -82,6 +94,9 @@ class UserServiceImplTest {
         verify(userRepository).findById(userId);
     }
 
+    /**
+     * Tests the user not found while fetching user details by user id.
+     */
     @Test
     void findUserById_NotFound() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -90,6 +105,9 @@ class UserServiceImplTest {
         verify(userRepository).findById(userId);
     }
 
+    /**
+     * Tests the retrievals of senders list based on recipient id.
+     */
     @Test
     void testFindSenderByRecipientId(){
         when(chatMessageService.findSenderByRecipientId(anyString())).thenReturn(List.of(1));
