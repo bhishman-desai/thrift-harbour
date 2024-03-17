@@ -27,7 +27,7 @@ const Carousel: React.FC<productImageUrls> = ({imageUrls}) => {
     return (
         <div>
             <Slider {...settings}>
-                {imageUrls!.map((image) => (
+                {imageUrls?.map((image) => (
                     <div >
                         <img src={image} height={"30%"} width={"30%"} style={{ margin: "auto", display: "block" }} />
                     </div>

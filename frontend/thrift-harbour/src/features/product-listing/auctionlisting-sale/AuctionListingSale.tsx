@@ -48,10 +48,30 @@ const AuctionListingSale = () => {
         (async function () {
             try {
                 const response = await listing.auctionSaleProductDetail(id!, token);
-                setAuctionSaleProductDetail(response);
+
+                let tempProductDetail: AuctionSaleProductDetail = {
+                    auctionSaleListingID: response.data.auctionSaleListingID,
+                    productName: response.data.productName,
+                    productDescription: response.data.productDescription,
+                    startingBid: response.data.startingBid,
+                    highestBid: response.data.highestBid,
+                    category: response.data.seller.firstName + " " + response.data.seller.lastName,
+                    sellerEmail: response.data.sellerEmail,
+                    active: response.data.active,
+                    approverEmail: response.data.approverEmail,
+                    messageFromApprover: response.data.messageFromApprover,
+                    approved: response.data.approved,
+                    rejected: response.data.rejected,
+                    sold: response.data.sold,
+                    seller: response.data.seller,
+                    imageUrl: response.data.imageURLs,
+
+                };
+                setAuctionSaleProductDetail(tempProductDetail);
+
                 setLoading(false);
             }
-            catch (error){
+            catch (error) {
                 console.log(error);
                 throw error;
             }
@@ -184,8 +204,14 @@ const AuctionListingSale = () => {
                                 <Carousel imageUrls={auctionSaleProductDetail?.imageUrl}></Carousel>
                             </CardContent>
                             <CardContent>
-                            <Toolbar sx={{ fontSize: 20 }}>
-                                    <span>Highest Bid: <span>&#36; </span>{auctionSaleProductDetail?.highestBid}</span>
+                                <Toolbar sx={{ fontSize: 20 }}>
+                                    <span>Highest Bid: <span>&#36;
+                                    </span>{auctionSaleProductDetail!.highestBid <= auctionSaleProductDetail!.startingBid
+                                        ?
+                                        auctionSaleProductDetail!.startingBid
+                                        :
+                                        auctionSaleProductDetail?.highestBid}
+                                    </span>
                                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                         <Button onClick={handleFav}>
                                             {isFavorite ? <FavoriteIcon sx={{ color: red[500] }} /> : <FavoriteBorderIcon />}

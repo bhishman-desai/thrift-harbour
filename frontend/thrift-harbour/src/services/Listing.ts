@@ -37,10 +37,10 @@ export class ListingService {
   };
 
   async auctionSaleProductDetail(auctionSaleListingID: string | null,
-    token?: string | null): Promise<AuctionSaleProductDetail>{
+    token?: string | null): Promise<any>{
       const baseUrl = this.path.getBaseUrl();
-      const immediateListUrl = this.path.getUserUrl("auctionsale-product-detail");
-      const requestUrl = baseUrl + immediateListUrl + `${auctionSaleListingID}`;
+      const auctionListUrl = this.path.getUserUrl("auctionsale-product-detail");
+      const requestUrl = baseUrl + auctionListUrl + `${auctionSaleListingID}`;
   
       try {
         const response = await axios.get(requestUrl, {
@@ -48,7 +48,7 @@ export class ListingService {
             Authorization: `Bearer ${token}`,
           },
         });
-        return response.data as AuctionSaleProductDetail;
+        return response;
       }
       catch(error){
         throw error;
