@@ -12,7 +12,7 @@ public class FileUtils {
   private FileUtils() {}
 
   public static Path generateTempFilePath(MultipartFile file) {
-    Path tempFilePath = null;
+    Path tempFilePath;
     try {
       tempFilePath = Files.createTempFile(file.getOriginalFilename(), "");
       file.transferTo(tempFilePath);

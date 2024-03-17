@@ -44,6 +44,20 @@ const AuctionListingSale = () => {
 
     const [auctionSaleProductDetail, setAuctionSaleProductDetail] = useState<AuctionSaleProductDetail>();
 
+    useEffect(() => {
+        (async function () {
+            try {
+                const response = await listing.auctionSaleProductDetail(id!, token);
+                setAuctionSaleProductDetail(response);
+                setLoading(false);
+            }
+            catch (error){
+                console.log(error);
+                throw error;
+            }
+        })();
+    }, []);
+
     let arkSeller: UserDetails = {
         userID: 5,
         firstName: "Mithun",
@@ -161,17 +175,17 @@ const AuctionListingSale = () => {
                         <Card style={{ backgroundColor: "whitesmoke" }}>
                             <Typography
                                 sx={{ textAlign: "left", marginLeft: "1%", marginTop: "1%", fontSize: 24 }}>
-                                <b>{a?.productName}</b>
+                                <b>{auctionSaleProductDetail?.productName}</b>
                             </Typography>
                             <Typography sx={{ textAlign: "left", marginLeft: "1%", fontSize: 14 }}>
-                                by <b>{a?.category}</b>, starting at &#36;{a.startingBid}
+                                by <b>{auctionSaleProductDetail?.category}</b>, starting at &#36;{auctionSaleProductDetail?.startingBid}
                             </Typography>
                             <CardContent>
-                                <Carousel imageUrls={a?.imageUrl}></Carousel>
+                                <Carousel imageUrls={auctionSaleProductDetail?.imageUrl}></Carousel>
                             </CardContent>
                             <CardContent>
                             <Toolbar sx={{ fontSize: 20 }}>
-                                    <span>Highest Bid: <span>&#36; </span>{a!.highestBid}</span>
+                                    <span>Highest Bid: <span>&#36; </span>{auctionSaleProductDetail?.highestBid}</span>
                                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                         <Button onClick={handleFav}>
                                             {isFavorite ? <FavoriteIcon sx={{ color: red[500] }} /> : <FavoriteBorderIcon />}
@@ -195,7 +209,7 @@ const AuctionListingSale = () => {
                                                 <CardContent>
                                                     <Typography>
                                                         <h3>Product Description:</h3>
-                                                        {a?.productDescription}
+                                                        {auctionSaleProductDetail?.productDescription}
                                                     </Typography>
                                                 </CardContent>
                                             </Card>
@@ -204,14 +218,14 @@ const AuctionListingSale = () => {
                                             <Card sx={{ bgcolor: "whitesmoke", borderColor: "divided", boxShadow: 3 }}>
                                                 <CardContent>
                                                     <Typography variant="h5" component="div">
-                                                        {a?.seller.firstName} {a?.seller.lastName}
+                                                        {auctionSaleProductDetail?.seller.firstName} {auctionSaleProductDetail?.seller.lastName}
                                                     </Typography>
                                                     <div>
-                                                        <Rating name="read-only" value={a?.seller.avgSellerRatings} precision={0.5} readOnly />
+                                                        <Rating name="read-only" value={auctionSaleProductDetail?.seller.avgSellerRatings} precision={0.5} readOnly />
                                                     </div>
                                                     <Typography sx={{ paddingLeft: "2px" }}>
-                                                        ({a?.seller.avgSellerRatings} of 5 stars)
-                                                        {a?.seller.avgSellerRatings === 0
+                                                        ({auctionSaleProductDetail?.seller.avgSellerRatings} of 5 stars)
+                                                        {auctionSaleProductDetail?.seller.avgSellerRatings === 0
                                                             ?
                                                             <>
                                                                 <span> No Reviews</span><br />
