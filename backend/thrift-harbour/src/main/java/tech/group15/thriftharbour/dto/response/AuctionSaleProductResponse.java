@@ -1,7 +1,8 @@
-package tech.group15.thriftharbour.dto;
+package tech.group15.thriftharbour.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
+import tech.group15.thriftharbour.model.User;
 
 import java.util.List;
 
@@ -21,6 +22,6 @@ public class AuctionSaleProductResponse {
 
     private List<String> imageURLs;
 
-    private String sellerName;
+    private User seller;
 }
 

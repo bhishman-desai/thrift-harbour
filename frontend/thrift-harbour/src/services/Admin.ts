@@ -2,7 +2,6 @@ import axios from "axios";
 import { ErrorResponse } from "../types/AuthTypes";
 import {
   AdminGetAllListingResponse,
-  AdminGetAllListingResponseType,
   AdminGetImmediateSaleProductById,
   GetApprovedProductsResponsetype,
   GetSellersResponsetype,
@@ -15,11 +14,11 @@ export class AdminServices {
   path = new Path(process.env.NODE_ENV);
 
   async getImmediateListedProducts(
-    token?: string | null
+    token?: string | null,
   ): Promise<[AdminGetAllListingResponse | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getallImmediateListingtUrl = this.path.getAdminUrl(
-      "get-all-immediatesale-listing"
+      "get-all-immediatesale-listing",
     );
     const requestUrl = baseUrl + getallImmediateListingtUrl;
     console.log("requestUrl===>", requestUrl);
@@ -40,11 +39,11 @@ export class AdminServices {
 
   async getImmediateListedProductById(
     id: string,
-    token?: string | null
+    token?: string | null,
   ): Promise<[AdminGetImmediateSaleProductById | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getallImmediateListingtByIdUrl = this.path.getAdminUrl(
-      "get-immediatesale-product"
+      "get-immediatesale-product",
     );
     const requestUrl = baseUrl + getallImmediateListingtByIdUrl + `/${id}`;
     console.log("requestUrl===>", requestUrl);
@@ -65,7 +64,7 @@ export class AdminServices {
 
   async submitReview(
     payload: SubmitReviewRequest,
-    token?: string | null
+    token?: string | null,
   ): Promise<[SubmitReviewResponsetype | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getSubmitReviewUrl = this.path.getAdminUrl("review-request");
@@ -87,11 +86,11 @@ export class AdminServices {
   }
 
   async getApprovedListing(
-    token?: string | null
+    token?: string | null,
   ): Promise<[GetApprovedProductsResponsetype | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getApprovedListingUrl = this.path.getAdminUrl(
-      "get-approved-immediatesale-listing"
+      "get-approved-immediatesale-listing",
     );
     const requestUrl = baseUrl + getApprovedListingUrl;
     console.log("requestUrl===>", requestUrl);
@@ -111,11 +110,11 @@ export class AdminServices {
   }
 
   async getRejectedListing(
-    token?: string | null
+    token?: string | null,
   ): Promise<[GetApprovedProductsResponsetype | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getRejectedListingUrl = this.path.getAdminUrl(
-      "get-denied-immediatesale-listing"
+      "get-denied-immediatesale-listing",
     );
     const requestUrl = baseUrl + getRejectedListingUrl;
     console.log("requestUrl===>", requestUrl);
@@ -135,7 +134,7 @@ export class AdminServices {
   }
 
   async getSellers(
-    token?: string | null
+    token?: string | null,
   ): Promise<[GetSellersResponsetype | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getSellersUrl = this.path.getAdminUrl("get-all-sellers");
@@ -158,12 +157,56 @@ export class AdminServices {
 
   async getSellerbyId(
     id: number,
-    token?: string | null
+    token?: string | null,
   ): Promise<[any | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getSellerByIdUrl = this.path.getAdminUrl("product-listing");
     const requestUrl =
       baseUrl + getSellerByIdUrl + `/${id}` + "/product-listing";
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getUserbyIDAdmin(
+    id: number,
+    token?: string | null,
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const requestUrl = baseUrl + `/admin/sellers` + `/${id}`;
+    console.log("requestUrl===>", requestUrl);
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getUserbyIDUser(
+    id: number,
+    token?: string | null,
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const requestUrl = baseUrl + `/user/users` + `/${id}`;
     console.log("requestUrl===>", requestUrl);
 
     try {
