@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import tech.group15.thriftharbour.constant.InfoConstant;
+import tech.group15.thriftharbour.dto.request.PlaceBidRequest;
 import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.exception.LowBidException;
@@ -39,6 +40,8 @@ class BiddingServiceImplTest {
 
   Bidding userBid;
 
+  PlaceBidRequest placeBidRequest;
+
   User user;
 
   @BeforeEach
@@ -65,6 +68,7 @@ class BiddingServiceImplTest {
             new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime(),
             new GregorianCalendar(2024, Calendar.MARCH, 13, 12, 44).getTime());
     userBid = new Bidding(1, "rand_uuid", "test@testmail.com", 120.0);
+    placeBidRequest = new PlaceBidRequest("rand_uuid", 120.0);
     user = new User(1, "firstName", "lastName", "email", "password", RoleEnum.USER, 4.0, 5.0);
   }
 
@@ -78,7 +82,7 @@ class BiddingServiceImplTest {
     when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
     when(biddingRepository.save(any())).thenReturn(userBid);
 
-    String result = biddingServiceImpl.placeBid("authorizationHeader", "rand_uuid", 120.0);
+    String result = biddingServiceImpl.placeBid("authorizationHeader", placeBidRequest);
 
     Assertions.assertEquals(InfoConstant.BID_PLACED_SUCCESFULLY, result);
   }
@@ -95,7 +99,7 @@ class BiddingServiceImplTest {
 
     Assertions.assertThrows(
         UsernameNotFoundException.class,
-        () -> biddingServiceImpl.placeBid("authorizationHeader", "rand_uuid", 1.0));
+        () -> biddingServiceImpl.placeBid("authorizationHeader", placeBidRequest));
   }
 
   @Test
@@ -108,7 +112,7 @@ class BiddingServiceImplTest {
 
     Assertions.assertThrows(
         ListingNotFoundException.class,
-        () -> biddingServiceImpl.placeBid("authorizationHeader", "rand_uuid", 1.0));
+        () -> biddingServiceImpl.placeBid("authorizationHeader", placeBidRequest));
   }
 
   @Test
@@ -120,8 +124,10 @@ class BiddingServiceImplTest {
     when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
     when(biddingRepository.save(any())).thenReturn(userBid);
 
+    placeBidRequest.setBidAmount(10.0);
+
     Assertions.assertThrows(
         LowBidException.class,
-        () -> biddingServiceImpl.placeBid("authorizationHeader", "rand_uuid", 100.0));
+        () -> biddingServiceImpl.placeBid("authorizationHeader", placeBidRequest));
   }
 }
