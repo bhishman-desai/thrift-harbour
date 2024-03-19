@@ -31,12 +31,15 @@ import Carousel from "../../../components/ui-components/carousel/Carousel";
 import Navbar from "../../../components/ui-components/navbar/Navbar";
 import Footer from "../../../components/ui-components/footer/Footer";
 import AboutImmediateSale from "../../../components/ui-components/thrift-harbour-immediatesale-about/AboutImmediateSale";
-import { ProfileLink } from "./ImmediatesaleStyles";
+// import { ProfileLink } from "./ImmediatesaleStyles";
 import Modal from "../../../components/ui-components/Modal/Modal";
-import UserProfile from "../../user-profile/UserProfile";
+// import UserProfile from "../../user-profile/UserProfile";
 import ChatWindow from "../../chat/ChatWindow";
 import { GetSellersResponse } from "../../../types/ListingTypes";
+import UserProfile from "../../user-profile/UserProfile";
+import { ProfileLink } from "../immediatelisting-sale/ImmediatesaleStyles";
 import { UsersService } from "../../../services/Users";
+// import { UsersService } from "../../../services/Users";
 
 const ImmediateListingSale = () => {
   const listing = new ListingService();
