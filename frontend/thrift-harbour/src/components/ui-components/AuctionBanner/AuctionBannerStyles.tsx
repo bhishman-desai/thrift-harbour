@@ -30,3 +30,11 @@ export const AuctionDesc = styled.div`
   line-height: 24px;
   font-size: 16px;
 `;
+
+export const ButtonContainer = styled.div`
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  // justify-content: space-between;
+  width: 150px;
+`;
