@@ -2,6 +2,7 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuctionBanner from "../../components/ui-components/AuctionBanner/AuctionBanner";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { ListingService } from "../../services/Listing";
 import { ProductsService } from "../../services/Products";
@@ -119,6 +120,8 @@ const BuyProducts: React.FC = () => {
   };
   return (
     <>
+      <AuctionBanner />
+
       <Header>Products</Header>
 
       <Grid>
