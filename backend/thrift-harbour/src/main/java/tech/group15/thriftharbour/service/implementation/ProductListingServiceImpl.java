@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.http.HttpStatusCode;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
+import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.mapper.ProductMapper;
@@ -21,11 +22,6 @@ import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.utils.DateUtil;
 import tech.group15.thriftharbour.utils.FileUtils;
 import tech.group15.thriftharbour.utils.UUIDUtil;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -391,6 +387,8 @@ public class ProductListingServiceImpl implements ProductListingService {
         }
         return deniedAuctionSaleListingForAdminResponseList;
     }
+
+
 
     /**
      * Finds and retrieves details of an auction sale product by its listing ID.

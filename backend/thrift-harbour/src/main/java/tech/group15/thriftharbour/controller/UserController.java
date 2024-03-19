@@ -16,6 +16,7 @@ import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
 import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
+import tech.group15.thriftharbour.service.ProductListingService;
 import tech.group15.thriftharbour.service.RatingsService;
 import tech.group15.thriftharbour.service.UserService;
 
@@ -27,6 +28,7 @@ import tech.group15.thriftharbour.service.UserService;
 public class UserController {
   private final RatingsService ratingsService;
   private final UserService userService;
+  private final ProductListingService productListingService;
 
   @GetMapping
   public ResponseEntity<String> hi() {

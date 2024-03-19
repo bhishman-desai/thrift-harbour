@@ -1,4 +1,4 @@
-package tech.group15.thriftharbour.dto;
+package tech.group15.thriftharbour.dto.response;
 
 
 import lombok.Builder;
