@@ -29,6 +29,13 @@ public class BiddingServiceImpl implements BiddingService {
 
   private final UserRepository userRepository;
 
+  /**
+   * Retrieves all immediate sale listings with its seller details.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @param placeBidRequest Containing the Listing ID and the bid to be placed.
+   * @return Message to user - Bid is placed successfully.
+   */
   @Override
   public String placeBid(String authorizationHeader, PlaceBidRequest placeBidRequest) {
 
