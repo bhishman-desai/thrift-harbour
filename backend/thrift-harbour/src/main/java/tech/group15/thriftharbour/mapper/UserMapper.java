@@ -3,10 +3,10 @@ package tech.group15.thriftharbour.mapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tech.group15.thriftharbour.dto.response.ForgotPassResponse;
-import tech.group15.thriftharbour.dto.response.SellerResponse;
-import tech.group15.thriftharbour.dto.response.SignInResponse;
-import tech.group15.thriftharbour.dto.request.SignUpRequest;
+import tech.group15.thriftharbour.dto.ForgotPassResponse;
+import tech.group15.thriftharbour.dto.SellerResponse;
+import tech.group15.thriftharbour.dto.SignInResponse;
+import tech.group15.thriftharbour.dto.SignUpRequest;
 import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.model.User;
 

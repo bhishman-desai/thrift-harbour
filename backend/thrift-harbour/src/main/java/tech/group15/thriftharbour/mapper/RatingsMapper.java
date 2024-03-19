@@ -1,7 +1,7 @@
 package tech.group15.thriftharbour.mapper;
 
-import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
-import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
+import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.SellerRatingsRequest;
 import tech.group15.thriftharbour.model.BuyerRatings;
 import tech.group15.thriftharbour.model.SellerRatings;
 

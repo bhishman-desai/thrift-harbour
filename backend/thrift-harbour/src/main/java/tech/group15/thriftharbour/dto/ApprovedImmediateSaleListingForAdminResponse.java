@@ -1,18 +1,20 @@
-package tech.group15.thriftharbour.dto.response;
+package tech.group15.thriftharbour.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class DeniedAuctionSaleListingForAdminResponse {
-
-    private String auctionSaleListingID;
+public class ApprovedImmediateSaleListingForAdminResponse {
+    private String immediateSaleListingID;
 
     private String productName;
 
     private String productDescription;
+
+    private double price;
 
     private String category;
 
@@ -22,7 +24,7 @@ public class DeniedAuctionSaleListingForAdminResponse {
 
     private boolean active;
 
-    private boolean isRejected;
+    private boolean isApproved;
 
     private String approverEmail;
 
@@ -31,4 +33,5 @@ public class DeniedAuctionSaleListingForAdminResponse {
     private Date dateOfApproval;
 
     private boolean isSold;
+
 }

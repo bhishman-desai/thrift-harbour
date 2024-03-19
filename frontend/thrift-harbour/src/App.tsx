@@ -23,8 +23,14 @@ function App() {
           <Route path="/reset-password/*" element={<ResetPassword />} />
           <Route path="/listing" element={<ProductListing />} />
           <Route path="/seller" element={<ListedBySeller />} />
-          <Route path="/immediatesale-product-detail/:id" element={< ImmediateListingSale />}/>
-          <Route path="/auctionsale-product-detail/:id" element={< AuctionListingSale />}/>
+          <Route
+            path="/immediatesale-product-detail/:id"
+            element={<ImmediateListingSale />}
+          />
+          <Route
+            path="/auctionsale-product-detail/:id"
+            element={<AuctionListingSale />}
+          />
         </Routes>
       </Router>
     </AuthWrapper>

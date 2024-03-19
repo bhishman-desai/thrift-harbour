@@ -1,7 +1,7 @@
 package tech.group15.thriftharbour.service;
 
-import tech.group15.thriftharbour.dto.request.ListingReviewRequest;
-import tech.group15.thriftharbour.dto.response.ListingReviewResponse;
+import tech.group15.thriftharbour.dto.ListingReviewRequest;
+import tech.group15.thriftharbour.dto.ListingReviewResponse;
 
 public interface AdminService {
 

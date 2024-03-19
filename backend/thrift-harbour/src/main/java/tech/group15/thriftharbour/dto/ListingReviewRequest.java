@@ -1,4 +1,4 @@
-package tech.group15.thriftharbour.dto.request;
+package tech.group15.thriftharbour.dto;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;

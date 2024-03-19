@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import AdminDashboard from "../../../features/admin/AdminDashboard";
+import BuyProducts from "../../../features/buy-product/BuyProducts";
 import ProductListing from "../../../features/product-listing/add-listing/ProductListing";
 import ListedProducts from "../../../features/product-listing/listed-products/ListedProducts";
 import ListedBySeller from "../../../features/product-listing/seller/ListedBySeller";
@@ -25,7 +26,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   const [currentSelected, setCurrentSelected] = useState(
-    loginType === "ADMIN" ? "Dashboard" : "List Product",
+    loginType === "ADMIN" ? "Dashboard" : "Buy Products"
   );
   const [isProfileClicked, setIsProfileClicked] = useState(false);
 
@@ -62,6 +63,9 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
       {isProfileClicked && <Profilepopup />}
       {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
+      {currentSelected === "Buy Products" && loginType === "USER" && (
+        <BuyProducts />
+      )}
       {currentSelected === "Dashboard" && loginType === "ADMIN" && (
         <AdminDashboard />
       )}
