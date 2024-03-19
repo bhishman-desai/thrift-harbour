@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import tech.group15.thriftharbour.dto.*;
+import tech.group15.thriftharbour.dto.request.*;
+import tech.group15.thriftharbour.dto.response.ForgotPassResponse;
+import tech.group15.thriftharbour.dto.response.SignInResponse;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.AuthenticationService;
 
