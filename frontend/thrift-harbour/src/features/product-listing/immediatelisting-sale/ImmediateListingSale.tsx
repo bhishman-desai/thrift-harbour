@@ -20,7 +20,6 @@ import {
   Typography,
   Button,
   Box,
-  CardHeader,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -283,6 +282,140 @@ const ImmediateListingSale = () => {
                                   <></>
                                 )}
                               </Typography>
+                              <Toolbar sx={{ fontSize: 20 }}>
+                                <span>
+                                  Seller Quoted Price: <span>&#36; </span>
+                                  {immediateSaleProductDetail!.price}
+                                </span>
+                                <Typography
+                                  variant="h6"
+                                  component="div"
+                                  sx={{ flexGrow: 1 }}
+                                >
+                                  <Button onClick={handleFav}>
+                                    {isFavorite ? (
+                                      <FavoriteIcon sx={{ color: red[500] }} />
+                                    ) : (
+                                      <FavoriteBorderIcon />
+                                    )}
+                                  </Button>
+                                </Typography>
+                                <Button
+                                  className="chat-button"
+                                  style={{
+                                    background: blue[400],
+                                    color: "white",
+                                  }}
+                                >
+                                  Chat
+                                </Button>
+                              </Toolbar>
+                            </CardContent>
+                            <CardContent>
+                              <Box
+                                sx={{
+                                  width: "100%",
+                                  borderRadius: 2,
+                                  bgcolor: "whitesmoke",
+                                }}
+                              >
+                                <TabContext value={value}>
+                                  <Box
+                                    sx={{
+                                      borderBottom: 1,
+                                      borderRadius: 1,
+                                      borderColor: "divider",
+                                    }}
+                                  >
+                                    <TabList
+                                      onChange={handleChange}
+                                      aria-label="lab API tabs example"
+                                    >
+                                      <Tab label="Description" value="1" />
+                                      <Tab label="Seller Details" value="2" />
+                                      <Tab
+                                        label="How Buying works in Thrift Harbour"
+                                        value="3"
+                                      />
+                                    </TabList>
+                                  </Box>
+                                  <TabPanel value="1">
+                                    <Card
+                                      sx={{
+                                        bgcolor: "whitesmoke",
+                                        borderColor: "divided",
+                                        boxShadow: 3,
+                                      }}
+                                    >
+                                      <CardContent>
+                                        <Typography>
+                                          <h3>Product Description:</h3>
+                                          {
+                                            immediateSaleProductDetail?.productDescription
+                                          }
+                                        </Typography>
+                                      </CardContent>
+                                    </Card>
+                                  </TabPanel>
+                                  <TabPanel value="2">
+                                    <Card
+                                      sx={{
+                                        bgcolor: "whitesmoke",
+                                        borderColor: "divided",
+                                        boxShadow: 3,
+                                      }}
+                                    >
+                                      <CardContent>
+                                        <Typography
+                                          variant="h5"
+                                          component="div"
+                                        >
+                                          {
+                                            immediateSaleProductDetail?.seller
+                                              .firstName
+                                          }{" "}
+                                          {
+                                            immediateSaleProductDetail?.seller
+                                              .lastName
+                                          }
+                                        </Typography>
+                                        <div>
+                                          <Rating
+                                            name="read-only"
+                                            value={
+                                              immediateSaleProductDetail?.seller
+                                                .avgSellerRatings
+                                            }
+                                            precision={0.5}
+                                            readOnly
+                                          />
+                                        </div>
+                                        <Typography sx={{ paddingLeft: "2px" }}>
+                                          (
+                                          {
+                                            immediateSaleProductDetail?.seller
+                                              .avgSellerRatings
+                                          }{" "}
+                                          of 5 stars)
+                                          {immediateSaleProductDetail?.seller
+                                            .avgSellerRatings === 0 ? (
+                                            <>
+                                              <span> No Reviews</span>
+                                              <br />
+                                            </>
+                                          ) : (
+                                            <></>
+                                          )}
+                                        </Typography>
+                                      </CardContent>
+                                    </Card>
+                                  </TabPanel>
+                                  <TabPanel value="3">
+                                    <AboutImmediateSale />
+                                  </TabPanel>
+                                </TabContext>
+                              </Box>
+                              <br />
                             </CardContent>
                           </Card>
                         </TabPanel>

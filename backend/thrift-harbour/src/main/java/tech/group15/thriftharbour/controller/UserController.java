@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.group15.thriftharbour.dto.BuyerRatingsRequest;
-import tech.group15.thriftharbour.dto.SellerRatingsRequest;
+import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
+import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
+import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.RatingsService;
 import tech.group15.thriftharbour.service.UserService;
@@ -57,7 +59,8 @@ public class UserController {
    * Handles GET request to retrieve a user by ID.
    *
    * @param userID The ID of the user to be retrieved.
-   * @return A {@code ResponseEntity} containing the retrieved {@code User} object.
+   * @return A {@code ResponseEntity} containing the retrieved {@code User}
+   *         object.
    */
   @GetMapping("/users/{userID}")
   public ResponseEntity<User> getUserById(@PathVariable Integer userID) {
@@ -68,10 +71,31 @@ public class UserController {
    * Retrieves the sender(s) associated with the specified recipient ID.
    *
    * @param recipientID The unique identifier of the recipient.
-   * @return {@code ResponseEntity} containing a list of User objects representing the sender(s).
+   * @return {@code ResponseEntity} containing a list of User objects representing
+   *         the sender(s).
    */
   @GetMapping("/senders/{recipientID}")
   public ResponseEntity<List<User>> getSendersFromRecipientId(@PathVariable String recipientID) {
     return ResponseEntity.ok(userService.findSenderByRecipientId(recipientID));
+  }
+
+  @GetMapping("/get-immediate-sale-product/{id}")
+  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct(@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findImmediateSaleListingByID(id));
+  }
+
+  /**
+   * Retrieves the details of an auction sale product by its ID.
+   *
+   * @param id The unique id of the auction sale product.
+   * @return A {@code ResponseEntity} containing the
+   *         {@code AuctionSaleProductResponse} object.
+   */
+  @GetMapping("/get-auction-sale-product/{id}")
+  public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(
+      @PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAuctionSaleProductDetailsById(id));
   }
 }

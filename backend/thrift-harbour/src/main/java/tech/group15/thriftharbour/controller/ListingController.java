@@ -76,4 +76,21 @@ public class ListingController {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllAuctionSaleListingImagesByID(id));
   }
+
+  /**
+   * GET request to retrieve all immediate sale listings for the authenticated
+   * user.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of
+   *                            user.
+   * @return A list of {@code ResponseEntity} objects containing list of
+   *         {@code ImmediateSaleListingCreationResponse} representing all
+   *         immediate sale listings details.
+   */
+  @GetMapping("/get-all-immediate-listing")
+  public ResponseEntity<List<ImmediateSaleListingCreationResponse>> getAllImmediateListings(
+      @Valid @RequestHeader("Authorization") String authorizationHeader) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllImmediateListing(authorizationHeader));
+  }
 }

@@ -29,6 +29,9 @@ export class Path {
     if (service === "add-seller-ratings") {
       return "/user/add-seller-ratings";
     }
+    if (service === "auctionsale-product-detail"){
+      return "/user/get-auction-sale-product/"
+    }
   }
 
   getAuthUrl(service: string) {

@@ -9,7 +9,7 @@ import {
   ListingDataTypes,
   ImmediateListing,
 } from "../types/ListingTypes";
-import { ImmediateSaleProductDetail } from "../types/ProductSaleDetails";
+import { ImmediateSaleProductDetail, AuctionSaleProductDetail } from "../types/ProductSaleDetails";
 import { Path } from "../utils/Path";
 
 export class ListingService {
@@ -35,6 +35,25 @@ export class ListingService {
       throw error;
     }
   };
+
+  async auctionSaleProductDetail(auctionSaleListingID: string | null,
+    token?: string | null): Promise<any>{
+      const baseUrl = this.path.getBaseUrl();
+      const auctionListUrl = this.path.getUserUrl("auctionsale-product-detail");
+      const requestUrl = baseUrl + auctionListUrl + `${auctionSaleListingID}`;
+  
+      try {
+        const response = await axios.get(requestUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response;
+      }
+      catch(error){
+        throw error;
+      }
+    }
 
   async immediateListing(
     payload: ListingDataTypes,
