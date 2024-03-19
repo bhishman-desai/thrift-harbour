@@ -35,13 +35,6 @@ public class UserController {
     return ResponseEntity.ok("Hi from user!");
   }
 
-  /**
-   * Adds buyer ratings based on the provided ratings request.
-   *
-   * @param authorizationHeader The Authorization token to validate the request. It must be passed in the header.
-   * @param buyerRatingsRequest The request body containing the details of the buyer ratings to be added.
-   * @return A {@code ResponseEntity} containing the response message.
-   */
   @PostMapping("/add-buyer-ratings")
   public ResponseEntity<String> addBuyerRatings(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -50,13 +43,6 @@ public class UserController {
         .body(ratingsService.addBuyerRatings(authorizationHeader, buyerRatingsRequest));
   }
 
-  /**
-   * Adds seller ratings based on the provided ratings request.
-   *
-   * @param authorizationHeader The Authorization token to validate the request. It must be passed in the header.
-   * @param sellerRatingsRequest The request body containing the details of the seller ratings to be added.
-   * @return A {@code ResponseEntity} containing the response message.
-   */
   @PostMapping("/add-seller-ratings")
   public ResponseEntity<String> addSellerRatings(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -65,12 +51,6 @@ public class UserController {
         .body(ratingsService.addSellerRatings(authorizationHeader, sellerRatingsRequest));
   }
 
-  /**
-   * Handles GET request to get user details by id.
-   *
-   * @param id The ID of the user to be fetched user details.
-   * @return A {@code ResponseEntity} containing the fetched {@code User} object.
-   */
   @GetMapping("/get-user-details/{id}")
   public ResponseEntity<User> getUserDetails(@PathVariable Integer id) {
     return ResponseEntity.ok(userService.findUserById(id));
@@ -81,7 +61,8 @@ public class UserController {
    * Handles GET request to retrieve a user by ID.
    *
    * @param userID The ID of the user to be retrieved.
-   * @return A {@code ResponseEntity} containing the retrieved {@code User} object.
+   * @return A {@code ResponseEntity} containing the retrieved {@code User}
+   *         object.
    */
   @GetMapping("/users/{userID}")
   public ResponseEntity<User> getUserById(@PathVariable Integer userID) {
@@ -92,7 +73,8 @@ public class UserController {
    * Retrieves the sender(s) associated with the specified recipient ID.
    *
    * @param recipientID The unique identifier of the recipient.
-   * @return {@code ResponseEntity} containing a list of User objects representing the sender(s).
+   * @return {@code ResponseEntity} containing a list of User objects representing
+   *         the sender(s).
    */
   @GetMapping("/senders/{recipientID}")
   public ResponseEntity<List<User>> getSendersFromRecipientId(@PathVariable String recipientID) {
@@ -100,22 +82,22 @@ public class UserController {
   }
 
   @GetMapping("/get-immediate-sale-product/{id}")
-  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
-          (@PathVariable String id) {
+  public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct(@PathVariable String id) {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findImmediateSaleListingByID(id));
+        .body(productListingService.findImmediateSaleListingByID(id));
   }
 
   /**
    * Retrieves the details of an auction sale product by its ID.
    *
    * @param id The unique id of the auction sale product.
-   * @return A {@code ResponseEntity} containing the {@code AuctionSaleProductResponse} object.
+   * @return A {@code ResponseEntity} containing the
+   *         {@code AuctionSaleProductResponse} object.
    */
   @GetMapping("/get-auction-sale-product/{id}")
   public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(
-          @PathVariable String id) {
+      @PathVariable String id) {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAuctionSaleProductDetailsById(id));
+        .body(productListingService.findAuctionSaleProductDetailsById(id));
   }
 }

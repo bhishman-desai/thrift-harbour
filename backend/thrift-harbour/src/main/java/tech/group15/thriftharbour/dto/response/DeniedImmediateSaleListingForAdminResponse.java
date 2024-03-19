@@ -7,30 +7,29 @@ import java.util.List;
 
 @Data
 public class DeniedImmediateSaleListingForAdminResponse {
+    private String immediateSaleListingID;
 
-  private String immediateSaleListingID;
+    private String productName;
 
-  private String productName;
+    private String productDescription;
 
-  private String productDescription;
+    private double price;
 
-  private double price;
+    private String category;
 
-  private String category;
+    private String sellerEmail;
 
-  private String sellerEmail;
+    private List<String> imageURLs;
 
-  private List<String> imageURLs;
+    private boolean active;
 
-  private boolean active;
+    private boolean isRejected;
 
-  private boolean isRejected;
+    private String approverEmail;
 
-  private String approverEmail;
+    private String messageFromApprover;
 
-  private String messageFromApprover;
+    private Date dateOfApproval;
 
-  private Date dateOfApproval;
-
-  private boolean isSold;
+    private boolean isSold;
 }

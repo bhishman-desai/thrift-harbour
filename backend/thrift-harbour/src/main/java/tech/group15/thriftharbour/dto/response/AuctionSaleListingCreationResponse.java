@@ -10,27 +10,27 @@ import java.util.List;
 @Builder
 public class AuctionSaleListingCreationResponse {
 
-  private String auctionSaleListingID;
+    private String auctionSaleListingID;
 
-  private String productName;
+    private String productName;
 
-  private String productDescription;
+    private String productDescription;
 
-  private double startingBid;
+    private double startingBid;
 
-  private String category;
+    private String category;
 
-  private String sellerEmail;
+    private String sellerEmail;
 
-  private Date auctionSlot;
+    private Date auctionSlot;
 
-  private List<String> imageURLs;
+    private List<String> imageURLs;
 
-  private boolean active;
+    private boolean active;
 
-  private boolean isApproved;
+    private boolean isApproved;
 
-  private boolean isRejected;
+    private boolean isRejected;
 
-  private Date createdDate;
+    private Date createdDate;
 }

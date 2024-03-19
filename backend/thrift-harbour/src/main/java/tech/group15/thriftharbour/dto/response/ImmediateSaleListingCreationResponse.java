@@ -33,4 +33,5 @@ public class ImmediateSaleListingCreationResponse {
     private Date createdDate;
 
     private int sellerID;
+
 }

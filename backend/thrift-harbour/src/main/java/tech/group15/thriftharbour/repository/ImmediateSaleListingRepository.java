@@ -23,4 +23,5 @@ public interface ImmediateSaleListingRepository extends JpaRepository<ImmediateS
 
     @Query("SELECT i FROM ImmediateSaleListing i WHERE i.sellerEmail != ?1 and i.active = true and i.isApproved = true and i.isRejected = false")
     List<ImmediateSaleListing> findAllImmediateSaleListing(String sellerEmail);
+
 }

@@ -14,7 +14,10 @@ const Profilepopup: React.FC = () => {
 
   const onClickLogout = async () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("uId");
+
     setToken("");
+
     // navigate("/home");
   };
 

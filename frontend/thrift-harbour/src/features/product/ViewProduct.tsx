@@ -161,7 +161,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
                 )}
               </ProductInfo>
             </ProductNameAndDescription>
-            <UserInfo>
+            {/* <UserInfo>
               <ProductInfo>
                 <Title>Seller First Name: </Title>
                 <Value style={{ marginLeft: "4px" }}>
@@ -186,7 +186,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
                   {"$" + product.active}
                 </Value>
               </ProductInfo>
-            </UserInfo>
+            </UserInfo> */}
           </ProductShowcase>
           <ChangeStatus onSubmit={handleSubmit}>
             <DropDown>

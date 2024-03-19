@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
 import tech.group15.thriftharbour.dto.response.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.response.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.response.ImmediateSaleListingCreationResponse;
@@ -79,15 +78,19 @@ public class ListingController {
   }
 
   /**
-   * GET request to retrieve all immediate sale listings for the authenticated user.
+   * GET request to retrieve all immediate sale listings for the authenticated
+   * user.
    *
-   * @param authorizationHeader The authorization header containing the JWT of user.
-   * @return A list of {@code ResponseEntity} objects containing list of {@code ImmediateSaleListingCreationResponse} representing all immediate sale listings details.
+   * @param authorizationHeader The authorization header containing the JWT of
+   *                            user.
+   * @return A list of {@code ResponseEntity} objects containing list of
+   *         {@code ImmediateSaleListingCreationResponse} representing all
+   *         immediate sale listings details.
    */
   @GetMapping("/get-all-immediate-listing")
   public ResponseEntity<List<ImmediateSaleListingCreationResponse>> getAllImmediateListings(
-          @Valid @RequestHeader("Authorization") String authorizationHeader) {
+      @Valid @RequestHeader("Authorization") String authorizationHeader) {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllImmediateListing(authorizationHeader));
+        .body(productListingService.findAllImmediateListing(authorizationHeader));
   }
 }

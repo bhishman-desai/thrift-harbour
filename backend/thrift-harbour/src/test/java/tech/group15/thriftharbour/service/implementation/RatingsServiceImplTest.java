@@ -71,6 +71,7 @@ class RatingsServiceImplTest {
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> ratingsServiceImpl.addBuyerRatings(authorizationHeader, new BuyerRatingsRequest()));
+        verify(userRepository).findByEmail(userEmail);
     }
 
     /**
@@ -99,5 +100,6 @@ class RatingsServiceImplTest {
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> ratingsServiceImpl.addSellerRatings(authorizationHeader, new SellerRatingsRequest()));
+        verify(userRepository).findByEmail(userEmail);
     }
 }

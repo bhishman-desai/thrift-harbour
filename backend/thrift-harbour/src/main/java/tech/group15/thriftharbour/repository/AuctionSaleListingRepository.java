@@ -3,6 +3,7 @@ package tech.group15.thriftharbour.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
+import tech.group15.thriftharbour.model.ImmediateSaleListing;
 
 import java.util.List;
 

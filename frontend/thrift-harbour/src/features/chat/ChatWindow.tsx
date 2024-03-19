@@ -18,7 +18,7 @@ import { ChatMessageType } from "../../types/ChatTypes";
 
 interface ChatWindowProps {
   open: boolean;
-  sender: GetSellersResponse;
+  sender: any;
   recipient: GetSellersResponse;
   onClose: () => void;
 }
@@ -32,10 +32,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [message, setMessage] = useState("");
   const [stompClient, setStompClient] = useState<Stomp.Client>(
-    {} as Stomp.Client,
+    {} as Stomp.Client
   );
   const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(
-    null,
+    null
   );
   const chatService = new ChatService();
 
@@ -45,13 +45,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
-
+  console.log("recipient", recipient);
   useEffect(() => {
     if (open) {
       fetchChatHistory().then(() => {
@@ -69,7 +69,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       stompClient.connect({}, () => {
         stompClient.subscribe(
           `/user/${sender.userID}/queue/messages`,
-          onMessageReceived,
+          onMessageReceived
         );
       });
 
@@ -94,7 +94,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const fetchChatHistory = async () => {
     const [chatHistory, error] = await chatService.fetchChatHistory(
       String(sender.userID),
-      String(recipient.userID),
+      String(recipient.userID)
     );
     if (chatHistory) setMessages(chatHistory);
   };
