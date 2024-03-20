@@ -20,6 +20,7 @@ import tech.group15.thriftharbour.service.UserService;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
+  private static final int BEARER_TOKEN_PREFIX_LENGTH = 7;
   private final JWTService jwtService;
   private final UserService userService;
 
@@ -38,7 +39,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /* Extracting the JWT from the Authorization header */
-    jwt = authHeader.substring(7);
+    jwt = authHeader.substring(BEARER_TOKEN_PREFIX_LENGTH);
     /* Extracting the username from the JWT */
     try {
       userEmail = jwtService.extractUserName(jwt);

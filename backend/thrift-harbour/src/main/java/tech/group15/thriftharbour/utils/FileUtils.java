@@ -32,10 +32,6 @@ public class FileUtils {
     throw new ImageTypeNotValidException("Images should be of type png, jpg, jpeg");
   }
 
-  public static double fileSizeInMB(MultipartFile file) {
-    return file.getSize() * 0.000_001;
-  }
-
   public static String getFileExtention(MultipartFile file) {
     try {
       String fileContent = file.getContentType();

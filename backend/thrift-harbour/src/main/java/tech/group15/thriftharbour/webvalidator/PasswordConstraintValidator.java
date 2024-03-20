@@ -8,6 +8,8 @@ import org.passay.*;
 import tech.group15.thriftharbour.contraint.ValidPassword;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+  private static final int MIN_PASSWORD_LENGTH = 8;
+  private static final int MAX_PASSWORD_LENGTH = 300;
   @Override
   public void initialize(ValidPassword arg0) {
     /*  We do not need the implementation of this method */
@@ -19,7 +21,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         new PasswordValidator(
             Arrays.asList(
                 /* at least 8 characters */
-                new LengthRule(8, 300),
+                new LengthRule(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH),
 
                 /* at least one upper-case character */
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),

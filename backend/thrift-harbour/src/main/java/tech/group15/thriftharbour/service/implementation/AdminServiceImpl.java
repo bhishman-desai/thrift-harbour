@@ -33,30 +33,40 @@ public class AdminServiceImpl implements AdminService {
 
     String adminEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
-    if (reviewRequest.getSellCategory().equals(SellCategoryEnum.DIRECT))
-      return setStatusOfImmediateSaleListing(adminEmail, reviewRequest);
-    else return setStatusOfAuctionSaleListing(adminEmail, reviewRequest);
+    boolean isCategoryDirect = reviewRequest.getSellCategory().equals(SellCategoryEnum.DIRECT);
+
+    ListingReviewResponse response;
+    if (isCategoryDirect) {
+      response = setStatusOfImmediateSaleListing(adminEmail, reviewRequest);
+    } else {
+      response = setStatusOfAuctionSaleListing(adminEmail, reviewRequest);
+    }
+
+    return response;
   }
 
   private ListingReviewResponse setStatusOfImmediateSaleListing(
       String adminEmail, ListingReviewRequest reviewRequest) {
 
+    var listingID = reviewRequest.getListingId();
+
     ImmediateSaleListing immediateSaleListing =
-        immediateSaleListingRepository.findByImmediateSaleListingID(reviewRequest.getListingId());
+        immediateSaleListingRepository.findByImmediateSaleListingID(listingID);
 
     Date currentDate = DateUtil.getCurrentDate();
 
-    if (immediateSaleListing == null)
-      throw new ListingNotFoundException(
-          String.format(
-              "No listing found with provided listing id:%s", reviewRequest.getListingId()));
-    else if (!immediateSaleListing.isActive()) {
+    if (immediateSaleListing == null) {
+      String errorMessage = String.format("No listing found with provided listing id:%s", listingID);
+      throw new ListingNotFoundException(errorMessage);
+    }
+
+    if (!immediateSaleListing.isActive()) {
       throw new ListingNotActiveException("Not an active listing");
     }
 
     ListingReviewResponse listingReviewResponse =
         ListingReviewResponse.builder()
-            .listingId(immediateSaleListing.getImmediateSaleListingID())
+            .listingId(listingID)
             .build();
 
     if (reviewRequest.getStatus().equals(ListingStatus.APPROVED)) {
@@ -81,22 +91,25 @@ public class AdminServiceImpl implements AdminService {
   private ListingReviewResponse setStatusOfAuctionSaleListing(
       String adminEmail, ListingReviewRequest reviewRequest) {
 
+    var listingID = reviewRequest.getListingId();
+
     AuctionSaleListing auctionSaleListing =
-        auctionSaleListingRepository.findByAuctionSaleListingID(reviewRequest.getListingId());
+        auctionSaleListingRepository.findByAuctionSaleListingID(listingID);
 
     Date currentDate = DateUtil.getCurrentDate();
 
-    if (auctionSaleListing == null)
-      throw new ListingNotFoundException(
-          String.format(
-              "No listing found with provided listing id:%s", reviewRequest.getListingId()));
-    else if (!auctionSaleListing.isActive()) {
+    if (auctionSaleListing == null) {
+      String errorMessage = String.format("No listing found with provided listing id:%s", listingID);
+      throw new ListingNotFoundException(errorMessage);
+    }
+
+    if (!auctionSaleListing.isActive()) {
       throw new ListingNotActiveException("Not an active listing");
     }
 
     ListingReviewResponse listingReviewResponse =
         ListingReviewResponse.builder()
-            .listingId(auctionSaleListing.getAuctionSaleListingID())
+            .listingId(listingID)
             .build();
 
     if (reviewRequest.getStatus().equals(ListingStatus.APPROVED)) {
@@ -115,9 +128,6 @@ public class AdminServiceImpl implements AdminService {
 
     auctionSaleListingRepository.save(auctionSaleListing);
 
-    return ListingReviewResponse.builder()
-        .listingId(auctionSaleListing.getAuctionSaleListingID())
-        .status(ListingStatus.REJECTED.toString())
-        .build();
+    return listingReviewResponse;
   }
 }
