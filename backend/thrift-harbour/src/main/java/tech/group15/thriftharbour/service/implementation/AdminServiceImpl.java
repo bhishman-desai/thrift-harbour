@@ -128,9 +128,6 @@ public class AdminServiceImpl implements AdminService {
 
     auctionSaleListingRepository.save(auctionSaleListing);
 
-    return ListingReviewResponse.builder()
-        .listingId(listingID)
-        .status(ListingStatus.REJECTED.toString())
-        .build();
+    return listingReviewResponse;
   }
 }

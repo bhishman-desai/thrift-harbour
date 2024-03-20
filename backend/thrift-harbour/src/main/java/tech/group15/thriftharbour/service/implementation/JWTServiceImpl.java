@@ -31,7 +31,10 @@ public class JWTServiceImpl implements JWTService {
     List<Object> roles = Arrays.asList(RoleEnum.USER.name(), RoleEnum.ADMIN.name());
     claims.put("Roles", roles);
 
-    Date expirationDate = new Date(System.currentTimeMillis() + MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY);
+    Date expirationDate =
+        new Date(
+            System.currentTimeMillis()
+                + MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY);
 
     return generate(claims, userDetails, expirationDate);
   }
@@ -44,7 +47,14 @@ public class JWTServiceImpl implements JWTService {
    * @return String - A JWT refresh token string.
    */
   public String generateRefreshToken(HashMap<String, Object> extraClaims, UserDetails userDetails) {
-    Date expirationDate = new Date(System.currentTimeMillis() + MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * DAYS_IN_WEEK); /* 7 days*/
+    Date expirationDate =
+        new Date(
+            System.currentTimeMillis()
+                + MILLISECONDS_IN_SECOND
+                    * SECONDS_IN_MINUTE
+                    * MINUTES_IN_HOUR
+                    * HOURS_IN_DAY
+                    * DAYS_IN_WEEK); /* 7 days*/
 
     return generate(extraClaims, userDetails, expirationDate);
   }
@@ -136,21 +146,24 @@ public class JWTServiceImpl implements JWTService {
    * @return String - A JWT token string.
    */
   public String onRefreshToken(RefreshTokenRequest refreshTokenRequest, UserDetails userDetails) {
-    return isTokenValid(refreshTokenRequest.getToken(), userDetails)
-        ? generateToken(userDetails)
-        : null;
+    boolean isValid = isTokenValid(refreshTokenRequest.getToken(), userDetails);
+    if (isValid) {
+      return generateToken(userDetails);
+    }
+    return null;
   }
 
-  private String generate(Map<String, Object> claims, UserDetails userDetails, Date expirationDate) {
+  private String generate(
+      Map<String, Object> claims, UserDetails userDetails, Date expirationDate) {
     String username = userDetails.getUsername();
     Date issueDate = new Date(System.currentTimeMillis());
 
     return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(username)
-            .setIssuedAt(issueDate)
-            .setExpiration(expirationDate)
-            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-            .compact();
+        .setClaims(claims)
+        .setSubject(username)
+        .setIssuedAt(issueDate)
+        .setExpiration(expirationDate)
+        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+        .compact();
   }
 }
