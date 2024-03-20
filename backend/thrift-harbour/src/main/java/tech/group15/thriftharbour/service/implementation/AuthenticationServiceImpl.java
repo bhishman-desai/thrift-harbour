@@ -1,5 +1,7 @@
 package tech.group15.thriftharbour.service.implementation;
 
+import static tech.group15.thriftharbour.constant.JWTTokenConstant.*;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
@@ -41,13 +43,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   public SignInResponse signIn(SignInRequest signInRequest) {
+
+    String signInRequestEmail = signInRequest.getEmail();
+    String signInRequestPassword = signInRequest.getPassword();
+
     authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            signInRequest.getEmail(), signInRequest.getPassword()));
-    var user =
-        userRepository
-            .findByEmail(signInRequest.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        new UsernamePasswordAuthenticationToken(signInRequestEmail, signInRequestPassword));
+
+    User user = findUserByEmail(signInRequestEmail);
     var token = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
@@ -56,24 +59,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   public SignInResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
     String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
-    User user =
-        userRepository
-            .findByEmail(userEmail)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+    User user = findUserByEmail(userEmail);
 
-    if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
-      var token = jwtService.generateToken(user);
-      return UserMapper.generateSignInResponse(token, refreshTokenRequest.getToken());
-    }
+    String newToken = jwtService.onRefreshToken(refreshTokenRequest, user);
+    String oldToken = refreshTokenRequest.getToken();
 
-    return null;
+    return UserMapper.generateSignInResponse(newToken, oldToken);
   }
 
+  /**
+   * This method will verify user's email then it will send reset password link to registered email
+   * id.
+   *
+   * @param forgotPassRequest The request includes the user's email id.
+   * @return A {@code ForgotPassResponse} object containing the response message.
+   */
   public ForgotPassResponse forgotPassword(ForgotPassRequest forgotPassRequest) {
-    User user =
-        userRepository
-            .findByEmail(forgotPassRequest.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
+    String forgotPassRequestEmail = forgotPassRequest.getEmail();
+    User user = findUserByEmail(forgotPassRequestEmail);
 
     Optional<PasswordResetToken> oldPassResetToken = passwordResetTokenRepository.findByUser(user);
     oldPassResetToken.ifPresent(
@@ -82,22 +85,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     PasswordResetToken token = new PasswordResetToken();
     token.setToken(UUID.randomUUID().toString());
     token.setUser(user);
-    token.setExpiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 30));
+
+    Date expiryDate =
+        new Date(
+            System.currentTimeMillis()
+                + MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR);
+    token.setExpiryDate(expiryDate);
     passwordResetTokenRepository.save(token);
 
-    emailService.sendEmail(
-        forgotPassRequest.getEmail(),
-        "Thrift Harbour Reset Password Link",
-        "http://172.17.1.50:8080/api/v1/auth/verify-password-reset-token/" + token.getToken());
+    String mailSubject = "Thrift Harbour Reset Password Link";
+    String URL = "http://172.17.1.50:8080/api/v1/auth/verify-password-reset-token/";
+
+    emailService.sendEmail(forgotPassRequestEmail, mailSubject, URL + token.getToken());
 
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
   }
 
   public Object resetPassTokenVerify(String token) {
-    PasswordResetToken passResetToken =
-        passwordResetTokenRepository
-            .findByToken(token)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+    PasswordResetToken passResetToken = getPasswordResetToken(token);
 
     if (!passResetToken.getExpiryDate().before(new Date())) {
       return "http://172.17.1.50:3000/reset-password" + "?token=" + token;
@@ -107,19 +112,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return "http://172.17.1.50:3000/login" + "?msg=Link Expired";
   }
 
+  /**
+   * The method will reset the password of the user.
+   *
+   * @param resetPassRequest A {@code ResetPassRequest} object containing all necessary information
+   *     to reset the password.
+   * @return A {@code Object} object containing the response message.
+   */
   public Object resetPassword(ResetPassRequest resetPassRequest) {
-    PasswordResetToken passResetToken =
-        passwordResetTokenRepository
-            .findByToken(resetPassRequest.getToken())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
-    User user =
-        userRepository
-            .findById(passResetToken.getUser().getUserID())
-            .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
+    PasswordResetToken passResetToken = getPasswordResetToken(resetPassRequest.getToken());
+
+    int id = passResetToken.getUser().getUserID();
+    User user = findUserById(id);
 
     passwordResetTokenRepository.deleteAllByTokenID(passResetToken.getTokenID());
     user.setPassword(passwordEncoder.encode((resetPassRequest.getPassword())));
     userRepository.save(user);
     return "Password Changed Successfully";
+  }
+
+  /* Helper methods */
+  private User findUserByEmail(String email) {
+    return userRepository
+        .findByEmail(email)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+  }
+
+  private User findUserById(int id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("User Not Found"));
+  }
+
+  private PasswordResetToken getPasswordResetToken(String token) {
+    return passwordResetTokenRepository
+        .findByToken(token)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
   }
 }

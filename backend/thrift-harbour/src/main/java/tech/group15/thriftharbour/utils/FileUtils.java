@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileUtils {
+  private static final double BYTES_TO_MEGABYTES = 0.000_001;
   private FileUtils() {}
 
   public static Path generateTempFilePath(MultipartFile file) {
@@ -33,7 +34,7 @@ public class FileUtils {
   }
 
   public static double fileSizeInMB(MultipartFile file) {
-    return file.getSize() * 0.000_001;
+    return file.getSize() * BYTES_TO_MEGABYTES;
   }
 
   public static String getFileExtention(MultipartFile file) {

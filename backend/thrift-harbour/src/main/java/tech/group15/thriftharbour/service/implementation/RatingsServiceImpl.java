@@ -38,14 +38,16 @@ public class RatingsServiceImpl implements RatingsService {
             .findByEmail(userName)
             .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
+    var userId = user.getUserID();
     BuyerRatings buyerRatings =
         RatingsMapper.convertBuyerRatingsRequestToBuyerRatingsModel(
-            buyerRatingsRequest, user.getUserID());
+            buyerRatingsRequest, userId);
 
     buyerRatingsRepository.save(buyerRatings);
 
+    var ratingToUserId = buyerRatings.getRatingToUserId();
     userRepository.updateBuyerRatings(
-        buyerRatingsRepository.findAvgBuyerRatings(buyerRatings.getRatingToUserId()), buyerRatings.getRatingToUserId());
+        buyerRatingsRepository.findAvgBuyerRatings(ratingToUserId), ratingToUserId);
 
     return "Buyer Ratings Added Successfully";
   }
@@ -61,14 +63,17 @@ public class RatingsServiceImpl implements RatingsService {
             .findByEmail(userName)
             .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
+    var userId = user.getUserID();
     SellerRatings sellerRatings =
         RatingsMapper.convertSellerRatingsRequestToSellerRatingsModel(
-            sellerRatingsRequest, user.getUserID());
+            sellerRatingsRequest, userId);
 
     sellerRatingsRepository.save(sellerRatings);
 
+    var ratingToUserId= sellerRatings.getRatingToUserId();
+
     userRepository.updateSellerRatings(
-            sellerRatingsRepository.findAvgSellerRatings(sellerRatings.getRatingToUserId()), sellerRatings.getRatingToUserId());
+            sellerRatingsRepository.findAvgSellerRatings(ratingToUserId), ratingToUserId);
 
     return "Seller Ratings Added Successfully";
   }
