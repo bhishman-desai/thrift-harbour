@@ -20,7 +20,6 @@ import tech.group15.thriftharbour.repository.*;
 import tech.group15.thriftharbour.service.AwsS3Service;
 import tech.group15.thriftharbour.service.JWTService;
 import tech.group15.thriftharbour.utils.DateUtil;
-import tech.group15.thriftharbour.utils.UUIDUtil;
 
 import java.util.*;
 
@@ -226,5 +225,24 @@ class ProductListingServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> productListingServiceImpl.findAllImmediateListing(authorizationHeader));
+    }
+
+    /**
+     * Tests the retrieval of all auction sale product details list for authorized user.
+     */
+    @Test
+    void testFindAllAuctionListing(){
+        when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
+        when(auctionSaleListingRepository.findAllAuctionSaleListing(anyString(), any())).thenReturn(List.of(auctionSaleListing));
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(auctionSaleImage));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        List<AuctionSaleListingCreationResponse> result = productListingServiceImpl.findAllAuctionListing(authorizationHeader);
+        Assertions.assertNotNull(result);
+
+        verify(jwtService).extractUserNameFromRequestHeaders(authorizationHeader);
+        auctionSaleListingRepository.findAllAuctionSaleListing(sellerEmail, DateUtil.getCurrentDate()).forEach(listing ->
+                verify(auctionSaleImageRepository).findAllByAuctionSaleListingID(listing.getAuctionSaleListingID()));
+        verify(userRepository).findByEmail(sellerEmail);
     }
 }
