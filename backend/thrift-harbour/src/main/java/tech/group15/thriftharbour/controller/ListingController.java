@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.AuctionSaleListingCreationResponse;
 import tech.group15.thriftharbour.dto.response.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.response.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -78,19 +78,30 @@ public class ListingController {
   }
 
   /**
-   * GET request to retrieve all immediate sale listings for the authenticated
-   * user.
+   * GET request to retrieve all immediate sale listings for the authenticated user.
    *
-   * @param authorizationHeader The authorization header containing the JWT of
-   *                            user.
-   * @return A list of {@code ResponseEntity} objects containing list of
-   *         {@code ImmediateSaleListingCreationResponse} representing all
-   *         immediate sale listings details.
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @return A list of {@code ResponseEntity} objects containing list of {@code
+   *     ImmediateSaleListingCreationResponse} representing all immediate sale listings details.
    */
   @GetMapping("/get-all-immediate-listing")
   public ResponseEntity<List<ImmediateSaleListingCreationResponse>> getAllImmediateListings(
       @Valid @RequestHeader("Authorization") String authorizationHeader) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllImmediateListing(authorizationHeader));
+  }
+
+  /**
+   * GET request to retrieve all auction sale listings for the authenticated user.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @return A list of {@code ResponseEntity} objects containing list of {@code
+   *     AuctionSaleListingCreationResponse} representing all auction sale listings details.
+   */
+  @GetMapping("/get-all-auction-listing")
+  public ResponseEntity<List<AuctionSaleListingCreationResponse>> getAllAuctionListings(
+      @Valid @RequestHeader("Authorization") String authorizationHeader) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllAuctionListing(authorizationHeader));
   }
 }

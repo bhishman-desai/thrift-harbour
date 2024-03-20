@@ -43,4 +43,6 @@ public interface ProductListingService {
 
     List<ImmediateSaleListingCreationResponse> findAllImmediateListing(String authorizationHeader);
 
+    List<AuctionSaleListingCreationResponse> findAllAuctionListing(String authorizationHeader);
+
 }

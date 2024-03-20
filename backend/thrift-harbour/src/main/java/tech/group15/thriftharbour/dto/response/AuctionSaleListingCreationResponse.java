@@ -33,4 +33,6 @@ public class AuctionSaleListingCreationResponse {
     private boolean isRejected;
 
     private Date createdDate;
+
+    private int sellerID;
 }
