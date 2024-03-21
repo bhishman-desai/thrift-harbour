@@ -30,10 +30,15 @@ const PlaceBid: React.FC<PlaceBidProps> = ({
   const navigate = useNavigate();
 
   const onPlaceBid = async () => {
-    if (bidAmount! < 1.23) {
+    console.log("bid amount", bidAmount);
+    console.log("highest bid", highestBid);
+    if (bidAmount! <= highestBid) {
+      console.log("in if");
       setAmountError(true);
-      return;
-    } else {
+    }
+
+    if (bidAmount! > highestBid) {
+      console.log("in else");
       setLoading(true);
       setAmountError(false);
       try {

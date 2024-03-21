@@ -112,7 +112,12 @@ const AuctionListing: React.FC = () => {
 
                       <NamePrice>
                         <Name> {product.productName}</Name>
-                        <Price>$ {product.startingBid}</Price>
+                        <Price>
+                          ${" "}
+                          {product.highestBid
+                            ? product.highestBid
+                            : product.startingBid}
+                        </Price>
                       </NamePrice>
                     </Card>
                   </>
