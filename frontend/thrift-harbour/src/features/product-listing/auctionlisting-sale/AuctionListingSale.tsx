@@ -199,11 +199,11 @@ const AuctionListingSale = () => {
         "Loading..."
       ) : (
         <>
-          {authorized && loginType === "USER" ? (
+          {/* {authorized && loginType === "USER" ? (
             <Navbar navOptions={navOptionsUsers} loginType={loginType} />
           ) : (
             <></>
-          )}
+          )} */}
           <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
             <Card style={{ backgroundColor: "whitesmoke" }}>
               <Typography

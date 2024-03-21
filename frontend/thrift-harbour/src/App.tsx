@@ -10,6 +10,7 @@ import ProductListing from "./features/product-listing/add-listing/ProductListin
 import ListedBySeller from "./features/product-listing/seller/ListedBySeller";
 import ImmediateListingSale from "./features/product-listing/immediatelisting-sale/ImmediateListingSale";
 import AuctionListingSale from "./features/product-listing/auctionlisting-sale/AuctionListingSale";
+import AuctionListing from "./features/auction/AuctionListing";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             path="/auctionsale-product-detail/:id"
             element={<AuctionListingSale />}
           />
+          <Route path="/auction" element={<AuctionListing />} />
         </Routes>
       </Router>
     </AuthWrapper>
