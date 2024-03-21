@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ListingService } from "../../services/Listing";
 import {
   Card,
   Grid,
@@ -12,6 +14,12 @@ import {
 
 const AuctionListing: React.FC = () => {
   const navigate = useNavigate();
+  const listing = new ListingService();
+  const token = localStorage.getItem("token");
+
+  const [auctionListedProducts, setAuctionListedProducts] = useState([] as any);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const productsList = [
     {
@@ -54,11 +62,32 @@ const AuctionListing: React.FC = () => {
     navigate(`/auctionsale-product-detail/${id}`);
   };
 
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await listing.getAllAuctionListedProducts(token);
+
+        if (response[0]?.status === 200) {
+          const data = response[0].data;
+
+          setAuctionListedProducts(data);
+          console.log("data after if", data);
+        } else {
+          setError(true);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
+    })();
+  }, []);
+
   return (
     <>
       <Header>Products</Header>
       <Grid>
-        {productsList.map((product) => {
+        {auctionListedProducts.map((product: any) => {
           return (
             <>
               <Card>

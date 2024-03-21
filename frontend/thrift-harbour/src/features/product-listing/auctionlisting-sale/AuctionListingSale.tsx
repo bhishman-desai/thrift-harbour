@@ -31,6 +31,8 @@ import Navbar from "../../../components/ui-components/navbar/Navbar";
 import Footer from "../../../components/ui-components/footer/Footer";
 import AboutImmediateSale from "../../../components/ui-components/thrift-harbour-immediatesale-about/AboutImmediateSale";
 import AboutAuctionSale from "../../../components/ui-components/thrift-harbour-auctionsale-about/AboutAuctionSale";
+import Modal from "../../../components/ui-components/Modal/Modal";
+import PlaceBid from "../../../components/ui-components/place-bid/PlaceBid";
 
 const AuctionListingSale = () => {
   const loren =
@@ -50,6 +52,7 @@ const AuctionListingSale = () => {
   let [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [placeBidButtonClicked, setPlaceBidButtonClicked] = useState(false);
 
   const [auctionSaleProductDetail, setAuctionSaleProductDetail] =
     useState<AuctionSaleProductDetail>();
@@ -148,6 +151,9 @@ const AuctionListingSale = () => {
     setValue(newValue);
   };
 
+  const closeModal = () => {
+    setPlaceBidButtonClicked(false);
+  };
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -247,6 +253,7 @@ const AuctionListingSale = () => {
                     </Button>
                   </Typography>
                   <Button
+                    onClick={() => setPlaceBidButtonClicked(true)}
                     className="chat-button"
                     style={{ background: blue[400], color: "white" }}
                   >
@@ -348,6 +355,11 @@ const AuctionListingSale = () => {
             </Card>
           </div>
           <Footer />
+          {placeBidButtonClicked && (
+            <Modal onClose={closeModal} title={""}>
+              <PlaceBid />
+            </Modal>
+          )}
         </>
       )}
     </>
