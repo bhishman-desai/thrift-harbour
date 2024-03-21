@@ -29,8 +29,8 @@ export class Path {
     if (service === "add-seller-ratings") {
       return "/user/add-seller-ratings";
     }
-    if (service === "auctionsale-product-detail"){
-      return "/user/get-auction-sale-product/"
+    if (service === "auctionsale-product-detail") {
+      return "/user/get-auction-sale-product/";
     }
   }
 
@@ -77,6 +77,9 @@ export class Path {
     if (service === "get-all-immediate-listing") {
       return "/users/listing/get-all-immediate-listing";
     }
+    if (service === "get-all-auction-listing") {
+      return "/users/listing/get-all-auction-listing";
+    }
   }
 
   getAdminUrl(service: string) {
@@ -106,6 +109,13 @@ export class Path {
   getChatUrl() {
     if (this.environment === "development") {
       return "http://localhost:8080";
+    } else {
+    }
+  }
+
+  getBiddingUrls(service: string) {
+    if (service === "place-bid") {
+      return "/user/place-bid";
     } else {
     }
   }

@@ -2,6 +2,7 @@ import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuctionBanner from "../../components/ui-components/AuctionBanner/AuctionBanner";
 import Modal from "../../components/ui-components/Modal/Modal";
 import { ListingService } from "../../services/Listing";
 import { ProductsService } from "../../services/Products";
@@ -119,6 +120,8 @@ const BuyProducts: React.FC = () => {
   };
   return (
     <>
+      <AuctionBanner />
+
       <Header>Products</Header>
 
       <Grid>
@@ -139,28 +142,11 @@ const BuyProducts: React.FC = () => {
                     />
                   </Image>
                 </ImageContainer>
-                {/* <Ratings>
-                  <Stack spacing={1}>
-                    <Rating
-                      name="half-rating-read"
-                      defaultValue={5}
-                      precision={0.5}
-                      readOnly
-                    />
-                  </Stack>
-                </Ratings> */}
+
                 <NamePrice>
                   <Name> {product.productName}</Name>
                   <Price>$ {product.price}</Price>
                 </NamePrice>
-                {/* <ViewButtonContainer>
-                  <Button onClick={() => setViewProfile(true)}>View</Button>
-                  {viewProfile && (
-                    <Modal style={newModalStyle} onClose={toggleViewProfile}>
-                      <UserProfile id={product.seller.userID} />
-                    </Modal>
-                  )}
-                </ViewButtonContainer> */}
               </Card>
             </>
           );
