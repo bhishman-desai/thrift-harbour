@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import RightIcon from "../../../assets/icons/RightIcon";
 import { ViewButtonContainer } from "../../../features/admin/AdminDashboardStyles";
 import { Button } from "../../../features/product-listing/listed-products/ListedProductsStyles";
@@ -12,6 +13,7 @@ import {
 
 const AuctionBanner = () => {
   const dates = new Dates();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -28,7 +30,7 @@ const AuctionBanner = () => {
             <Button
               style={{ marginLeft: "8px" }}
               onClick={() => {
-                console.log("clicked");
+                navigate("/auction");
               }}
             >
               View Auction
