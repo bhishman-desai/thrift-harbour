@@ -531,6 +531,20 @@ public class ProductListingServiceImpl implements ProductListingService {
               .findByEmail(auctionSaleListing.getSellerEmail())
               .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
 
+      User currentHighestBidUser =
+              userRepository
+                      .findByEmail(auctionSaleListing.getCurrentHighestBidUserMail())
+                      .orElseThrow(() -> new UsernameNotFoundException("Highest bid user not found!"));
+
+      User highestBidUserRequiredInfo = new User();
+      highestBidUserRequiredInfo.setUserID(currentHighestBidUser.getUserID());
+      highestBidUserRequiredInfo.setFirstName(currentHighestBidUser.getFirstName());
+      highestBidUserRequiredInfo.setLastName(currentHighestBidUser.getLastName());
+      highestBidUserRequiredInfo.setEmail(currentHighestBidUser.getEmail());
+      highestBidUserRequiredInfo.setRole(currentHighestBidUser.getRole());
+      highestBidUserRequiredInfo.setAvgBuyerRatings(currentHighestBidUser.getAvgBuyerRatings());
+      highestBidUserRequiredInfo.setAvgSellerRatings(currentHighestBidUser.getAvgSellerRatings());
+
       auctionSaleListingCreationResponseList.add(
           AuctionSaleListingCreationResponse.builder()
               .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
@@ -545,6 +559,9 @@ public class ProductListingServiceImpl implements ProductListingService {
               .isRejected(auctionSaleListing.isRejected())
               .createdDate(auctionSaleListing.getCreatedDate())
               .sellerID(seller.getUserID())
+              .highestBid(auctionSaleListing.getHighestBid())
+              .currentHighestBidUserMail(auctionSaleListing.getCurrentHighestBidUserMail())
+              .highestBidUser(highestBidUserRequiredInfo)
               .build());
     }
     return auctionSaleListingCreationResponseList;
