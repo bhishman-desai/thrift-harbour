@@ -14,10 +14,12 @@ import { Container, Header, Instruct } from "./PlaceBidStyled";
 export interface PlaceBidProps {
   auctionSaleListingID: string;
   highestBid: number;
+  highestBidUser: any;
 }
 const PlaceBid: React.FC<PlaceBidProps> = ({
   auctionSaleListingID,
   highestBid,
+  highestBidUser,
 }) => {
   const bid = new BidService();
   const token = localStorage.getItem("token");
@@ -64,7 +66,9 @@ const PlaceBid: React.FC<PlaceBidProps> = ({
 
   return (
     <Container>
-      <Header>Highest bid is $1.23</Header>
+      <Header>
+        Highest bid is ${highestBid} by {highestBidUser.firstName}
+      </Header>
       <Instruct>Place your bid below</Instruct>
       <Field style={{ marginTop: "4px" }}>
         <Input

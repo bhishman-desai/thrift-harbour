@@ -58,8 +58,11 @@ const AuctionListing: React.FC = () => {
     },
   ];
 
-  const handleOnProductClick = (id: string) => {
-    navigate(`/auctionsale-product-detail/${id}`);
+  const handleOnProductClick = (id: string, highestBidUser: any) => {
+    console.log("auctionListedProducts.highestBidUser", highestBidUser);
+    navigate(`/auctionsale-product-detail/${id}`, {
+      state: highestBidUser,
+    });
   };
 
   useEffect(() => {
@@ -98,7 +101,10 @@ const AuctionListing: React.FC = () => {
                     <Card>
                       <ImageContainer
                         onClick={() =>
-                          handleOnProductClick(product.auctionSaleListingID)
+                          handleOnProductClick(
+                            product.auctionSaleListingID,
+                            product.highestBidUser
+                          )
                         }
                       >
                         <Image>

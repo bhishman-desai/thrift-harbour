@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Auth } from "../../../services/Auth";
 import useAuth from "../../../hooks/useAuth";
@@ -41,6 +41,7 @@ const AuctionListingSale = () => {
   const auth = new Auth();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [value, setValue] = useState("1");
 
@@ -53,10 +54,11 @@ const AuctionListingSale = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [placeBidButtonClicked, setPlaceBidButtonClicked] = useState(false);
-
+  const highestBidUser = location.state;
   const [auctionSaleProductDetail, setAuctionSaleProductDetail] =
     useState<AuctionSaleProductDetail>();
 
+  console.log("highestBidUser", highestBidUser);
   useEffect(() => {
     (async function () {
       try {
@@ -190,7 +192,8 @@ const AuctionListingSale = () => {
                     {auctionSaleProductDetail!.highestBid <=
                     auctionSaleProductDetail!.startingBid
                       ? auctionSaleProductDetail!.startingBid
-                      : auctionSaleProductDetail?.highestBid}
+                      : auctionSaleProductDetail?.highestBid}{" "}
+                    by {highestBidUser.firstName}
                   </span>
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     <Button onClick={handleFav}>
@@ -311,6 +314,7 @@ const AuctionListingSale = () => {
                   auctionSaleProductDetail?.auctionSaleListingID!
                 }
                 highestBid={auctionSaleProductDetail?.highestBid!}
+                highestBidUser={highestBidUser}
               />
             </Modal>
           )}
