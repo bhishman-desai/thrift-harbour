@@ -85,36 +85,43 @@ const AuctionListing: React.FC = () => {
 
   return (
     <>
-      <Header>Products</Header>
-      <Grid>
-        {auctionListedProducts.map((product: any) => {
-          return (
-            <>
-              <Card>
-                <ImageContainer
-                  onClick={() =>
-                    handleOnProductClick(product.auctionSaleListingID)
-                  }
-                >
-                  <Image>
-                    <img
-                      src={product.imageURLs && product.imageURLs[0]}
-                      height={"100%"}
-                      width={"100%"}
-                    />
-                  </Image>
-                </ImageContainer>
+      <>
+        {auctionListedProducts.length === 0 ? (
+          "Loading"
+        ) : (
+          <>
+            <Header>Products</Header>
+            <Grid>
+              {auctionListedProducts.map((product: any) => {
+                return (
+                  <>
+                    <Card>
+                      <ImageContainer
+                        onClick={() =>
+                          handleOnProductClick(product.auctionSaleListingID)
+                        }
+                      >
+                        <Image>
+                          <img
+                            src={product.imageURLs && product.imageURLs[0]}
+                            height={"100%"}
+                            width={"100%"}
+                          />
+                        </Image>
+                      </ImageContainer>
 
-                <NamePrice>
-                  <Name> {product.productName}</Name>
-                  <Price>$ {product.startingBid}</Price>
-                </NamePrice>
-              </Card>
-            </>
-          );
-        })}
-      </Grid>
-      t
+                      <NamePrice>
+                        <Name> {product.productName}</Name>
+                        <Price>$ {product.startingBid}</Price>
+                      </NamePrice>
+                    </Card>
+                  </>
+                );
+              })}
+            </Grid>
+          </>
+        )}
+      </>
     </>
   );
 };

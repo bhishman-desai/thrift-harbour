@@ -112,4 +112,11 @@ export class Path {
     } else {
     }
   }
+
+  getBiddingUrls(service: string) {
+    if (service === "place-bid") {
+      return "/user/place-bid";
+    } else {
+    }
+  }
 }

@@ -8,22 +8,52 @@ import {
   RegisterButton,
   Error,
 } from "../../../features/registration/RegistrationStyles";
+import { BidService } from "../../../services/Bid";
 import { Container, Header, Instruct } from "./PlaceBidStyled";
 
-const PlaceBid: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+export interface PlaceBidProps {
+  auctionSaleListingID: string;
+  highestBid: number;
+}
+const PlaceBid: React.FC<PlaceBidProps> = ({
+  auctionSaleListingID,
+  highestBid,
+}) => {
+  const bid = new BidService();
+  const token = localStorage.getItem("token");
+
   const [bidAmount, setBidAmount] = useState<number>();
   const [amountError, setAmountError] = useState(false);
-
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const onPlaceBid = () => {
+  const onPlaceBid = async () => {
     if (bidAmount! < 1.23) {
       setAmountError(true);
       return;
     } else {
+      setLoading(true);
       setAmountError(false);
-      console.log("bid amount", bidAmount);
+      try {
+        const response = await bid.placeBid(token!, {
+          auctionSaleListingID: auctionSaleListingID,
+          bidAmount: bidAmount,
+        });
+        console.log("response of place bid", response);
+        if (response[0] === "Bid Placed successfully") {
+          setSuccess(true);
+          setLoading(false);
+          setError(false);
+        } else {
+          setLoading(false);
+          setError(true);
+        }
+      } catch (error) {
+        setLoading(false);
+        setError(true);
+      }
     }
   };
 
@@ -47,13 +77,17 @@ const PlaceBid: React.FC = () => {
           </Error>
         )}
       </Field>
+      {success && <p style={{ color: "green" }}> Bid Placed Successfully! </p>}
+      {error && (
+        <p style={{ color: "red" }}>Error in placing bid, please try again!</p>
+      )}
       <RegisterButton
         onClick={() => onPlaceBid()}
         type="submit"
         style={{ marginTop: "8px" }}
       >
-        {isLoading ? (
-          <ClipLoader color="#ffffff" loading={isLoading} size={20} />
+        {loading ? (
+          <ClipLoader color="#ffffff" loading={loading} size={20} />
         ) : (
           "Place Bid"
         )}

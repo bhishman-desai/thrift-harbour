@@ -61,7 +61,7 @@ const AuctionListingSale = () => {
     (async function () {
       try {
         const response = await listing.auctionSaleProductDetail(id!, token);
-
+        console.log("response of 1 product", response);
         let tempProductDetail: AuctionSaleProductDetail = {
           auctionSaleListingID: response.data.auctionSaleListingID,
           productName: response.data.productName,
@@ -92,57 +92,6 @@ const AuctionListingSale = () => {
     })();
   }, []);
 
-  // let arkSeller: UserDetails = {
-  //     userID: 5,
-  //     firstName: "Mithun",
-  //     lastName: "Khanna",
-  //     email: "Khanna@mail.com",
-  //     avgBuyerRatings: 4.2,
-  //     avgSellerRatings: 4.5,
-  //     username: "98only99-1",
-  // }
-
-  // let bowImg: string[] = ["https://picsum.photos/220", "https://picsum.photos/200", "https://picsum.photos/300"];
-
-  // let a: AuctionSaleProductDetail = {
-  //     auctionSaleListingID: "random-uuid-here",
-  //     productName: "Antique Ark of the Covenant",
-  //     productDescription: loren,
-  //     startingBid: 100,
-  //     highestBid: 220,
-  //     category: "Lifestyle",
-  //     sellerEmail: "mithun@mithun.com",
-  //     active: true,
-  //     approverEmail: "admin@dal.ca",
-  //     messageFromApprover: "Good product",
-  //     approved: true,
-  //     rejected: false,
-  //     sold: false,
-  //     seller: arkSeller,
-  //     imageUrl: bowImg,
-
-  // };
-
-  const navOptionsUsers = [
-    {
-      key: "List Product",
-      value: "List Product",
-      isSelected: false,
-    },
-
-    {
-      key: "My Listed Products",
-      value: "My Listed Products",
-      isSelected: false,
-    },
-
-    {
-      key: "Buy Products",
-      value: "Buy Products",
-      isSelected: false,
-    },
-  ];
-
   const handleFav = () => {
     setIsFavorite((prevIsFav) => !prevIsFav);
   };
@@ -154,54 +103,54 @@ const AuctionListingSale = () => {
   const closeModal = () => {
     setPlaceBidButtonClicked(false);
   };
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
 
-    (async () => {
-      if (!token) {
-        navigate("/login");
-      } else {
-        try {
-          const [data, error] = await auth.getUser(token);
-          if (data?.status === 200) {
-            console.log("in user");
-            setAuthorized(true);
-            setLogintype("USER");
-            setLoading(false);
-            return;
-          } else if (error) {
-            setError(true);
-            setAuthorized(false);
-          } else {
-            setError(true);
-          }
-        } catch (error) {
-          setError(true);
-        }
+  //   (async () => {
+  //     if (!token) {
+  //       navigate("/login");
+  //     } else {
+  //       try {
+  //         const [data, error] = await auth.getUser(token);
+  //         if (data?.status === 200) {
+  //           console.log("in user");
+  //           setAuthorized(true);
+  //           setLogintype("USER");
+  //           setLoading(false);
+  //           return;
+  //         } else if (error) {
+  //           setError(true);
+  //           setAuthorized(false);
+  //         } else {
+  //           setError(true);
+  //         }
+  //       } catch (error) {
+  //         setError(true);
+  //       }
 
-        try {
-          const [data, error] = await auth.getAdmin(token);
-          if (data?.status === 200) {
-            console.log("in admin");
+  //       try {
+  //         const [data, error] = await auth.getAdmin(token);
+  //         if (data?.status === 200) {
+  //           console.log("in admin");
 
-            setAuthorized(true);
-            setLogintype("ADMIN");
-          } else if (error) {
-            setError(true);
-            setAuthorized(false);
-          } else {
-            setError(true);
-          }
-        } catch (error) {
-          setError(true);
-        }
-      }
-    })();
-  }, [token]);
+  //           setAuthorized(true);
+  //           setLogintype("ADMIN");
+  //         } else if (error) {
+  //           setError(true);
+  //           setAuthorized(false);
+  //         } else {
+  //           setError(true);
+  //         }
+  //       } catch (error) {
+  //         setError(true);
+  //       }
+  //     }
+  //   })();
+  // }, [token]);
 
   return (
     <>
-      {loading ? (
+      {!auctionSaleProductDetail ? (
         "Loading..."
       ) : (
         <>
@@ -237,11 +186,11 @@ const AuctionListingSale = () => {
                 <Toolbar sx={{ fontSize: 20 }}>
                   <span>
                     Highest Bid: <span>&#36;</span>
-                    {"100"}
-                    {/* {auctionSaleProductDetail!.highestBid <=
+                    {/* {"100"} */}
+                    {auctionSaleProductDetail!.highestBid <=
                     auctionSaleProductDetail!.startingBid
                       ? auctionSaleProductDetail!.startingBid
-                      : auctionSaleProductDetail?.highestBid} */}
+                      : auctionSaleProductDetail?.highestBid}
                   </span>
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     <Button onClick={handleFav}>
@@ -357,7 +306,12 @@ const AuctionListingSale = () => {
           <Footer />
           {placeBidButtonClicked && (
             <Modal onClose={closeModal} title={""}>
-              <PlaceBid />
+              <PlaceBid
+                auctionSaleListingID={
+                  auctionSaleProductDetail?.auctionSaleListingID!
+                }
+                highestBid={auctionSaleProductDetail?.highestBid!}
+              />
             </Modal>
           )}
         </>
