@@ -8,10 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
-import tech.group15.thriftharbour.dto.response.AuctionSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.response.AuctionSaleProductResponse;
-import tech.group15.thriftharbour.dto.response.ImmediateSaleListingCreationResponse;
-import tech.group15.thriftharbour.dto.response.ImmediateSaleMinifiedResponse;
+import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.enums.SellCategoryEnum;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
@@ -141,7 +138,7 @@ class ProductListingServiceImplTest {
     }
 
     /**
-     * Tests the retrieval of all Immediate sale listing of a seller by its seller id.
+     * Tests the retrieval of all Immediate sale listing of a seller by its seller email.
      */
     @Test
     void testFindAllImmediateSaleListingBySellerEmail(){
@@ -151,6 +148,111 @@ class ProductListingServiceImplTest {
         List<ImmediateSaleListing> result = productListingServiceImpl.findAllImmediateSaleListingBySellerEmail(authorizationHeader);
         Assertions.assertNotNull(result);
         verify(immediateSaleListingRepository).findAllBySellerEmail(sellerEmail);
+    }
+
+    /**
+     * Tests the retrieval of all Auction sale listing of a seller by its seller email.
+     */
+    @Test
+    void testFindAllAuctionSaleListingBySellerEmail(){
+        when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
+        when(auctionSaleListingRepository.findAllBySellerEmail(anyString())).thenReturn(List.of(auctionSaleListing));
+
+        List<AuctionSaleListing> result = productListingServiceImpl.findAllAuctionSaleListingBySellerEmail(authorizationHeader);
+        Assertions.assertNotNull(result);
+        verify(auctionSaleListingRepository).findAllBySellerEmail(sellerEmail);
+    }
+
+    /**
+     * Tests the retrieval of all Immediate sale listing images by immediateListingId.
+     */
+    @Test
+    void testFindAllImmediateSaleListingImagesByID(){
+        when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
+
+        GetListingImageResponse result = productListingServiceImpl.findAllImmediateSaleListingImagesByID("immediateSaleListingID");
+        Assertions.assertNotNull(result);
+        verify(immediateSaleImageRepository).getAllByImmediateSaleListingID("immediateSaleListingID");
+    }
+
+    /**
+     * Tests the retrieval of all Auction sale listing images by auctionListingId.
+     */
+    @Test
+    void testFindAllAuctionSaleListingImagesByID(){
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(auctionSaleImage));
+
+        GetListingImageResponse result = productListingServiceImpl.findAllAuctionSaleListingImagesByID("auctionSaleListingID");
+        Assertions.assertNotNull(result);
+        verify(auctionSaleImageRepository).findAllByAuctionSaleListingID("auctionSaleListingID");
+    }
+
+    /**
+     * Tests the retrieval of user listing details by userId.
+     */
+    @Test
+    void testFindUserListingById(){
+        when(immediateSaleListingRepository.findAllBySellerID(anyInt())).thenReturn(List.of(immediateSaleListing));
+
+        List<ImmediateSaleListing> result = productListingServiceImpl.findUserListingById(user.getUserID());
+        Assertions.assertEquals(List.of(immediateSaleListing), result);
+        verify(immediateSaleListingRepository).findAllBySellerID(user.getUserID());
+    }
+
+    /**
+     * Tests the retrieval of all approved Immediate listing.
+     */
+    @Test
+    void testFindAllApprovedImmediateSaleListing(){
+        when(immediateSaleListingRepository.findAllApprovedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, true, false, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
+
+        List<ApprovedImmediateSaleListingForAdminResponse> result = productListingServiceImpl.findAllApprovedImmediateSaleListing();
+        Assertions.assertNotNull(result);
+        verify(immediateSaleListingRepository).findAllApprovedImmediateSaleListing();
+        verify(immediateSaleImageRepository).getAllByImmediateSaleListingID("immediateSaleListingID");
+    }
+
+    /**
+     * Tests the retrieval of all denied Immediate listing.
+     */
+    @Test
+    void testFindAllDeniedImmediateSaleListing(){
+        when(immediateSaleListingRepository.findAllDeniedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, false, true, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
+
+        List<DeniedImmediateSaleListingForAdminResponse> result = productListingServiceImpl.findAllDeniedImmediateSaleListing();
+        Assertions.assertNotNull(result);
+        verify(immediateSaleListingRepository).findAllDeniedImmediateSaleListing();
+        verify(immediateSaleImageRepository).getAllByImmediateSaleListingID("immediateSaleListingID");
+    }
+
+    /**
+     * Tests the retrieval of all approved Auction listing.
+     */
+    @Test
+    void testFindAllApprovedAuctionSaleListing(){
+        when(auctionSaleListingRepository.findAllApprovedAuctionSaleListing()).thenReturn(List.of(new AuctionSaleListing("auctionSaleListingID", "productName", "productDescription", 0d, 0d, "currentHighestBidUserMail", "category", "sellerEmail", new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), true, true, false, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(auctionSaleImage));
+
+        List<ApprovedAuctionSaleListingForAdminResponse> result = productListingServiceImpl.findAllApprovedAuctionSaleListing();
+        Assertions.assertNotNull(result);
+        verify(auctionSaleListingRepository).findAllApprovedAuctionSaleListing();
+        verify(auctionSaleImageRepository).findAllByAuctionSaleListingID("auctionSaleListingID");
+    }
+
+    /**
+     * Tests the retrieval of all denied Auction listing.
+     */
+    @Test
+    void testFindAllDeniedAuctionSaleListing(){
+        when(auctionSaleListingRepository.findAllDeniedAuctionSaleListing()).thenReturn(List.of(new AuctionSaleListing("auctionSaleListingID", "productName", "productDescription", 0d, 0d, "currentHighestBidUserMail", "category", "sellerEmail", new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), true, false, true, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(new AuctionSaleImage(0, "auctionSaleListingID", "imageURL", new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+
+        List<DeniedAuctionSaleListingForAdminResponse> result = productListingServiceImpl.findAllDeniedAuctionSaleListing();
+        Assertions.assertNotNull(result);
+        verify(auctionSaleListingRepository).findAllDeniedAuctionSaleListing();
+        verify(auctionSaleImageRepository).findAllByAuctionSaleListingID("auctionSaleListingID");
     }
 
     /**
