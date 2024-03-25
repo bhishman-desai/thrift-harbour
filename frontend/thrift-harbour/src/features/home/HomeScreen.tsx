@@ -38,6 +38,11 @@ const Home: React.FC = () => {
       value: "Buy Products",
       isSelected: false,
     },
+    {
+      key: "Auction",
+      value: "Auction",
+      isSelected: false,
+    },
   ];
 
   const navOptionsAdmin = [
@@ -114,10 +119,7 @@ const Home: React.FC = () => {
             <></>
           )}
         </>
-        // <AdminDashboard />
       )}
-
-      {/* {authorized && loginType === "ADMIN" && <AdminDashboard />} */}
     </>
   );
 };

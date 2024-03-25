@@ -88,6 +88,30 @@ const ImmediateListingSale = () => {
     setViewProfile(!viewProfile);
   };
 
+  const navOptionsUsers = [
+    {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
+
+    {
+      key: "My Listed Products",
+      value: "My Listed Products",
+      isSelected: false,
+    },
+    {
+      key: "Chats",
+      value: "Chats",
+      isSelected: false,
+    },
+
+    {
+      key: "Buy Products",
+      value: "Buy Products",
+      isSelected: true,
+    },
+  ];
   useEffect(() => {
     (async function () {
       try {
@@ -144,6 +168,8 @@ const ImmediateListingSale = () => {
           {" "}
           {immediateSaleProductDetail && (
             <>
+              <Navbar navOptions={navOptionsUsers} loginType={"USER"} />
+
               <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
                 <Card style={{ backgroundColor: "whitesmoke" }}>
                   <Typography

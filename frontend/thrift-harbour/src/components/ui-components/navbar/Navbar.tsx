@@ -18,6 +18,8 @@ import {
   TabsOptionsContainer,
 } from "./NavbarStyles";
 import ChatScreen from "../../../features/chat/ChatScreen";
+import ImmediateListingSale from "../../../features/product-listing/immediatelisting-sale/ImmediateListingSale";
+import AuctionListing from "../../../features/auction/AuctionListing";
 
 interface NavbarProps {
   navOptions: NavOptions[];
@@ -34,10 +36,21 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
     setCurrentSelected(key);
   };
 
+  const currentUrl = window.location.href;
+  console.log("currentUrl", currentUrl);
+  const isImmediateSaleProductDetail = currentUrl.includes(
+    "immediatesale-product-detail"
+  );
+  const auctionProductDetails = currentUrl.includes(
+    "auctionsale-product-detail"
+  );
+
+  const auction = currentUrl.includes("auction");
+  console.log("isImmediateSaleProductDetail", isImmediateSaleProductDetail);
+
   return (
     <>
       <NavContainer>
-        {/* <ReviewBoosterIcon height={"125"} width={"74"} /> */}
         <TabsOptionsContainer>
           <Tabs>
             {navOptions.map((option) => {
@@ -63,9 +76,12 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
       {isProfileClicked && <Profilepopup />}
       {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
-      {currentSelected === "Buy Products" && loginType === "USER" && (
-        <BuyProducts />
-      )}
+      {currentSelected === "Buy Products" &&
+        !isImmediateSaleProductDetail &&
+        !auctionProductDetails &&
+        !auction &&
+        loginType === "USER" && <BuyProducts />}
+
       {currentSelected === "Dashboard" && loginType === "ADMIN" && (
         <AdminDashboard />
       )}
@@ -77,6 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
       )}
       {currentSelected === "List By Sellers" && <ListedBySeller />}
       {currentSelected === "Chats" && <ChatScreen />}
+      {currentSelected === "Auction" && <AuctionListing />}
     </>
   );
 };

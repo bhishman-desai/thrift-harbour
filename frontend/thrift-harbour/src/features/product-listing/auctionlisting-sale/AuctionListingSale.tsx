@@ -105,62 +105,38 @@ const AuctionListingSale = () => {
   const closeModal = () => {
     setPlaceBidButtonClicked(false);
   };
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
 
-  //   (async () => {
-  //     if (!token) {
-  //       navigate("/login");
-  //     } else {
-  //       try {
-  //         const [data, error] = await auth.getUser(token);
-  //         if (data?.status === 200) {
-  //           console.log("in user");
-  //           setAuthorized(true);
-  //           setLogintype("USER");
-  //           setLoading(false);
-  //           return;
-  //         } else if (error) {
-  //           setError(true);
-  //           setAuthorized(false);
-  //         } else {
-  //           setError(true);
-  //         }
-  //       } catch (error) {
-  //         setError(true);
-  //       }
+  const navOptionsUsers = [
+    {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
 
-  //       try {
-  //         const [data, error] = await auth.getAdmin(token);
-  //         if (data?.status === 200) {
-  //           console.log("in admin");
+    {
+      key: "My Listed Products",
+      value: "My Listed Products",
+      isSelected: false,
+    },
+    {
+      key: "Chats",
+      value: "Chats",
+      isSelected: false,
+    },
 
-  //           setAuthorized(true);
-  //           setLogintype("ADMIN");
-  //         } else if (error) {
-  //           setError(true);
-  //           setAuthorized(false);
-  //         } else {
-  //           setError(true);
-  //         }
-  //       } catch (error) {
-  //         setError(true);
-  //       }
-  //     }
-  //   })();
-  // }, [token]);
-
+    {
+      key: "Buy Products",
+      value: "Buy Products",
+      isSelected: true,
+    },
+  ];
   return (
     <>
       {!auctionSaleProductDetail ? (
         "Loading..."
       ) : (
         <>
-          {/* {authorized && loginType === "USER" ? (
-            <Navbar navOptions={navOptionsUsers} loginType={loginType} />
-          ) : (
-            <></>
-          )} */}
+          <Navbar navOptions={navOptionsUsers} loginType={"USER"} />
           <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
             <Card style={{ backgroundColor: "whitesmoke" }}>
               <Typography
