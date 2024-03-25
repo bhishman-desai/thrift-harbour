@@ -45,4 +45,5 @@ public interface ProductListingService {
 
     List<AuctionSaleListingCreationResponse> findAllAuctionListing(String authorizationHeader);
 
+    List<AuctionSaleListingCreationResponse> findAllAuctionListingForAdmin();
 }

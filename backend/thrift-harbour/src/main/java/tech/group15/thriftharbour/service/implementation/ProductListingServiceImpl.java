@@ -566,4 +566,45 @@ public class ProductListingServiceImpl implements ProductListingService {
     }
     return auctionSaleListingCreationResponseList;
   }
+
+  /**
+   * Retrieves all auction sale listings with its seller details for admin.
+   *
+   * @return A list of {@code AuctionSaleListingCreationResponse} objects representing all
+   *     auction sale listings details.
+   */
+  @Override
+  public List<AuctionSaleListingCreationResponse> findAllAuctionListingForAdmin() {
+
+    List<AuctionSaleListing> auctionSaleListingList =
+            auctionSaleListingRepository.findAllAuctionSaleListingForAdmin();
+
+    List<AuctionSaleListingCreationResponse> auctionSaleListingCreationResponseList =
+            new ArrayList<>();
+
+    for (AuctionSaleListing auctionSaleListing : auctionSaleListingList) {
+      List<AuctionSaleImage> productImages =
+              auctionSaleImageRepository.findAllByAuctionSaleListingID(
+                      auctionSaleListing.getAuctionSaleListingID());
+
+      User seller =
+              userRepository
+                      .findByEmail(auctionSaleListing.getSellerEmail())
+                      .orElseThrow(() -> new UsernameNotFoundException("Seller not found!"));
+
+      auctionSaleListingCreationResponseList.add(
+              AuctionSaleListingCreationResponse.builder()
+                      .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+                      .productName(auctionSaleListing.getProductName())
+                      .productDescription(auctionSaleListing.getProductDescription())
+                      .category(auctionSaleListing.getCategory())
+                      .sellerEmail(seller.getEmail())
+                      .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+                      .active(auctionSaleListing.isActive())
+                      .createdDate(auctionSaleListing.getCreatedDate())
+                      .sellerID(seller.getUserID())
+                      .build());
+    }
+    return auctionSaleListingCreationResponseList;
+  }
 }
