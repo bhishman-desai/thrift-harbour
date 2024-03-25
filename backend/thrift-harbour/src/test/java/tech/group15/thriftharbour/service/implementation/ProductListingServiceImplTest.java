@@ -347,4 +347,20 @@ class ProductListingServiceImplTest {
                 verify(auctionSaleImageRepository).findAllByAuctionSaleListingID(listing.getAuctionSaleListingID()));
         verify(userRepository).findByEmail(sellerEmail);
     }
+
+    /**
+     * Tests the retrieval of all auction sale product details list for admin.
+     */
+    @Test
+    void testFindAllAuctionListingForAdmin(){
+        when(auctionSaleListingRepository.findAllAuctionSaleListingForAdmin()).thenReturn(List.of(auctionSaleListing));
+        when(auctionSaleImageRepository.findAllByAuctionSaleListingID(anyString())).thenReturn(List.of(auctionSaleImage));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        List<AuctionSaleListingCreationResponse> result = productListingServiceImpl.findAllAuctionListingForAdmin();
+        Assertions.assertNotNull(result);
+
+        auctionSaleListingRepository.findAllAuctionSaleListingForAdmin().forEach(listing ->
+                verify(auctionSaleImageRepository).findAllByAuctionSaleListingID(listing.getAuctionSaleListingID()));
+    }
 }

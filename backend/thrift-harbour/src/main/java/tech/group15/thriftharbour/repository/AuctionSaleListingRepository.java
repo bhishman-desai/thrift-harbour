@@ -25,4 +25,7 @@ public interface AuctionSaleListingRepository extends JpaRepository<AuctionSaleL
 
     @Query("SELECT i FROM AuctionSaleListing i WHERE i.sellerEmail != ?1 and CAST(auctionSlot AS date) = ?2 and i.active = true and i.isApproved = true and i.isRejected = false")
     List<AuctionSaleListing> findAllAuctionSaleListing(String sellerEmail, Date auctionSlot);
+
+    @Query("SELECT i FROM AuctionSaleListing i WHERE i.active = true")
+    List<AuctionSaleListing> findAllAuctionSaleListingForAdmin();
 }
