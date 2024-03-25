@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileIcon from "../../../assets/icons/ProfileIcon";
 import AdminDashboard from "../../../features/admin/AdminDashboard";
 import BuyProducts from "../../../features/buy-product/BuyProducts";
@@ -27,11 +27,16 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
+  const currentState = window.history.state;
   const [currentSelected, setCurrentSelected] = useState(
-    loginType === "ADMIN" ? "Dashboard" : "Buy Products"
+    loginType === "ADMIN"
+      ? "Dashboard"
+      : currentState.currentSelectd
+        ? currentState.currentSelectd
+        : "Buy Products"
   );
   const [isProfileClicked, setIsProfileClicked] = useState(false);
-
+  console.log("currentSelected", currentSelected);
   const onClickOption = (key: string) => {
     setCurrentSelected(key);
   };
@@ -44,9 +49,19 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   const auctionProductDetails = currentUrl.includes(
     "auctionsale-product-detail"
   );
-
   const auction = currentUrl.includes("auction");
+  const home = currentUrl.includes("home");
   console.log("isImmediateSaleProductDetail", isImmediateSaleProductDetail);
+  const handleUrlChange = (selectedTab: string) => {
+    if (selectedTab !== "Buy Products") {
+      window.history.pushState({}, "", "/home");
+    }
+  };
+
+  // Call handleUrlChange when the tab is changed
+  // useEffect(() => {
+  //   handleUrlChange(currentSelected);
+  // }, [currentSelected]);
 
   return (
     <>
@@ -58,7 +73,10 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
                 <Option
                   style={{ color: "#ffffff" }}
                   currentSelectd={currentSelected === option.key}
-                  onClick={() => onClickOption(option.key)}
+                  onClick={() => {
+                    onClickOption(option.key);
+                    handleUrlChange(option.value);
+                  }}
                 >
                   {option.value}
                 </Option>
@@ -73,6 +91,10 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
         </TabsOptionsContainer>
       </NavContainer>
 
+      {currentSelected === "Dashboard" && loginType === "ADMIN" && (
+        <AdminDashboard />
+      )}
+
       {isProfileClicked && <Profilepopup />}
       {currentSelected === "List Product" && <ProductListing />}
       {currentSelected === "My Listed Products" && <ListedProducts />}
@@ -82,9 +104,6 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
         !auction &&
         loginType === "USER" && <BuyProducts />}
 
-      {currentSelected === "Dashboard" && loginType === "ADMIN" && (
-        <AdminDashboard />
-      )}
       {currentSelected === "Sellers" && (
         <SellersList
           setCurrentSelected={setCurrentSelected}
@@ -93,7 +112,6 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
       )}
       {currentSelected === "List By Sellers" && <ListedBySeller />}
       {currentSelected === "Chats" && <ChatScreen />}
-      {currentSelected === "Auction" && <AuctionListing />}
     </>
   );
 };

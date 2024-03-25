@@ -15,7 +15,8 @@ import {
   Price,
 } from "../buy-product/BuyProductsStyles";
 
-const AuctionListing: React.FC = () => {
+export interface AuctionListingProps {}
+const AuctionListing: React.FC<AuctionListingProps> = ({}) => {
   const navigate = useNavigate();
   const listing = new ListingService();
   const token = localStorage.getItem("token");
@@ -68,6 +69,9 @@ const AuctionListing: React.FC = () => {
     });
   };
 
+  const currentUrl = window.location.href;
+  const auction = currentUrl.includes("auction");
+
   useEffect(() => {
     (async function () {
       try {
@@ -114,6 +118,8 @@ const AuctionListing: React.FC = () => {
     },
   ];
 
+  console.log("in auction list");
+
   return (
     <>
       {auctionListedProducts.length === 0 ? (
@@ -121,43 +127,48 @@ const AuctionListing: React.FC = () => {
       ) : (
         <>
           <Navbar navOptions={navOptionsUsers} loginType={"USER"} />
-          <Header>Products</Header>
-          <Grid>
-            {auctionListedProducts.map((product: any) => {
-              return (
-                <>
-                  <Card>
-                    <ImageContainer
-                      onClick={() =>
-                        handleOnProductClick(
-                          product.auctionSaleListingID,
-                          product.highestBidUser
-                        )
-                      }
-                    >
-                      <Image>
-                        <img
-                          src={product.imageURLs && product.imageURLs[0]}
-                          height={"100%"}
-                          width={"100%"}
-                        />
-                      </Image>
-                    </ImageContainer>
 
-                    <NamePrice>
-                      <Name> {product.productName}</Name>
-                      <Price>
-                        ${" "}
-                        {product.highestBid
-                          ? product.highestBid
-                          : product.startingBid}
-                      </Price>
-                    </NamePrice>
-                  </Card>
-                </>
-              );
-            })}
-          </Grid>
+          {auction && (
+            <>
+              <Header>Products</Header>
+              <Grid>
+                {auctionListedProducts.map((product: any) => {
+                  return (
+                    <>
+                      <Card>
+                        <ImageContainer
+                          onClick={() =>
+                            handleOnProductClick(
+                              product.auctionSaleListingID,
+                              product.highestBidUser
+                            )
+                          }
+                        >
+                          <Image>
+                            <img
+                              src={product.imageURLs && product.imageURLs[0]}
+                              height={"100%"}
+                              width={"100%"}
+                            />
+                          </Image>
+                        </ImageContainer>
+
+                        <NamePrice>
+                          <Name> {product.productName}</Name>
+                          <Price>
+                            ${" "}
+                            {product.highestBid
+                              ? product.highestBid
+                              : product.startingBid}
+                          </Price>
+                        </NamePrice>
+                      </Card>
+                    </>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
         </>
       )}
     </>
