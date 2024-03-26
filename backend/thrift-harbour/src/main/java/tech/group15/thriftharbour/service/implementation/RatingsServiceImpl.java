@@ -27,6 +27,13 @@ public class RatingsServiceImpl implements RatingsService {
 
   private final SellerRatingsRepository sellerRatingsRepository;
 
+  /**
+   * Adds a rating for a buyer based on the provided request details.
+   *
+   * @param authorizationHeader The Authorization token used for authenticating the request.
+   * @param buyerRatingsRequest The request containing the details of the buyer rating.
+   * @return A String message indicating that the buyer ratings have been added successfully.
+   */
   @Override
   public String addBuyerRatings(
       String authorizationHeader, BuyerRatingsRequest buyerRatingsRequest) {
@@ -40,8 +47,7 @@ public class RatingsServiceImpl implements RatingsService {
 
     var userId = user.getUserID();
     BuyerRatings buyerRatings =
-        RatingsMapper.convertBuyerRatingsRequestToBuyerRatingsModel(
-            buyerRatingsRequest, userId);
+        RatingsMapper.convertBuyerRatingsRequestToBuyerRatingsModel(buyerRatingsRequest, userId);
 
     buyerRatingsRepository.save(buyerRatings);
 
@@ -52,6 +58,13 @@ public class RatingsServiceImpl implements RatingsService {
     return "Buyer Ratings Added Successfully";
   }
 
+  /**
+   * Adds a rating for a seller based on the provided request details.
+   *
+   * @param authorizationHeader The Authorization token used for authenticating the request.
+   * @param sellerRatingsRequest The request containing the details of the seller rating.
+   * @return A String message indicating that the seller ratings have been added successfully.
+   */
   @Override
   public String addSellerRatings(
       String authorizationHeader, SellerRatingsRequest sellerRatingsRequest) {
@@ -65,15 +78,14 @@ public class RatingsServiceImpl implements RatingsService {
 
     var userId = user.getUserID();
     SellerRatings sellerRatings =
-        RatingsMapper.convertSellerRatingsRequestToSellerRatingsModel(
-            sellerRatingsRequest, userId);
+        RatingsMapper.convertSellerRatingsRequestToSellerRatingsModel(sellerRatingsRequest, userId);
 
     sellerRatingsRepository.save(sellerRatings);
 
-    var ratingToUserId= sellerRatings.getRatingToUserId();
+    var ratingToUserId = sellerRatings.getRatingToUserId();
 
     userRepository.updateSellerRatings(
-            sellerRatingsRepository.findAvgSellerRatings(ratingToUserId), ratingToUserId);
+        sellerRatingsRepository.findAvgSellerRatings(ratingToUserId), ratingToUserId);
 
     return "Seller Ratings Added Successfully";
   }

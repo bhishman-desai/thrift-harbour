@@ -35,6 +35,15 @@ public class UserController {
     return ResponseEntity.ok("Hi from user!");
   }
 
+  /**
+   * Adds buyer ratings based on the provided ratings request.
+   *
+   * @param authorizationHeader The Authorization token to validate the request. It must be passed
+   *     in the header.
+   * @param buyerRatingsRequest The request body containing the details of the buyer ratings to be
+   *     added.
+   * @return A {@code ResponseEntity} containing the response message.
+   */
   @PostMapping("/add-buyer-ratings")
   public ResponseEntity<String> addBuyerRatings(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -43,6 +52,15 @@ public class UserController {
         .body(ratingsService.addBuyerRatings(authorizationHeader, buyerRatingsRequest));
   }
 
+  /**
+   * Adds seller ratings based on the provided ratings request.
+   *
+   * @param authorizationHeader The Authorization token to validate the request. It must be passed
+   *     in the header.
+   * @param sellerRatingsRequest The request body containing the details of the seller ratings to be
+   *     added.
+   * @return A {@code ResponseEntity} containing the response message.
+   */
   @PostMapping("/add-seller-ratings")
   public ResponseEntity<String> addSellerRatings(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -51,6 +69,12 @@ public class UserController {
         .body(ratingsService.addSellerRatings(authorizationHeader, sellerRatingsRequest));
   }
 
+  /**
+   * Handles GET request to get user details by id.
+   *
+   * @param id The ID of the user to be fetched user details.
+   * @return A {@code ResponseEntity} containing the fetched {@code User} object.
+   */
   @GetMapping("/get-user-details/{id}")
   public ResponseEntity<User> getUserDetails(@PathVariable Integer id) {
     return ResponseEntity.ok(userService.findUserById(id));

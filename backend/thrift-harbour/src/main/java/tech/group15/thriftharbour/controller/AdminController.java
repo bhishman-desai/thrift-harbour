@@ -77,32 +77,56 @@ public class AdminController {
         .body(adminService.reviewListing(authorizationHeader, listingReviewRequest));
   }
 
+  /**
+   * Retrieves a list of all approved immediate sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     ApprovedImmediateSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-approved-immediatesale-listing")
-  public ResponseEntity<List<ApprovedImmediateSaleListingForAdminResponse>> getApprovedImmediateSaleListings
-          () {
+  public ResponseEntity<List<ApprovedImmediateSaleListingForAdminResponse>>
+      getApprovedImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllApprovedImmediateSaleListing());
+        .body(productListingService.findAllApprovedImmediateSaleListing());
   }
 
+  /**
+   * Retrieves a list of all rejected immediate sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     DeniedImmediateSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-denied-immediatesale-listing")
-  public ResponseEntity<List<DeniedImmediateSaleListingForAdminResponse>> getDeniedImmediateSaleListings
-          () {
+  public ResponseEntity<List<DeniedImmediateSaleListingForAdminResponse>>
+      getDeniedImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllDeniedImmediateSaleListing());
+        .body(productListingService.findAllDeniedImmediateSaleListing());
   }
 
+  /**
+   * Retrieves a list of all approved auction sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     ApprovedAuctionSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-approved-auctionsale-listing")
-  public ResponseEntity<List<ApprovedAuctionSaleListingForAdminResponse>> getApprovedAuctionSaleListings
-          () {
+  public ResponseEntity<List<ApprovedAuctionSaleListingForAdminResponse>>
+      getApprovedAuctionSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllApprovedAuctionSaleListing());
+        .body(productListingService.findAllApprovedAuctionSaleListing());
   }
 
+  /**
+   * Retrieves a list of all rejected auction sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     DeniedAuctionSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-denied-auctionsale-listing")
-  public ResponseEntity<List<DeniedAuctionSaleListingForAdminResponse>> getDeniedAuctionSaleListings
-          () {
+  public ResponseEntity<List<DeniedAuctionSaleListingForAdminResponse>>
+      getDeniedAuctionSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllDeniedAuctionSaleListing());
+        .body(productListingService.findAllDeniedAuctionSaleListing());
   }
 
   /**
@@ -114,6 +138,6 @@ public class AdminController {
   @GetMapping("/get-all-auction-listing")
   public ResponseEntity<List<AuctionSaleListingCreationResponse>> getAllAuctionListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllAuctionListingForAdmin());
+        .body(productListingService.findAllAuctionListingForAdmin());
   }
 }
