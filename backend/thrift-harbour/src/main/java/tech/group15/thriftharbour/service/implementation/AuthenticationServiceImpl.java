@@ -101,6 +101,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return UserMapper.generateForgotPassResponse("Email Sent Successfully");
   }
 
+  /**
+   * Verifies the expiry of a password reset token.
+   *
+   * @param token The password reset token to be verified.
+   * @return The url of reset password page if token is valid otherwise url of login page.
+   */
   public Object resetPassTokenVerify(String token) {
     PasswordResetToken passResetToken = getPasswordResetToken(token);
 
