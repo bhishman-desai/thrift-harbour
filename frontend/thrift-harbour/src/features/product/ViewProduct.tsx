@@ -51,7 +51,6 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
   const [openModal, setOpenModal] = useState(false);
   const [errorInReview, setErrorInReview] = useState(false);
 
-  console.log("view product", product);
   useEffect(() => {
     (async function () {
       try {
@@ -75,7 +74,6 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
             product.auctionSaleListingID,
             token
           );
-          console.log("in auction", response);
           if (response[0]?.status === 200) {
             setLoading(false);
             setError(false);
@@ -101,27 +99,52 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
     setDenyComment("");
     try {
       setLoader(true);
-      const response = await admin.submitReview(
-        {
-          listingId: product.immediateSaleListingID,
-          status: changeStatus,
-          sellCategory: "DIRECT",
-          message: denyComment ? denyComment : "",
-        },
-        token
-      );
+      if (product.immediateSaleListingID) {
+        const response = await admin.submitReview(
+          {
+            listingId: product.immediateSaleListingID,
+            status: changeStatus,
+            sellCategory: "DIRECT",
+            message: denyComment ? denyComment : "",
+          },
+          token
+        );
 
-      if (response[0]?.status === 200) {
-        setLoader(false);
-        setErrorInReview(false);
+        if (response[0]?.status === 200) {
+          setLoader(false);
+          setErrorInReview(false);
 
-        const data = response[0].data;
-        setData(data);
-        setOpenModal(true);
+          const data = response[0].data;
+          setData(data);
+          setOpenModal(true);
+        } else {
+          setErrorInReview(true);
+          setLoader(false);
+          setOpenModal(true);
+        }
       } else {
-        setErrorInReview(true);
-        setLoader(false);
-        setOpenModal(true);
+        const response = await admin.submitReview(
+          {
+            listingId: product.auctionSaleListingID,
+            status: changeStatus,
+            sellCategory: "AUCTION",
+            message: denyComment ? denyComment : "",
+          },
+          token
+        );
+
+        if (response[0]?.status === 200) {
+          setLoader(false);
+          setErrorInReview(false);
+
+          const data = response[0].data;
+          setData(data);
+          setOpenModal(true);
+        } else {
+          setErrorInReview(true);
+          setLoader(false);
+          setOpenModal(true);
+        }
       }
     } catch (error) {
       setLoader(false);
@@ -147,7 +170,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Price: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + (product.price || product.startingBid)}
                 </Value>
               </ProductInfo>
               <ProductInfo style={{ marginTop: "4px" }}>

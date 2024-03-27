@@ -48,9 +48,7 @@ const AdminDashboard: React.FC = () => {
   const [approvedListing, setApprovedListing] = useState<
     ApprovedDeniedProducts[]
   >([]);
-  const [rejectedListing, setRejectedListing] = useState<
-    ApprovedDeniedProducts[]
-  >([]);
+  const [rejectedListing, setRejectedListing] = useState<any[]>([]);
   const [allListedProducts, setAllListedProducts] = useState([] as any);
 
   const tabs = [
@@ -75,7 +73,6 @@ const AdminDashboard: React.FC = () => {
         if (response[0]?.status === 200) {
           setLoading(false);
           const data = response[0].data;
-          console.log("data", data);
           data.map(async (product: any) => {
             if (product.immediateSaleListingID) {
               const imagesResponse =
@@ -134,21 +131,32 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await admin.getApprovedListing(token);
+        const immediateApproved = await admin.getApprovedListing(token);
+        const auctionApproved =
+          await admin.getApprovedListingAuctionSale(token);
 
-        if (response[0]?.status === 200) {
+        if (
+          immediateApproved[0]?.status === 200 &&
+          auctionApproved[0]?.status
+        ) {
           setLoading(false);
-          const data = response[0].data;
+          const data = [
+            ...immediateApproved[0].data,
+            ...auctionApproved[0].data,
+          ];
 
           data.map(async (product, index) => {
-            const imagesResponse =
-              await listing.getImmediateListedProductsImages(
-                product.immediateSaleListingID,
-                token
-              );
-            if (imagesResponse[0]?.status === 200) {
-              product.imageURLs = imagesResponse[0].data.imageURLs;
+            if (product.immediateSaleListingID) {
+              const imagesResponse =
+                await listing.getImmediateListedProductsImages(
+                  product.immediateSaleListingID,
+                  token
+                );
+              if (imagesResponse[0]?.status === 200) {
+                product.imageURLs = imagesResponse[0].data.imageURLs;
+              }
             }
+
             setApprovedListing([...data]);
           });
         } else {
@@ -165,23 +173,33 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await admin.getRejectedListing(token);
+        const rejectedListingImmediate = await admin.getRejectedListing(token);
+        const rejectedListingAuction =
+          await admin.getRejectedListingAuctionSale(token);
 
-        if (response[0]?.status === 200) {
+        if (
+          rejectedListingImmediate[0]?.status === 200 &&
+          rejectedListingAuction[0]?.status
+        ) {
           setLoading(false);
-          const data = response[0].data;
+          const data = [
+            ...rejectedListingImmediate[0].data,
+            ...rejectedListingAuction[0].data,
+          ];
 
           data.map(async (product, index) => {
-            const imagesResponse =
-              await listing.getImmediateListedProductsImages(
-                product.immediateSaleListingID,
-                token
-              );
-            if (imagesResponse[0]?.status === 200) {
-              product.imageURLs = imagesResponse[0].data.imageURLs;
+            if (product.immediateSaleListingID) {
+              const imagesResponse =
+                await listing.getImmediateListedProductsImages(
+                  product.immediateSaleListingID,
+                  token
+                );
+              if (imagesResponse[0]?.status === 200) {
+                product.imageURLs = imagesResponse[0].data.imageURLs;
+              }
             }
-            setRejectedListing([...data]);
           });
+          setRejectedListing([...data]);
         } else {
           setError(true);
           setLoading(false);

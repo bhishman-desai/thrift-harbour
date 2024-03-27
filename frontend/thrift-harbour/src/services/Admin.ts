@@ -68,13 +68,7 @@ export class AdminServices {
     try {
       auctionListedProducts = await this.getAuctionListedProducts(token);
       immediateListedProducts = await this.getImmediateListedProducts(token);
-      // Handle the response data
-      // console.log("auctionListedProducts", auctionListedProducts);
-      // console.log("immediateListedProducts", immediateListedProducts);
-      console.log("reponse in service", [
-        ...auctionListedProducts,
-        ...immediateListedProducts,
-      ]);
+
       if (
         auctionListedProducts[0].status === 200 &&
         immediateListedProducts[0].status === 200
@@ -191,6 +185,29 @@ export class AdminServices {
     }
   }
 
+  async getApprovedListingAuctionSale(
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getApprovedListingAuctionSaleUrl = this.path.getAdminUrl(
+      "get-approved-auctionsale-listing"
+    );
+    const requestUrl = baseUrl + getApprovedListingAuctionSaleUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
   async getRejectedListing(
     token?: string | null
   ): Promise<[GetApprovedProductsResponsetype | null, ErrorResponse | null]> {
@@ -199,6 +216,29 @@ export class AdminServices {
       "get-denied-immediatesale-listing"
     );
     const requestUrl = baseUrl + getRejectedListingUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getRejectedListingAuctionSale(
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getRejectedListingAuctionSaleUrl = this.path.getAdminUrl(
+      "get-denied-auctionsale-listing"
+    );
+    const requestUrl = baseUrl + getRejectedListingAuctionSaleUrl;
 
     try {
       const response = await axios.get(requestUrl, {
