@@ -104,6 +104,18 @@ export class Path {
     if (service === "product-listing") {
       return "/admin/sellers";
     }
+    if (service === "get-all-auction-listing") {
+      return "/admin/get-all-auction-listing";
+    }
+    if (service === "get-auctionsale-product") {
+      return "/admin/get-auctionsale-product";
+    }
+    if (service === "get-denied-auctionsale-listing") {
+      return "/admin/get-denied-auctionsale-listing";
+    }
+    if (service === "get-approved-auctionsale-listing") {
+      return "/admin/get-approved-auctionsale-listing";
+    }
   }
 
   getChatUrl() {
