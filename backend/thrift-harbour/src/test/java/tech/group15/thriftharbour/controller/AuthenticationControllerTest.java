@@ -71,9 +71,11 @@ class AuthenticationControllerTest {
         signInRequest.setEmail("mock@dal.ca");
         signInRequest.setPassword("Mock@Test.com");
 
-        statusCode = restTemplate.postForEntity("/api/v1/auth/signin", signInRequest, Void.class).getStatusCode();
+        ResponseEntity<SignInResponse> msg = restTemplate.postForEntity("/api/v1/auth/signin", signInRequest, SignInResponse.class);
 
-        Assertions.assertEquals(statusCode, HttpStatus.OK);
+        Assertions.assertEquals(msg.getStatusCode(), HttpStatus.OK);
     }
+
+
 
 }
