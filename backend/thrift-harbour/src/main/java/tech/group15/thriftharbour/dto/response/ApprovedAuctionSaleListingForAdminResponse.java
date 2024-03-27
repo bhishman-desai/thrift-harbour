@@ -14,6 +14,8 @@ public class ApprovedAuctionSaleListingForAdminResponse {
 
     private String productDescription;
 
+    private double startingBid;
+
     private String category;
 
     private String sellerEmail;
