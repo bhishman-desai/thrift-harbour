@@ -23,5 +23,11 @@ public class AuctionSaleProductResponse {
     private List<String> imageURLs;
 
     private User seller;
+
+    private boolean active;
+
+    private boolean isApproved;
+
+    private boolean isRejected;
 }
 
