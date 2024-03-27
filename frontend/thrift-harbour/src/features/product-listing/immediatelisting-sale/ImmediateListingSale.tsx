@@ -294,10 +294,9 @@ const ImmediateListingSale = () => {
                               </div>
                               <Typography sx={{ paddingLeft: "2px" }}>
                                 (
-                                {
-                                  immediateSaleProductDetail?.seller
-                                    .avgSellerRatings
-                                }{" "}
+                                {immediateSaleProductDetail?.seller.avgSellerRatings.toFixed(
+                                  2
+                                )}{" "}
                                 of 5 stars)
                                 {immediateSaleProductDetail?.seller
                                   .avgSellerRatings === 0 ? (

@@ -33,6 +33,8 @@ import AboutImmediateSale from "../../../components/ui-components/thrift-harbour
 import AboutAuctionSale from "../../../components/ui-components/thrift-harbour-auctionsale-about/AboutAuctionSale";
 import Modal from "../../../components/ui-components/Modal/Modal";
 import PlaceBid from "../../../components/ui-components/place-bid/PlaceBid";
+import UserProfile from "../../user-profile/UserProfile";
+import { ProfileLink } from "../immediatelisting-sale/ImmediatesaleStyles";
 
 const AuctionListingSale = () => {
   const loren =
@@ -57,6 +59,14 @@ const AuctionListingSale = () => {
   const highestBidUser = location.state;
   const [auctionSaleProductDetail, setAuctionSaleProductDetail] =
     useState<AuctionSaleProductDetail>();
+  const [viewProfile, setViewProfile] = useState(false);
+
+  const newModalStyle: React.CSSProperties = {
+    width: "80%",
+    height: "80%",
+    maxWidth: "600px",
+    maxHeight: "600px",
+  };
 
   useEffect(() => {
     (async function () {
@@ -102,6 +112,9 @@ const AuctionListingSale = () => {
 
   const closeModal = () => {
     setPlaceBidButtonClicked(false);
+  };
+  const toggleViewProfile = () => {
+    setViewProfile(!viewProfile);
   };
 
   const navOptionsUsers = [
@@ -240,23 +253,28 @@ const AuctionListingSale = () => {
                         }}
                       >
                         <CardContent>
-                          <Typography variant="h5" component="div">
-                            {auctionSaleProductDetail?.seller.firstName}{" "}
-                            {auctionSaleProductDetail?.seller.lastName}
-                          </Typography>
-                          <div>
-                            <Rating
-                              name="read-only"
-                              value={
-                                auctionSaleProductDetail?.seller
-                                  .avgSellerRatings
-                              }
-                              precision={0.5}
-                              readOnly
-                            />
-                          </div>
+                          <ProfileLink onClick={() => setViewProfile(true)}>
+                            <Typography variant="h5" component="div">
+                              {auctionSaleProductDetail?.seller.firstName}{" "}
+                              {auctionSaleProductDetail?.seller.lastName}
+                            </Typography>
+                            <div>
+                              <Rating
+                                name="read-only"
+                                value={
+                                  auctionSaleProductDetail?.seller
+                                    .avgSellerRatings
+                                }
+                                precision={0.5}
+                                readOnly
+                              />
+                            </div>
+                          </ProfileLink>
                           <Typography sx={{ paddingLeft: "2px" }}>
-                            ({auctionSaleProductDetail?.seller.avgSellerRatings}{" "}
+                            (
+                            {auctionSaleProductDetail?.seller.avgSellerRatings.toFixed(
+                              2
+                            )}{" "}
                             of 5 stars)
                             {auctionSaleProductDetail?.seller
                               .avgSellerRatings === 0 ? (
@@ -289,6 +307,17 @@ const AuctionListingSale = () => {
                 }
                 highestBid={auctionSaleProductDetail?.highestBid!}
                 highestBidUser={highestBidUser}
+              />
+            </Modal>
+          )}
+          {viewProfile && (
+            <Modal style={newModalStyle} onClose={toggleViewProfile}>
+              <UserProfile
+                id={
+                  auctionSaleProductDetail
+                    ? auctionSaleProductDetail?.seller.userID
+                    : 0
+                }
               />
             </Modal>
           )}
