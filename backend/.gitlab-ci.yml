@@ -25,7 +25,7 @@ test-be:
 
 quality-be:
   stage: quality
-  image: openjdk:11
+  image: openjdk:17
   script:
     - echo "Compiling the project"
     - mkdir smells
