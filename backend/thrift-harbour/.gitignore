@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 /src/main/resources/env.properties
+.gitlab/.config
+smells/
 
 ### STS ###
 .apt_generated

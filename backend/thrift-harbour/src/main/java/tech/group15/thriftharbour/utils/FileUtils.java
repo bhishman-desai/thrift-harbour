@@ -12,7 +12,7 @@ public class FileUtils {
   private FileUtils() {}
 
   public static Path generateTempFilePath(MultipartFile file) {
-    Path tempFilePath = null;
+    Path tempFilePath;
     try {
       tempFilePath = Files.createTempFile(file.getOriginalFilename(), "");
       file.transferTo(tempFilePath);
@@ -30,10 +30,6 @@ public class FileUtils {
       return fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".jpeg");
     }
     throw new ImageTypeNotValidException("Images should be of type png, jpg, jpeg");
-  }
-
-  public static double fileSizeInMB(MultipartFile file) {
-    return file.getSize() * 0.000_001;
   }
 
   public static String getFileExtention(MultipartFile file) {

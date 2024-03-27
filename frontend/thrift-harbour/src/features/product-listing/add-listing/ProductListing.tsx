@@ -81,7 +81,6 @@ const ProductListing: React.FC = () => {
     if (event.target.files && event.target.files.length > 0) {
       const filesArray = Array.from(event.target.files).slice(0, 5); // Limit to max 5 files
       setSelectedFiles(filesArray);
-      console.log("length", filesArray.length);
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.result) {
@@ -106,7 +105,6 @@ const ProductListing: React.FC = () => {
     if (selectedFiles.length > 0) {
       setListingData({ ...listingData, productImages: selectedFiles });
       setShowModal(false);
-      console.log("Selected files:", selectedFiles);
     }
   };
 
@@ -146,7 +144,6 @@ const ProductListing: React.FC = () => {
       setImageError(true);
       return;
     }
-    console.log("formData =>", listingData);
     setIsLoading(true);
 
     if (listingData.sellCategory === "DIRECT") {
@@ -155,7 +152,6 @@ const ProductListing: React.FC = () => {
           listingData,
           token
         );
-        console.log("data", data);
         if (data?.immediateSaleListingID) {
           setIsLoading(false);
           emptyListingData();
@@ -184,7 +180,6 @@ const ProductListing: React.FC = () => {
           listingData,
           token
         );
-        console.log("data", data);
         if (data?.auctionSaleListingID) {
           setIsLoading(false);
           emptyListingData();

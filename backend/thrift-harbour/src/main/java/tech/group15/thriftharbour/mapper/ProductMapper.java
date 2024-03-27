@@ -2,7 +2,7 @@ package tech.group15.thriftharbour.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
+import tech.group15.thriftharbour.dto.response.ImmediateSaleMinifiedResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 
 public class ProductMapper {

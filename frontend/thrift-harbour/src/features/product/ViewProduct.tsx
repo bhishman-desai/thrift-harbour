@@ -35,7 +35,7 @@ import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/
 // import ExampleCarouselImage from "components/ExampleCarouselImage";
 
 interface ViewProductsProps {
-  product: AdminGetAllListingResponseType;
+  product: any;
 }
 
 const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
@@ -54,21 +54,36 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await admin.getImmediateListedProductById(
-          product.immediateSaleListingID,
-          token
-        );
-        console.log("response[0]?.status", response[0]?.status);
-        if (response[0]?.status === 200) {
-          setLoading(false);
-          setError(false);
-          const data = response[0].data;
-          setData(data);
-          console.log("data after if", data);
+        if (product.immediateSaleListingID) {
+          const response = await admin.getImmediateListedProductById(
+            product.immediateSaleListingID,
+            token
+          );
+          if (response[0]?.status === 200) {
+            setLoading(false);
+            setError(false);
+            const data = response[0].data;
+            setData(data);
+          } else {
+            setError(true);
+            setLoading(false);
+            setOpenModal(true);
+          }
         } else {
-          setError(true);
-          setLoading(false);
-          setOpenModal(true);
+          const response = await admin.getAuctionListedProductById(
+            product.auctionSaleListingID,
+            token
+          );
+          if (response[0]?.status === 200) {
+            setLoading(false);
+            setError(false);
+            const data = response[0].data;
+            setData(data);
+          } else {
+            setError(true);
+            setLoading(false);
+            setOpenModal(true);
+          }
         }
       } catch (error) {
         setLoading(false);
@@ -84,29 +99,52 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
     setDenyComment("");
     try {
       setLoader(true);
-      const response = await admin.submitReview(
-        {
-          listingId: product.immediateSaleListingID,
-          status: changeStatus,
-          sellCategory: "DIRECT",
-          message: denyComment ? denyComment : "",
-        },
-        token
-      );
+      if (product.immediateSaleListingID) {
+        const response = await admin.submitReview(
+          {
+            listingId: product.immediateSaleListingID,
+            status: changeStatus,
+            sellCategory: "DIRECT",
+            message: denyComment ? denyComment : "",
+          },
+          token
+        );
 
-      if (response[0]?.status === 200) {
-        setLoader(false);
-        setErrorInReview(false);
+        if (response[0]?.status === 200) {
+          setLoader(false);
+          setErrorInReview(false);
 
-        const data = response[0].data;
-        setData(data);
-        console.log("data after if", data);
-        setOpenModal(true);
+          const data = response[0].data;
+          setData(data);
+          setOpenModal(true);
+        } else {
+          setErrorInReview(true);
+          setLoader(false);
+          setOpenModal(true);
+        }
       } else {
-        console.log("in e;se");
-        setErrorInReview(true);
-        setLoader(false);
-        setOpenModal(true);
+        const response = await admin.submitReview(
+          {
+            listingId: product.auctionSaleListingID,
+            status: changeStatus,
+            sellCategory: "AUCTION",
+            message: denyComment ? denyComment : "",
+          },
+          token
+        );
+
+        if (response[0]?.status === 200) {
+          setLoader(false);
+          setErrorInReview(false);
+
+          const data = response[0].data;
+          setData(data);
+          setOpenModal(true);
+        } else {
+          setErrorInReview(true);
+          setLoader(false);
+          setOpenModal(true);
+        }
       }
     } catch (error) {
       setLoader(false);
@@ -132,7 +170,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Price: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + (product.price || product.startingBid)}
                 </Value>
               </ProductInfo>
               <ProductInfo style={{ marginTop: "4px" }}>
@@ -161,7 +199,7 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
                 )}
               </ProductInfo>
             </ProductNameAndDescription>
-            <UserInfo>
+            {/* <UserInfo>
               <ProductInfo>
                 <Title>Seller First Name: </Title>
                 <Value style={{ marginLeft: "4px" }}>
@@ -177,16 +215,16 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Seller Email: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + product.immediateSaleListingID}
                 </Value>
               </ProductInfo>
               <ProductInfo style={{ marginTop: "4px" }}>
                 <Title>Sold: </Title>
                 <Value style={{ marginLeft: "4px" }}>
-                  {"$" + product.price}
+                  {"$" + product.active}
                 </Value>
               </ProductInfo>
-            </UserInfo>
+            </UserInfo> */}
           </ProductShowcase>
           <ChangeStatus onSubmit={handleSubmit}>
             <DropDown>

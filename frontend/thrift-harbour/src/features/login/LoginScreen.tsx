@@ -19,10 +19,14 @@ import Modal from "../../components/ui-components/Modal/Modal";
 import { ClipLoader } from "react-spinners";
 import ErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import { ChatService } from "../../services/ChatService";
+import { UserChatType } from "../../types/ChatTypes";
 
 const Login: React.FC = () => {
   const { token, handleLogin } = useAuth();
   const navigate = useNavigate();
+  const chatService = new ChatService();
+
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [loginCredentials, setLoginCredentials] = useState(
     {} as LoginCredentials
@@ -30,6 +34,8 @@ const Login: React.FC = () => {
   const [errorInLogin, setErrorInLogin] = useState(false);
   const [badCredentials, setBadCredentials] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState<UserChatType[]>([]);
+
   const auth = new Auth();
   useEffect(() => {
     if (token?.length) {
@@ -46,6 +52,7 @@ const Login: React.FC = () => {
         setErrorInLogin(false);
         setIsLoading(false);
         handleLogin && handleLogin(data?.token);
+
         navigate("/home");
       } else if (error?.status === 401) {
         setIsLoading(false);

@@ -7,11 +7,58 @@ import {
   GetAllImmediateListingResponse,
   ImmediateListingResponse,
   ListingDataTypes,
+  ImmediateListing,
 } from "../types/ListingTypes";
+import {
+  ImmediateSaleProductDetail,
+  AuctionSaleProductDetail,
+} from "../types/ProductSaleDetails";
 import { Path } from "../utils/Path";
 
 export class ListingService {
   path = new Path(process.env.NODE_ENV);
+
+  async immediateSaleProductDetail(
+    immediateSaleListingID: string | null,
+    token?: string | null
+  ): Promise<ImmediateSaleProductDetail> {
+    const baseUrl = this.path.getBaseUrl();
+    const immediateListUrl = this.path.getUserUrl(
+      "immediatesale-product-detail"
+    );
+    const requestUrl = baseUrl + immediateListUrl + `${immediateSaleListingID}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data as ImmediateSaleProductDetail;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async auctionSaleProductDetail(
+    auctionSaleListingID: string | null,
+    token?: string | null
+  ): Promise<any> {
+    const baseUrl = this.path.getBaseUrl();
+    const auctionListUrl = this.path.getUserUrl("auctionsale-product-detail");
+    const requestUrl = baseUrl + auctionListUrl + `${auctionSaleListingID}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async immediateListing(
     payload: ListingDataTypes,
@@ -177,6 +224,29 @@ export class ListingService {
     );
     const requestUrl =
       baseUrl + getAuctionListingImagesUrl + `/${auctionListingId}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle errors
+      return [response, null];
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  }
+
+  async getAllAuctionListedProducts(
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getAllAuctionListedProductsUrl = this.path.getListingUrl(
+      "get-all-auction-listing"
+    );
+    const requestUrl = baseUrl + getAllAuctionListedProductsUrl;
 
     try {
       const response = await axios.get(requestUrl, {

@@ -4,7 +4,7 @@ before_script:
 stages:
   - build
   - test
-  #  - quality
+  - quality
   - publish
   - deploy
 
@@ -23,17 +23,16 @@ test-be:
   script:
     - mvn test
 
-# quality-be:
-#   stage: quality
-#   image: openjdk:11
-#   script:
-#     - echo "Compiling the project"
-#     - mkdir smells/
-#     - java -jar $CI_PROJECT_DIR/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR -o $CI_PROJECT_DIR/smells/ -d
-#   artifacts:
-#     paths:
-#       - smells/
-#       - $CI_PROJECT_DIR
+quality-be:
+  stage: quality
+  image: openjdk:11
+  script:
+    - echo "Compiling the project"
+    - mkdir smells
+    - java -jar $CI_PROJECT_DIR/backend/thrift-harbour/.gitlab/DesigniteJava.jar -i . -o smells -d
+  artifacts:
+    paths:
+      - backend/thrift-harbour/smells
 
 publish-be:
   image: docker:latest
@@ -66,7 +65,7 @@ deploy-be:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u=$DOCKER_HUB_USER -p=$DOCKER_HUB_PWD docker.io"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull docker.io/group15/backend:$CI_COMMIT_SHORT_SHA"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f thrift-harbour-backend-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=$CURRENT_PROFILE --name thrift-harbour-backend-app docker.io/group15/backend:$CI_COMMIT_SHORT_SHA"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e DB_URL_PROD=$DB_URL_PROD -e DB_USER_PROD=$DB_USER_PROD -e DB_PASSWORD_PROD=$DB_PASSWORD_PROD -e MAIL_USER=$MAIL_USER -e MAIL_PASSWORD=$MAIL_PASSWORD -e AWS_ACCESS_KEY_ID_PROD=$AWS_ACCESS_KEY_ID_PROD -e AWS_SECRET_ACCESS_KEY_PROD=$AWS_SECRET_ACCESS_KEY_PROD -e AWS_REGION_PROD=$AWS_REGION_PROD -e AWS_BUCKET_NAME_PROD=$AWS_BUCKET_NAME_PROD  --name thrift-harbour-backend-app docker.io/group15/backend:$CI_COMMIT_SHORT_SHA"
   environment:
     name: production
     url: http://172.17.1.50:8080

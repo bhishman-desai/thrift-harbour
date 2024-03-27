@@ -1,5 +1,7 @@
 package tech.group15.thriftharbour.service.implementation;
 
+import static tech.group15.thriftharbour.constant.JWTTokenConstant.*;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +12,7 @@ import java.util.*;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import tech.group15.thriftharbour.dto.request.RefreshTokenRequest;
 import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.service.JWTService;
 
@@ -27,13 +30,13 @@ public class JWTServiceImpl implements JWTService {
     Map<String, Object> claims = new HashMap<>();
     List<Object> roles = Arrays.asList(RoleEnum.USER.name(), RoleEnum.ADMIN.name());
     claims.put("Roles", roles);
-    return Jwts.builder()
-        .setClaims(claims)
-        .setSubject(userDetails.getUsername())
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-        .compact();
+
+    Date expirationDate =
+        new Date(
+            System.currentTimeMillis()
+                + MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY);
+
+    return generate(claims, userDetails, expirationDate);
   }
 
   /**
@@ -44,13 +47,16 @@ public class JWTServiceImpl implements JWTService {
    * @return String - A JWT refresh token string.
    */
   public String generateRefreshToken(HashMap<String, Object> extraClaims, UserDetails userDetails) {
-    return Jwts.builder()
-        .setClaims(extraClaims)
-        .setSubject(userDetails.getUsername())
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 604800000)) /* 7 days*/
-        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-        .compact();
+    Date expirationDate =
+        new Date(
+            System.currentTimeMillis()
+                + MILLISECONDS_IN_SECOND
+                    * SECONDS_IN_MINUTE
+                    * MINUTES_IN_HOUR
+                    * HOURS_IN_DAY
+                    * DAYS_IN_WEEK); /* 7 days*/
+
+    return generate(extraClaims, userDetails, expirationDate);
   }
 
   /**
@@ -130,5 +136,34 @@ public class JWTServiceImpl implements JWTService {
    */
   private boolean isTokenExpired(String token) {
     return extractClaim(token, Claims::getExpiration).before(new Date());
+  }
+
+  /**
+   * This method generates a JWT on a refresh request
+   *
+   * @param refreshTokenRequest The refresh token payload
+   * @param userDetails The user details object from which to extract the username.
+   * @return String - A JWT token string.
+   */
+  public String onRefreshToken(RefreshTokenRequest refreshTokenRequest, UserDetails userDetails) {
+    boolean isValid = isTokenValid(refreshTokenRequest.getToken(), userDetails);
+    if (isValid) {
+      return generateToken(userDetails);
+    }
+    return null;
+  }
+
+  private String generate(
+      Map<String, Object> claims, UserDetails userDetails, Date expirationDate) {
+    String username = userDetails.getUsername();
+    Date issueDate = new Date(System.currentTimeMillis());
+
+    return Jwts.builder()
+        .setClaims(claims)
+        .setSubject(username)
+        .setIssuedAt(issueDate)
+        .setExpiration(expirationDate)
+        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+        .compact();
   }
 }

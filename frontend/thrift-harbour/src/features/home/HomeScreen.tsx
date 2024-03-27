@@ -1,12 +1,10 @@
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { HomeParent } from "./HomeSreenStyles";
 import { Auth } from "../../services/Auth";
-import { HamburgerMenuProps, MenuItem } from "../../types/ListingTypes";
 import Navbar from "../../components/ui-components/navbar/Navbar";
-import { LoginType } from "../../types/AuthTypes";
-import AdminDashboard from "../admin/AdminDashboard";
+import { UserChatType } from "../../types/ChatTypes";
+import { ChatService } from "../../services/ChatService";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +14,7 @@ const Home: React.FC = () => {
   const [authorized, setAuthorized] = useState(false);
   const [loginType, setLogintype] = useState<string | null>();
   const [error, setError] = useState(false);
+  // Accessing the 'tab' property of the state object
 
   const navOptionsUsers = [
     {
@@ -27,6 +26,17 @@ const Home: React.FC = () => {
     {
       key: "My Listed Products",
       value: "My Listed Products",
+      isSelected: false,
+    },
+    {
+      key: "Chats",
+      value: "Chats",
+      isSelected: false,
+    },
+
+    {
+      key: "Buy Products",
+      value: "Buy Products",
       isSelected: false,
     },
   ];
@@ -59,7 +69,6 @@ const Home: React.FC = () => {
         try {
           const [data, error] = await auth.getUser(token);
           if (data?.status === 200) {
-            console.log("in user");
             setAuthorized(true);
             setLogintype("USER");
             return;
@@ -76,8 +85,6 @@ const Home: React.FC = () => {
         try {
           const [data, error] = await auth.getAdmin(token);
           if (data?.status === 200) {
-            console.log("in admin");
-
             setAuthorized(true);
             setLogintype("ADMIN");
           } else if (error) {
@@ -105,10 +112,7 @@ const Home: React.FC = () => {
             <></>
           )}
         </>
-        // <AdminDashboard />
       )}
-
-      {/* {authorized && loginType === "ADMIN" && <AdminDashboard />} */}
     </>
   );
 };

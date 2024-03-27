@@ -20,6 +20,7 @@ import tech.group15.thriftharbour.service.UserService;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
+  private static final int BEARER_TOKEN_PREFIX_LENGTH = 7;
   private final JWTService jwtService;
   private final UserService userService;
 
@@ -38,7 +39,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /* Extracting the JWT from the Authorization header */
-    jwt = authHeader.substring(7);
+    jwt = authHeader.substring(BEARER_TOKEN_PREFIX_LENGTH);
     /* Extracting the username from the JWT */
     try {
       userEmail = jwtService.extractUserName(jwt);
@@ -59,15 +60,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         /* Creating an empty security context */
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         /* Creating an authentication token for the user */
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+        UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
 
         /* Setting the details of the authentication token */
-        usernamePasswordAuthenticationToken.setDetails(
+        token.setDetails(
             new WebAuthenticationDetailsSource().buildDetails(request));
         /* Setting the authentication in the security context */
-        securityContext.setAuthentication(usernamePasswordAuthenticationToken);
+        securityContext.setAuthentication(token);
         /* Setting the security context in the SecurityContextHolder */
         SecurityContextHolder.setContext(securityContext);
       }

@@ -3,19 +3,15 @@ package tech.group15.thriftharbour.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
-import tech.group15.thriftharbour.dto.ListingReviewRequest;
-import tech.group15.thriftharbour.dto.ListingReviewResponse;
+import tech.group15.thriftharbour.dto.request.ListingReviewRequest;
+import tech.group15.thriftharbour.dto.response.*;
+import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.service.AdminService;
-import tech.group15.thriftharbour.dto.ImmediateSaleMinifiedResponse;
-import tech.group15.thriftharbour.dto.SellerResponse;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
 import tech.group15.thriftharbour.service.ProductListingService;
@@ -23,11 +19,6 @@ import tech.group15.thriftharbour.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.group15.thriftharbour.dto.ApprovedAuctionSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.ApprovedImmediateSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.DeniedAuctionSaleListingForAdminResponse;
-import tech.group15.thriftharbour.dto.DeniedImmediateSaleListingForAdminResponse;
-import tech.group15.thriftharbour.service.ProductListingService;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -87,32 +78,79 @@ public class AdminController {
         .body(adminService.reviewListing(authorizationHeader, listingReviewRequest));
   }
 
+  /**
+   * Retrieves a list of all approved immediate sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     ApprovedImmediateSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-approved-immediatesale-listing")
-  public ResponseEntity<List<ApprovedImmediateSaleListingForAdminResponse>> getApprovedImmediateSaleListings
-          () {
+  public ResponseEntity<List<ApprovedImmediateSaleListingForAdminResponse>>
+      getApprovedImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllApprovedImmediateSaleListing());
+        .body(productListingService.findAllApprovedImmediateSaleListing());
   }
 
+  /**
+   * Retrieves a list of all rejected immediate sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     DeniedImmediateSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-denied-immediatesale-listing")
-  public ResponseEntity<List<DeniedImmediateSaleListingForAdminResponse>> getDeniedImmediateSaleListings
-          () {
+  public ResponseEntity<List<DeniedImmediateSaleListingForAdminResponse>>
+      getDeniedImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllDeniedImmediateSaleListing());
+        .body(productListingService.findAllDeniedImmediateSaleListing());
   }
 
+  /**
+   * Retrieves a list of all approved auction sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     ApprovedAuctionSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-approved-auctionsale-listing")
-  public ResponseEntity<List<ApprovedAuctionSaleListingForAdminResponse>> getApprovedAuctionSaleListings
-          () {
+  public ResponseEntity<List<ApprovedAuctionSaleListingForAdminResponse>>
+      getApprovedAuctionSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllApprovedAuctionSaleListing());
+        .body(productListingService.findAllApprovedAuctionSaleListing());
   }
 
+  /**
+   * Retrieves a list of all rejected auction sale listings.
+   *
+   * @return A {@code ResponseEntity} object containing a list of
+   *     DeniedAuctionSaleListingForAdminResponse instances.
+   */
   @GetMapping("/get-denied-auctionsale-listing")
-  public ResponseEntity<List<DeniedAuctionSaleListingForAdminResponse>> getDeniedAuctionSaleListings
-          () {
+  public ResponseEntity<List<DeniedAuctionSaleListingForAdminResponse>>
+      getDeniedAuctionSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
-            .body(productListingService.findAllDeniedAuctionSaleListing());
+        .body(productListingService.findAllDeniedAuctionSaleListing());
   }
 
+  /**
+   * GET request to retrieve all auction sale listings for the admin.
+   *
+   * @return A list of {@code ResponseEntity} objects containing list of {@code
+   *     AuctionSaleListingCreationResponse} representing all auction sale listings details.
+   */
+  @GetMapping("/get-all-auction-listing")
+  public ResponseEntity<List<AuctionSaleListingCreationResponse>> getAllAuctionListings() {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAllAuctionListingForAdmin());
+  }
+
+  /**
+   * GET request to retrieve auction sale listing by its id for the admin.
+   *
+   * @return The Object of {@code ResponseEntity} object containing {@code AuctionSaleListing}
+   *     representing auction sale listing details.
+   */
+  @GetMapping("/get-auctionsale-product/{id}")
+  public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAuctionListingByID(id));
+  }
 }
