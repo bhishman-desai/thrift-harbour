@@ -41,34 +41,39 @@ public class BiddingServiceImpl implements BiddingService {
 
     String userEmail = jwtService.extractUserNameFromRequestHeaders(authorizationHeader);
 
-    User seller =
-        userRepository
-            .findByEmail(userEmail)
-            .orElseThrow(() -> new UsernameNotFoundException(ErrorConstant.USER_NOT_FOUND));
+    User seller = findUserByMail(userEmail);
 
-    AuctionSaleListing auctionSaleListing = auctionSaleListingRepository.findByAuctionSaleListingID(placeBidRequest.getAuctionSaleListingID());
+    String listingID = placeBidRequest.getAuctionSaleListingID();
+    AuctionSaleListing listing = auctionSaleListingRepository.findByAuctionSaleListingID(listingID);
 
-    if(auctionSaleListing == null){
+    if(listing == null){
       throw new ListingNotFoundException(ErrorConstant.PRODUCT_NOT_FOUND);
     }
 
-    if(placeBidRequest.getBidAmount() <= auctionSaleListing.getHighestBid()){
+    if(placeBidRequest.getBidAmount() <= listing.getHighestBid()){
       throw new LowBidException(ErrorConstant.LOW_BID_EXCEPTION);
     }
 
     Bidding userPlacedBid =
         Bidding.builder()
-            .auctionSaleListingID(auctionSaleListing.getAuctionSaleListingID())
+            .auctionSaleListingID(listing.getAuctionSaleListingID())
             .userEmail(userEmail)
             .placedBid(placeBidRequest.getBidAmount())
             .build();
 
-    auctionSaleListing.setHighestBid(placeBidRequest.getBidAmount());
-    auctionSaleListing.setCurrentHighestBidUserMail(seller.getEmail());
+    listing.setHighestBid(placeBidRequest.getBidAmount());
+    listing.setCurrentHighestBidUserMail(seller.getEmail());
 
-    auctionSaleListingRepository.save(auctionSaleListing);
+    auctionSaleListingRepository.save(listing);
     biddingRepository.save(userPlacedBid);
 
     return InfoConstant.BID_PLACED_SUCCESFULLY;
+  }
+
+  // Find the user details for provided mail id or throw user not found exception
+  private User findUserByMail(String mail) {
+    return userRepository
+            .findByEmail(mail)
+            .orElseThrow(() -> new UsernameNotFoundException(ErrorConstant.USER_NOT_FOUND));
   }
 }

@@ -23,7 +23,7 @@ public class AdminServiceImpl implements AdminService {
 
   private final JWTService jwtService;
 
-  private final ImmediateSaleListingRepository immediateSaleListingRepository;
+  private final ImmediateSaleListingRepository immediateListingRepository;
 
   private final AuctionSaleListingRepository auctionSaleListingRepository;
 
@@ -51,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
     var listingID = reviewRequest.getListingId();
 
     ImmediateSaleListing immediateSaleListing =
-        immediateSaleListingRepository.findByImmediateSaleListingID(listingID);
+        immediateListingRepository.findByImmediateSaleListingID(listingID);
 
     Date currentDate = DateUtil.getCurrentDate();
 
@@ -83,7 +83,7 @@ public class AdminServiceImpl implements AdminService {
     immediateSaleListing.setMessageFromApprover(reviewRequest.getMessage());
     immediateSaleListing.setDateOfApproval(currentDate);
 
-    immediateSaleListingRepository.save(immediateSaleListing);
+    immediateListingRepository.save(immediateSaleListing);
 
     return listingReviewResponse;
   }

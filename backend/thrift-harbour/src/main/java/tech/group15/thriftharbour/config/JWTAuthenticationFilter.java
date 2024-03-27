@@ -60,15 +60,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         /* Creating an empty security context */
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         /* Creating an authentication token for the user */
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+        UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
 
         /* Setting the details of the authentication token */
-        usernamePasswordAuthenticationToken.setDetails(
+        token.setDetails(
             new WebAuthenticationDetailsSource().buildDetails(request));
         /* Setting the authentication in the security context */
-        securityContext.setAuthentication(usernamePasswordAuthenticationToken);
+        securityContext.setAuthentication(token);
         /* Setting the security context in the SecurityContextHolder */
         SecurityContextHolder.setContext(securityContext);
       }
