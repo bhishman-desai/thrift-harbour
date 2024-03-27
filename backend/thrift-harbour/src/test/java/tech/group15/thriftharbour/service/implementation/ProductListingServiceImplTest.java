@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.http.HttpStatusCode;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.enums.RoleEnum;
@@ -64,12 +67,16 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testCreateImmediateSaleListing(){
+        MockMultipartFile mockFile1 = new MockMultipartFile("image1", "image1.png", "image/png", "test image content".getBytes());
+        MockMultipartFile mockFile2 = new MockMultipartFile("image2", "image2.png", "image/png", "another test image content".getBytes());
+        List<MultipartFile> productImages = Arrays.asList(mockFile1, mockFile2);
 
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(awsS3Service.uploadImageToBucket(anyString(), any())).thenReturn(2);
+        when(awsS3Service.uploadImageToBucket(anyString(), any(MultipartFile.class))).thenReturn(HttpStatusCode.OK);
 
-        ImmediateSaleListingCreationResponse result = productListingServiceImpl.createImmediateSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.DIRECT, "auctionSlot"), Collections.emptyList());
+        ImmediateSaleListingCreationResponse result = productListingServiceImpl.createImmediateSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.DIRECT, "auctionSlot"), productImages);
 
         Assertions.assertNotNull(result);
     }
@@ -91,12 +98,16 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testCreateAuctionSaleListing(){
+        MockMultipartFile mockFile1 = new MockMultipartFile("image1", "image1.png", "image/png", "test image content".getBytes());
+        MockMultipartFile mockFile2 = new MockMultipartFile("image2", "image2.png", "image/png", "another test image content".getBytes());
+        List<MultipartFile> productImages = Arrays.asList(mockFile1, mockFile2);
 
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(awsS3Service.uploadImageToBucket(anyString(), any())).thenReturn(2);
+        when(awsS3Service.uploadImageToBucket(anyString(), any(MultipartFile.class))).thenReturn(HttpStatusCode.OK);
 
-        AuctionSaleListingCreationResponse result = productListingServiceImpl.createAuctionSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.AUCTION, "2024-03-10"), Collections.emptyList());
+        AuctionSaleListingCreationResponse result = productListingServiceImpl.createAuctionSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.AUCTION, "2024-03-10"), productImages);
 
         Assertions.assertNotNull(result);
     }

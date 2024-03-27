@@ -17,9 +17,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tech.group15.thriftharbour.dto.*;
-import tech.group15.thriftharbour.dto.request.ResetPassRequest;
-import tech.group15.thriftharbour.dto.request.SignInRequest;
-import tech.group15.thriftharbour.dto.request.SignUpRequest;
+import tech.group15.thriftharbour.dto.request.*;
+import tech.group15.thriftharbour.dto.response.ForgotPassResponse;
 import tech.group15.thriftharbour.dto.response.SignInResponse;
 import tech.group15.thriftharbour.exception.EmailAlreadyExistsException;
 import tech.group15.thriftharbour.mapper.UserMapper;
@@ -263,4 +262,39 @@ public class AuthenticationServiceImplTest {
         assertEquals("Password Changed Successfully", result);
     }
 
+    @Test
+    public void testForgotPassword() {
+        String email = "user@example.com";
+        ForgotPassRequest forgotPassRequest = new ForgotPassRequest();
+        forgotPassRequest.setEmail(email);
+        User mockUser = new User();
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(mockUser));
+        when(passwordResetTokenRepository.findByUser(any(User.class))).thenReturn(Optional.empty()); // Simulate no existing token
+
+        ForgotPassResponse response = authenticationService.forgotPassword(forgotPassRequest);
+
+        assertNotNull(response);
+        assertEquals("Email Sent Successfully", response.getMsg());
+    }
+
+    @Test
+    public void testRefreshToken() {
+        String oldToken = "oldRefreshToken";
+        String newToken = "newAccessToken";
+        String userEmail = "user@example.com";
+        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest();
+        refreshTokenRequest.setToken(oldToken);
+
+        User mockUser = new User();
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(mockUser));
+        when(jwtService.extractUserName(refreshTokenRequest.getToken())).thenReturn(userEmail);
+        when(jwtService.onRefreshToken(refreshTokenRequest, mockUser)).thenReturn(newToken);
+
+        SignInResponse response = authenticationService.refreshToken(refreshTokenRequest);
+
+        assertNotNull(response);
+        assertEquals(newToken, response.getToken());
+        assertEquals(oldToken, response.getRefreshToken());
+    }
 }
