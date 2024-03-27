@@ -3,6 +3,7 @@ package tech.group15.thriftharbour.service.implementation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.http.HttpStatusCode;
 import tech.group15.thriftharbour.constant.ErrorConstant;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
+import tech.group15.thriftharbour.enums.RoleEnum;
 import tech.group15.thriftharbour.exception.ImageUploadException;
 import tech.group15.thriftharbour.exception.ListingNotFoundException;
 import tech.group15.thriftharbour.mapper.ProductMapper;
@@ -559,17 +561,23 @@ public class ProductListingServiceImpl implements ProductListingService {
             String userMail = auctionSaleListing.getSellerEmail();
             User seller = findUserByMail(userMail);
 
-            String highestBidUserMail = auctionSaleListing.getCurrentHighestBidUserMail();
-            User currentHighestBidUser = findUserByMail(highestBidUserMail);
-
+            Optional<User> currentHighestBidUser;
             User highestBidUserRequiredInfo = new User();
-            highestBidUserRequiredInfo.setUserID(currentHighestBidUser.getUserID());
-            highestBidUserRequiredInfo.setFirstName(currentHighestBidUser.getFirstName());
-            highestBidUserRequiredInfo.setLastName(currentHighestBidUser.getLastName());
-            highestBidUserRequiredInfo.setEmail(currentHighestBidUser.getEmail());
-            highestBidUserRequiredInfo.setRole(currentHighestBidUser.getRole());
-            highestBidUserRequiredInfo.setAvgBuyerRatings(currentHighestBidUser.getAvgBuyerRatings());
-            highestBidUserRequiredInfo.setAvgSellerRatings(currentHighestBidUser.getAvgSellerRatings());
+            highestBidUserRequiredInfo.setRole(RoleEnum.USER);
+            if(!auctionSaleListing.getCurrentHighestBidUserMail().isEmpty())
+            {
+                currentHighestBidUser = userRepository.findByEmail(auctionSaleListing.getCurrentHighestBidUserMail());
+                if(currentHighestBidUser.isPresent())
+                {
+                    highestBidUserRequiredInfo.setUserID(currentHighestBidUser.get().getUserID());
+                    highestBidUserRequiredInfo.setFirstName(currentHighestBidUser.get().getFirstName());
+                    highestBidUserRequiredInfo.setLastName(currentHighestBidUser.get().getLastName());
+                    highestBidUserRequiredInfo.setEmail(currentHighestBidUser.get().getEmail());
+                    highestBidUserRequiredInfo.setRole(currentHighestBidUser.get().getRole());
+                    highestBidUserRequiredInfo.setAvgBuyerRatings(currentHighestBidUser.get().getAvgBuyerRatings());
+                    highestBidUserRequiredInfo.setAvgSellerRatings(currentHighestBidUser.get().getAvgSellerRatings());
+                }
+            }
 
             responseList.add(
                     AuctionSaleListingCreationResponse.builder()
