@@ -624,6 +624,8 @@ public class ProductListingServiceImpl implements ProductListingService {
                             .sellerEmail(seller.getEmail())
                             .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
                             .active(auctionSaleListing.isActive())
+                            .isApproved(auctionSaleListing.isApproved())
+                            .isRejected(auctionSaleListing.isRejected())
                             .createdDate(auctionSaleListing.getCreatedDate())
                             .sellerID(seller.getUserID())
                             .build());
