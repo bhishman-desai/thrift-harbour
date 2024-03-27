@@ -630,6 +630,34 @@ public class ProductListingServiceImpl implements ProductListingService {
         return responseList;
     }
 
+    /**
+     * Retrieves Auction sale listing by auctionSaleListingID.
+     *
+     * @return A list of {@code AuctionSaleListing} object representing auction sale listing details.
+     */
+    @Override
+    public AuctionSaleProductResponse findAuctionListingByID(String auctionSaleListingID) {
+        AuctionSaleListing listing =
+            auctionListingRepository.findByAuctionSaleListingID(auctionSaleListingID);
+
+        if (listing == null) {
+          throw new ListingNotFoundException(ErrorConstant.PRODUCT_NOT_FOUND);
+        }
+
+        List<AuctionSaleImage> productImages =
+                auctionImageRepository.findAllByAuctionSaleListingID(auctionSaleListingID);
+
+        return AuctionSaleProductResponse.builder()
+                .auctionSaleListingID(listing.getAuctionSaleListingID())
+                .productName(listing.getProductName())
+                .productDescription(listing.getProductDescription())
+                .startingBid(listing.getStartingBid())
+                .highestBid(listing.getHighestBid())
+                .imageURLs(productImages.stream().map(AuctionSaleImage::getImageURL).toList())
+                .seller(findUserByMail(listing.getSellerEmail()))
+                .build();
+    }
+
     // Find the product details for provided product id or throw Product not found exception
     private ImmediateSaleListing findProductByID(String id) {
         String error = ErrorConstant.PRODUCT_NOT_FOUND;

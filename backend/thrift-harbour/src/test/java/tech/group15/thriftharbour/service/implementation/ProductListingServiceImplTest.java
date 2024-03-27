@@ -363,4 +363,20 @@ class ProductListingServiceImplTest {
         auctionSaleListingRepository.findAllAuctionSaleListingForAdmin().forEach(listing ->
                 verify(auctionSaleImageRepository).findAllByAuctionSaleListingID(listing.getAuctionSaleListingID()));
     }
+
+    @Test
+    void testFindAuctionListingByID(){
+        when(auctionSaleListingRepository.findByAuctionSaleListingID(anyString())).thenReturn(auctionSaleListing);
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        AuctionSaleProductResponse result = productListingServiceImpl.findAuctionListingByID("auctionSaleListingID");
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    void testFindAuctionListingByIDProductNotFound(){
+        when(auctionSaleListingRepository.findByAuctionSaleListingID(anyString())).thenReturn(null);
+
+        assertThrows(ListingNotFoundException.class, () -> productListingServiceImpl.findAuctionListingByID("auctionSaleListingID"));
+    }
 }
