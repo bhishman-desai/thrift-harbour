@@ -35,7 +35,7 @@ import SuccessErrorModal from "../../components/ui-components/SuccessErrorModal/
 // import ExampleCarouselImage from "components/ExampleCarouselImage";
 
 interface ViewProductsProps {
-  product: AdminGetAllListingResponseType;
+  product: any;
 }
 
 const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
@@ -51,22 +51,41 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
   const [openModal, setOpenModal] = useState(false);
   const [errorInReview, setErrorInReview] = useState(false);
 
+  console.log("view product", product);
   useEffect(() => {
     (async function () {
       try {
-        const response = await admin.getImmediateListedProductById(
-          product.immediateSaleListingID,
-          token
-        );
-        if (response[0]?.status === 200) {
-          setLoading(false);
-          setError(false);
-          const data = response[0].data;
-          setData(data);
+        if (product.immediateSaleListingID) {
+          const response = await admin.getImmediateListedProductById(
+            product.immediateSaleListingID,
+            token
+          );
+          if (response[0]?.status === 200) {
+            setLoading(false);
+            setError(false);
+            const data = response[0].data;
+            setData(data);
+          } else {
+            setError(true);
+            setLoading(false);
+            setOpenModal(true);
+          }
         } else {
-          setError(true);
-          setLoading(false);
-          setOpenModal(true);
+          const response = await admin.getAuctionListedProductById(
+            product.auctionSaleListingID,
+            token
+          );
+          console.log("in auction", response);
+          if (response[0]?.status === 200) {
+            setLoading(false);
+            setError(false);
+            const data = response[0].data;
+            setData(data);
+          } else {
+            setError(true);
+            setLoading(false);
+            setOpenModal(true);
+          }
         }
       } catch (error) {
         setLoading(false);

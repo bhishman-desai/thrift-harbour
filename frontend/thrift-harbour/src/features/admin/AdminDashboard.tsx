@@ -38,28 +38,20 @@ const AdminDashboard: React.FC = () => {
   const listing = new ListingService();
   const token = localStorage.getItem("token");
   const [activeTab, setActiveTab] = useState("All Listed Products");
-  const [allListedProducts, setAllListedProducts] = useState<
-    AdminGetAllListingResponseType[]
-  >([]);
+  // const [allListedProducts, setAllListedProducts] = useState<
+  //   AdminGetAllListingResponseType[]
+  // >([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [viewProduct, setViewProduct] = useState(false);
-  const [currentProduct, setCurrentProduct] =
-    useState<AdminGetAllListingResponseType>({
-      immediateSaleListingID: "",
-      productName: "",
-      price: 0,
-      active: false,
-      approved: false,
-      rejected: false,
-      productImages: [],
-    });
+  const [currentProduct, setCurrentProduct] = useState({} as any);
   const [approvedListing, setApprovedListing] = useState<
     ApprovedDeniedProducts[]
   >([]);
   const [rejectedListing, setRejectedListing] = useState<
     ApprovedDeniedProducts[]
   >([]);
+  const [allListedProducts, setAllListedProducts] = useState([] as any);
 
   const tabs = [
     {
@@ -79,22 +71,23 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await admin.getImmediateListedProducts(token);
-
+        const response = await admin.getAllProductListing(token!);
         if (response[0]?.status === 200) {
           setLoading(false);
           const data = response[0].data;
-
-          data.map(async (product, index) => {
-            const imagesResponse =
-              await listing.getImmediateListedProductsImages(
-                product.immediateSaleListingID,
-                token
-              );
-            if (imagesResponse[0]?.status === 200) {
-              product.productImages = imagesResponse[0].data.imageURLs;
+          console.log("data", data);
+          data.map(async (product: any) => {
+            if (product.immediateSaleListingID) {
+              const imagesResponse =
+                await listing.getImmediateListedProductsImages(
+                  product.immediateSaleListingID,
+                  token
+                );
+              if (imagesResponse[0]?.status === 200) {
+                product.productImages = imagesResponse[0].data.imageURLs;
+              }
+              setAllListedProducts([...data]);
             }
-            setAllListedProducts([...data]);
           });
         } else {
           setError(true);
@@ -106,6 +99,37 @@ const AdminDashboard: React.FC = () => {
       }
     })();
   }, []);
+
+  // useEffect(() => {
+  //   (async function () {
+  //     try {
+  //       const response = await admin.getImmediateListedProducts(token);
+
+  //       if (response[0]?.status === 200) {
+  //         setLoading(false);
+  //         const data = response[0].data;
+
+  //         data.map(async (product, index) => {
+  //           const imagesResponse =
+  //             await listing.getImmediateListedProductsImages(
+  //               product.immediateSaleListingID,
+  //               token
+  //             );
+  //           if (imagesResponse[0]?.status === 200) {
+  //             product.productImages = imagesResponse[0].data.imageURLs;
+  //           }
+  //           setAllListedProducts([...data]);
+  //         });
+  //       } else {
+  //         setError(true);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       setLoading(false);
+  //       setError(true);
+  //     }
+  //   })();
+  // }, []);
 
   useEffect(() => {
     (async function () {
@@ -214,7 +238,7 @@ const AdminDashboard: React.FC = () => {
             "Loading..."
           ) : (
             <Grid>
-              {allListedProducts.map((product) => {
+              {allListedProducts.map((product: any) => {
                 return (
                   <ProductList
                     product={product}
@@ -270,7 +294,9 @@ const AdminDashboard: React.FC = () => {
 
       {viewProduct && (
         <Modal style={newModalStyle} onClose={toggleViewProduct}>
-          <ImageSlider images={currentProduct.productImages} />
+          <ImageSlider
+            images={currentProduct.productImages || currentProduct.imageURLs}
+          />
           <ViewProduct product={currentProduct} />
         </Modal>
       )}

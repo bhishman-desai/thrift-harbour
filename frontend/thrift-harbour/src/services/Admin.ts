@@ -15,12 +15,36 @@ export class AdminServices {
 
   async getImmediateListedProducts(
     token?: string | null
-  ): Promise<[AdminGetAllListingResponse | null, ErrorResponse | null]> {
+  ): Promise<[any | null, ErrorResponse | null]> {
     const baseUrl = this.path.getBaseUrl();
     const getallImmediateListingtUrl = this.path.getAdminUrl(
       "get-all-immediatesale-listing"
     );
     const requestUrl = baseUrl + getallImmediateListingtUrl;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getAuctionListedProducts(
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getAuctionListedProductstUrl = this.path.getAdminUrl(
+      "get-all-auction-listing"
+    );
+    const requestUrl = baseUrl + getAuctionListedProductstUrl;
 
     try {
       const response = await axios.get(requestUrl, {
@@ -36,6 +60,44 @@ export class AdminServices {
     }
   }
 
+  async getAllProductListing(
+    token?: string
+  ): Promise<[any | null, ErrorResponse | null]> {
+    let immediateListedProducts = [];
+    let auctionListedProducts = [];
+    try {
+      auctionListedProducts = await this.getAuctionListedProducts(token);
+      immediateListedProducts = await this.getImmediateListedProducts(token);
+      // Handle the response data
+      // console.log("auctionListedProducts", auctionListedProducts);
+      // console.log("immediateListedProducts", immediateListedProducts);
+      console.log("reponse in service", [
+        ...auctionListedProducts,
+        ...immediateListedProducts,
+      ]);
+      if (
+        auctionListedProducts[0].status === 200 &&
+        immediateListedProducts[0].status === 200
+      ) {
+        return [
+          {
+            status: 200,
+            data: [
+              ...auctionListedProducts[0].data,
+              ...immediateListedProducts[0].data,
+            ],
+          },
+          null,
+        ];
+      } else {
+        return ["error", null];
+      }
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
   async getImmediateListedProductById(
     id: string,
     token?: string | null
@@ -45,6 +107,30 @@ export class AdminServices {
       "get-immediatesale-product"
     );
     const requestUrl = baseUrl + getallImmediateListingtByIdUrl + `/${id}`;
+
+    try {
+      const response = await axios.get(requestUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Handle the response data
+      return [response, null];
+    } catch (error) {
+      // Handle errors
+      throw error;
+    }
+  }
+
+  async getAuctionListedProductById(
+    id: string,
+    token?: string | null
+  ): Promise<[any | null, ErrorResponse | null]> {
+    const baseUrl = this.path.getBaseUrl();
+    const getAuctionListedProductByIdUrl = this.path.getAdminUrl(
+      "get-auctionsale-product"
+    );
+    const requestUrl = baseUrl + getAuctionListedProductByIdUrl + `/${id}`;
 
     try {
       const response = await axios.get(requestUrl, {

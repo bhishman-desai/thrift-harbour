@@ -104,6 +104,12 @@ export class Path {
     if (service === "product-listing") {
       return "/admin/sellers";
     }
+    if (service === "get-all-auction-listing") {
+      return "/admin/get-all-auction-listing";
+    }
+    if (service === "get-auctionsale-product") {
+      return "/admin/get-auctionsale-product";
+    }
   }
 
   getChatUrl() {
