@@ -27,8 +27,9 @@ public class UserMapper {
     return user;
   }
 
-  public static SignInResponse generateSignInResponse(String token, String refreshToken) {
+  public static SignInResponse generateSignInResponse(String token, String refreshToken, Integer userId) {
     SignInResponse signInResponse = new SignInResponse();
+    signInResponse.setUserID(userId);
     signInResponse.setToken(token);
     signInResponse.setRefreshToken(refreshToken);
 
