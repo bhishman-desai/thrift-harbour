@@ -379,6 +379,7 @@ public class ProductListingServiceImpl implements ProductListingService {
             response.setProductName(auctionSale.getProductName());
             response.setProductDescription(
                     auctionSale.getProductDescription());
+            response.setStartingBid(auctionSale.getStartingBid());
             response.setCategory(auctionSale.getCategory());
             response.setSellerEmail(auctionSale.getSellerEmail());
             String listingID = auctionSale.getAuctionSaleListingID();
@@ -423,6 +424,7 @@ public class ProductListingServiceImpl implements ProductListingService {
             response.setProductName(auctionSale.getProductName());
             response.setProductDescription(
                     auctionSale.getProductDescription());
+            response.setStartingBid(auctionSale.getStartingBid());
             response.setCategory(auctionSale.getCategory());
             response.setSellerEmail(auctionSale.getSellerEmail());
             String listingID = auctionSale.getAuctionSaleListingID();
