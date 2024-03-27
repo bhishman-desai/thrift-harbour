@@ -564,7 +564,7 @@ public class ProductListingServiceImpl implements ProductListingService {
             Optional<User> currentHighestBidUser;
             User highestBidUserRequiredInfo = new User();
             highestBidUserRequiredInfo.setRole(RoleEnum.USER);
-            if(!auctionSaleListing.getCurrentHighestBidUserMail().isEmpty())
+            if(auctionSaleListing.getCurrentHighestBidUserMail() != null && !auctionSaleListing.getCurrentHighestBidUserMail().isEmpty())
             {
                 currentHighestBidUser = userRepository.findByEmail(auctionSaleListing.getCurrentHighestBidUserMail());
                 if(currentHighestBidUser.isPresent())
