@@ -79,7 +79,6 @@ const ListedProducts: React.FC = () => {
             }
             setImmediateListedProducts([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -111,8 +110,6 @@ const ListedProducts: React.FC = () => {
             }
             setAuctionListedProducts([...data]);
           });
-
-          //   console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);

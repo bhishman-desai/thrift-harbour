@@ -58,13 +58,11 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
           product.immediateSaleListingID,
           token
         );
-        console.log("response[0]?.status", response[0]?.status);
         if (response[0]?.status === 200) {
           setLoading(false);
           setError(false);
           const data = response[0].data;
           setData(data);
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -100,10 +98,8 @@ const ViewProduct: React.FC<ViewProductsProps> = ({ product }) => {
 
         const data = response[0].data;
         setData(data);
-        console.log("data after if", data);
         setOpenModal(true);
       } else {
-        console.log("in e;se");
         setErrorInReview(true);
         setLoader(false);
         setOpenModal(true);

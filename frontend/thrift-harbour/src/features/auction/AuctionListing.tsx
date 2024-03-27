@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuctionBanner from "../../components/ui-components/AuctionBanner/AuctionBanner";
+import Navbar from "../../components/ui-components/navbar/Navbar";
 import { ListingService } from "../../services/Listing";
+import { Dates } from "../../utils/Dates";
 import {
   Card,
   Grid,
@@ -12,15 +15,16 @@ import {
   Price,
 } from "../buy-product/BuyProductsStyles";
 
-const AuctionListing: React.FC = () => {
+export interface AuctionListingProps {}
+const AuctionListing: React.FC<AuctionListingProps> = ({}) => {
   const navigate = useNavigate();
   const listing = new ListingService();
   const token = localStorage.getItem("token");
-
+  const dates = new Dates();
   const [auctionListedProducts, setAuctionListedProducts] = useState([] as any);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
+  const today = new Date();
   const productsList = [
     {
       auctionSaleListingID: "43f2c169-edcb-4c60-9d20-a8329e34492e",
@@ -59,11 +63,13 @@ const AuctionListing: React.FC = () => {
   ];
 
   const handleOnProductClick = (id: string, highestBidUser: any) => {
-    console.log("auctionListedProducts.highestBidUser", highestBidUser);
     navigate(`/auctionsale-product-detail/${id}`, {
       state: highestBidUser,
     });
   };
+
+  const currentUrl = window.location.href;
+  const auction = currentUrl.includes("auction");
 
   useEffect(() => {
     (async function () {
@@ -74,7 +80,6 @@ const AuctionListing: React.FC = () => {
           const data = response[0].data;
 
           setAuctionListedProducts(data);
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -86,53 +91,82 @@ const AuctionListing: React.FC = () => {
     })();
   }, []);
 
+  const navOptionsUsers = [
+    {
+      key: "List Product",
+      value: "List Product",
+      isSelected: false,
+    },
+
+    {
+      key: "My Listed Products",
+      value: "My Listed Products",
+      isSelected: false,
+    },
+    {
+      key: "Chats",
+      value: "Chats",
+      isSelected: false,
+    },
+
+    {
+      key: "Buy Products",
+      value: "Buy Products",
+      isSelected: false,
+    },
+  ];
+
   return (
     <>
-      <>
-        {auctionListedProducts.length === 0 ? (
-          "Loading"
-        ) : (
-          <>
-            <Header>Products</Header>
-            <Grid>
-              {auctionListedProducts.map((product: any) => {
-                return (
-                  <>
-                    <Card>
-                      <ImageContainer
-                        onClick={() =>
-                          handleOnProductClick(
-                            product.auctionSaleListingID,
-                            product.highestBidUser
-                          )
-                        }
-                      >
-                        <Image>
-                          <img
-                            src={product.imageURLs && product.imageURLs[0]}
-                            height={"100%"}
-                            width={"100%"}
-                          />
-                        </Image>
-                      </ImageContainer>
+      {auctionListedProducts.length === 0 ? (
+        "Loading"
+      ) : (
+        <>
+          <Navbar navOptions={navOptionsUsers} loginType={"USER"} />
 
-                      <NamePrice>
-                        <Name> {product.productName}</Name>
-                        <Price>
-                          ${" "}
-                          {product.highestBid
-                            ? product.highestBid
-                            : product.startingBid}
-                        </Price>
-                      </NamePrice>
-                    </Card>
-                  </>
-                );
-              })}
-            </Grid>
-          </>
-        )}
-      </>
+          {auction && (
+            <>
+              <Header>Products</Header>
+              <Grid>
+                {auctionListedProducts.map((product: any) => {
+                  return (
+                    <>
+                      <Card>
+                        <ImageContainer
+                          onClick={() =>
+                            handleOnProductClick(
+                              product.auctionSaleListingID,
+                              product.highestBidUser
+                            )
+                          }
+                        >
+                          <Image>
+                            <img
+                              src={product.imageURLs && product.imageURLs[0]}
+                              height={"100%"}
+                              width={"100%"}
+                            />
+                          </Image>
+                        </ImageContainer>
+
+                        <NamePrice>
+                          <Name> {product.productName}</Name>
+                          <Price>
+                            ${" "}
+                            {product.highestBid
+                              ? product.highestBid
+                              : product.startingBid}
+                          </Price>
+                        </NamePrice>
+                      </Card>
+                    </>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
+        </>
+      )}
     </>
   );
 };

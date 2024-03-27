@@ -27,8 +27,6 @@ const ProductList: React.FC<ProductListProps> = ({
   handleViewClick,
   showViewButton,
 }) => {
-  console.log("auction listing", product);
-
   const helper = new Helper();
   return (
     <>

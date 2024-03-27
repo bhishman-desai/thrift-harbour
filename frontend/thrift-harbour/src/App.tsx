@@ -11,6 +11,7 @@ import ListedBySeller from "./features/product-listing/seller/ListedBySeller";
 import ImmediateListingSale from "./features/product-listing/immediatelisting-sale/ImmediateListingSale";
 import AuctionListingSale from "./features/product-listing/auctionlisting-sale/AuctionListingSale";
 import AuctionListing from "./features/auction/AuctionListing";
+import ListedProducts from "./features/product-listing/listed-products/ListedProducts";
 
 function App() {
   return (

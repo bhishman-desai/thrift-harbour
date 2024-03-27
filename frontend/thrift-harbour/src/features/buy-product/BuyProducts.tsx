@@ -103,7 +103,6 @@ const BuyProducts: React.FC = () => {
             }
             setProductsList([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);

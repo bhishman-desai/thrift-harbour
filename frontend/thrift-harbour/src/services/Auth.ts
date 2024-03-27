@@ -76,7 +76,6 @@ export class Auth {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("user response", response);
       return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [
@@ -102,7 +101,6 @@ export class Auth {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("user response", response);
       return [{ status: response.status, message: response.data }, null];
     } catch (error: any) {
       return [

@@ -48,7 +48,6 @@ const Login: React.FC = () => {
     setIsLoading(true);
     try {
       const [data, error] = await auth.signInUser(loginCredentials);
-      console.log("data", data);
       if (data?.token) {
         setErrorInLogin(false);
         setIsLoading(false);

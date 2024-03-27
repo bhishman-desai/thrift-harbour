@@ -32,15 +32,11 @@ const PlaceBid: React.FC<PlaceBidProps> = ({
   const navigate = useNavigate();
 
   const onPlaceBid = async () => {
-    console.log("bid amount", bidAmount);
-    console.log("highest bid", highestBid);
     if (bidAmount! <= highestBid) {
-      console.log("in if");
       setAmountError(true);
     }
 
     if (bidAmount! > highestBid) {
-      console.log("in else");
       setLoading(true);
       setAmountError(false);
       try {
@@ -48,7 +44,6 @@ const PlaceBid: React.FC<PlaceBidProps> = ({
           auctionSaleListingID: auctionSaleListingID,
           bidAmount: bidAmount,
         });
-        console.log("response of place bid", response);
         if (response[0] === "Bid Placed successfully") {
           setSuccess(true);
           setLoading(false);

@@ -4,7 +4,8 @@ import { AdminServices } from "../../services/Admin";
 import { GetSellersResponse } from "../../types/ListingTypes";
 import {
   Avatar,
-  AvatarContainer, ChatButton,
+  AvatarContainer,
+  ChatButton,
   Email,
   Header,
   Id,
@@ -36,7 +37,7 @@ const SellersList: React.FC<SllerListProps> = ({
   const [error, setError] = useState(false);
   const [openChat, setOpenChat] = useState(false);
   const [selectedUser, setSelectedUser] = useState<GetSellersResponse>(
-    {} as GetSellersResponse,
+    {} as GetSellersResponse
   );
 
   const list = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
@@ -46,7 +47,6 @@ const SellersList: React.FC<SllerListProps> = ({
   useEffect(() => {
     (async function () {
       try {
-        console.log("in use effect");
         const response = await admin.getSellers(token);
 
         if (response[0]?.status === 200) {
@@ -54,7 +54,6 @@ const SellersList: React.FC<SllerListProps> = ({
           const data = response[0].data;
 
           setSellers(data);
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);

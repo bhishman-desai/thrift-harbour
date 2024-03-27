@@ -15,9 +15,7 @@ const ListedBySeller = () => {
 
   useEffect(() => {
     (async function () {
-      console.log("in use effect seller");
       try {
-        console.log("id=.", id);
         const response = await admin.getSellerbyId(parseInt(id || "1"), token);
 
         if (response[0]?.status === 200) {
@@ -35,7 +33,6 @@ const ListedBySeller = () => {
             }
             setProductsByseller([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
