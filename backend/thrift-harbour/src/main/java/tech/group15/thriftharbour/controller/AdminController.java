@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import tech.group15.thriftharbour.dto.request.ListingReviewRequest;
 import tech.group15.thriftharbour.dto.response.*;
+import tech.group15.thriftharbour.model.AuctionSaleListing;
 import tech.group15.thriftharbour.service.AdminService;
 import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.model.User;
@@ -139,5 +140,17 @@ public class AdminController {
   public ResponseEntity<List<AuctionSaleListingCreationResponse>> getAllAuctionListings() {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllAuctionListingForAdmin());
+  }
+
+  /**
+   * GET request to retrieve auction sale listing by its id for the admin.
+   *
+   * @return The Object of {@code ResponseEntity} object containing {@code AuctionSaleListing}
+   *     representing auction sale listing details.
+   */
+  @GetMapping("/get-auctionsale-product/{id}")
+  public ResponseEntity<AuctionSaleProductResponse> getAuctionSaleProduct(@PathVariable String id) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(productListingService.findAuctionListingByID(id));
   }
 }
