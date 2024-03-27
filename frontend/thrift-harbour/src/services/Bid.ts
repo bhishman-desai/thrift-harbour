@@ -13,14 +13,12 @@ export class BidService {
     const baseUrl = this.path.getBaseUrl();
     const placeBidUrl = this.path.getBiddingUrls("place-bid");
     const requestUrl = baseUrl + placeBidUrl!;
-    console.log("request url for bidding", requestUrl);
     try {
       const response = await axios.post(requestUrl, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("bid response", response);
       return [response.data, null];
     } catch (error: any) {
       return [

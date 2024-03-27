@@ -51,7 +51,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   };
 
-  console.log("recipient", recipient);
   useEffect(() => {
     if (open) {
       fetchChatHistory().then(() => {

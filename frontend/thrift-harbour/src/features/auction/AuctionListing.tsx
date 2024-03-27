@@ -63,7 +63,6 @@ const AuctionListing: React.FC<AuctionListingProps> = ({}) => {
   ];
 
   const handleOnProductClick = (id: string, highestBidUser: any) => {
-    console.log("auctionListedProducts.highestBidUser", highestBidUser);
     navigate(`/auctionsale-product-detail/${id}`, {
       state: highestBidUser,
     });
@@ -81,7 +80,6 @@ const AuctionListing: React.FC<AuctionListingProps> = ({}) => {
           const data = response[0].data;
 
           setAuctionListedProducts(data);
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -117,8 +115,6 @@ const AuctionListing: React.FC<AuctionListingProps> = ({}) => {
       isSelected: false,
     },
   ];
-
-  console.log("in auction list");
 
   return (
     <>

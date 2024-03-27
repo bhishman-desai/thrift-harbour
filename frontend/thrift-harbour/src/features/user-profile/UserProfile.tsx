@@ -70,7 +70,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ id }) => {
 
         if (response[0]?.status === 200) {
           const data = response[0].data;
-          console.log("data of user", data);
           setUser(data);
         } else {
           setError(true);

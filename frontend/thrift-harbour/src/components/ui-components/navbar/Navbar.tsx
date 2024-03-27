@@ -36,13 +36,11 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
         : "Buy Products"
   );
   const [isProfileClicked, setIsProfileClicked] = useState(false);
-  console.log("currentSelected", currentSelected);
   const onClickOption = (key: string) => {
     setCurrentSelected(key);
   };
 
   const currentUrl = window.location.href;
-  console.log("currentUrl", currentUrl);
   const isImmediateSaleProductDetail = currentUrl.includes(
     "immediatesale-product-detail"
   );
@@ -51,7 +49,6 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   );
   const auction = currentUrl.includes("auction");
   const home = currentUrl.includes("home");
-  console.log("isImmediateSaleProductDetail", isImmediateSaleProductDetail);
   const handleUrlChange = (selectedTab: string) => {
     if (selectedTab !== "Buy Products") {
       window.history.pushState({}, "", "/home");

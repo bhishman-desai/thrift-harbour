@@ -58,12 +58,10 @@ const AuctionListingSale = () => {
   const [auctionSaleProductDetail, setAuctionSaleProductDetail] =
     useState<AuctionSaleProductDetail>();
 
-  console.log("highestBidUser", highestBidUser);
   useEffect(() => {
     (async function () {
       try {
         const response = await listing.auctionSaleProductDetail(id!, token);
-        console.log("response of 1 product", response);
         let tempProductDetail: AuctionSaleProductDetail = {
           auctionSaleListingID: response.data.auctionSaleListingID,
           productName: response.data.productName,

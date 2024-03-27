@@ -79,8 +79,6 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     (async function () {
       try {
-        console.log("in use effect");
-        console.log("active tab", activeTab);
         const response = await admin.getImmediateListedProducts(token);
 
         if (response[0]?.status === 200) {
@@ -98,7 +96,6 @@ const AdminDashboard: React.FC = () => {
             }
             setAllListedProducts([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -130,7 +127,6 @@ const AdminDashboard: React.FC = () => {
             }
             setApprovedListing([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);
@@ -162,7 +158,6 @@ const AdminDashboard: React.FC = () => {
             }
             setRejectedListing([...data]);
           });
-          console.log("data after if", data);
         } else {
           setError(true);
           setLoading(false);

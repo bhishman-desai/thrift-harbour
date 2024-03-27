@@ -116,7 +116,6 @@ const ImmediateListingSale = () => {
     (async function () {
       try {
         const response = await listing.immediateSaleProductDetail(id!, token);
-        console.log("response", response);
         const imgresponse = await listing.getImmediateListedProductsImages(
           id!,
           token
@@ -146,7 +145,6 @@ const ImmediateListingSale = () => {
 
         if (response[0]?.status === 200) {
           const data = response[0].data;
-          console.log("data of user", data);
           setUser(data);
         } else {
           setError(true);
