@@ -34,6 +34,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final PasswordResetTokenRepository passwordResetTokenRepository;
   private final EmailService emailService;
 
+  /**
+   * Register user to application
+   *
+   * @param signUpRequest Containing name, mail and password.
+   * @return A {@code User} containing the registered user details.
+   */
   public User signUp(SignUpRequest signUpRequest) {
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       throw new EmailAlreadyExistsException("Email already exists!");
@@ -42,6 +48,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return userRepository.save(user);
   }
 
+  /**
+   * Login user and generate token
+   *
+   * @param signInRequest Containing mail and password.
+   * @return A {@code SignInResponse} containing the token and refresh token.
+   */
   public SignInResponse signIn(SignInRequest signInRequest) {
 
     String signInRequestEmail = signInRequest.getEmail();
@@ -57,6 +69,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return UserMapper.generateSignInResponse(token, refreshToken);
   }
 
+  /**
+   * Refresh the token of logged in user to maintain session
+   *
+   * @param refreshTokenRequest Containing jwt token.
+   * @return A {@code SignInResponse} containing the token and refresh token.
+   */
   public SignInResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
     String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
     User user = findUserByEmail(userEmail);

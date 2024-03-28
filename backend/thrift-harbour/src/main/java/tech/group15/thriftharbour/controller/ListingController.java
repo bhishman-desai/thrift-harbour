@@ -24,6 +24,15 @@ public class ListingController {
 
   private final ProductListingService productListingService;
 
+  /**
+   * Post request to create a immediate sale listing.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @param submitListingRequest has the listing details
+   * @param productImages has the byte data of uploaded images
+   * @return A list of {@code ImmediateSaleListingCreationResponse}  containing the
+   * details of listed product
+   */
   @PostMapping("/create-immediatesale-listing")
   public ResponseEntity<ImmediateSaleListingCreationResponse> createImmediateListing(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -36,7 +45,13 @@ public class ListingController {
                 authorizationHeader, submitListingRequest, productImages));
   }
 
-  // Get all immediate sale listing of the user
+  /**
+   * Get all immediate sale listing of the user.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @return A list of {@code ImmediateSaleListing}  containing the
+   * details of products listed by the logged in user
+   */
   @GetMapping("/get-immediatesale-listing")
   public ResponseEntity<List<ImmediateSaleListing>> getImmediateSaleListings(
       @Valid @RequestHeader("Authorization") String authorizationHeader) {
@@ -44,7 +59,13 @@ public class ListingController {
         .body(productListingService.findAllImmediateSaleListingBySellerEmail(authorizationHeader));
   }
 
-  // get image url associated with the immediatesale listing
+  /**
+   * get image url associated with the immediatesale listing.
+   *
+   * @param id listing id of a particular listing.
+   * @return A list of {@code GetListingImageResponse}  containing the
+   * image URL of images associated with provided listing id
+   */
   @GetMapping("/get-immediatesale-images/{id}")
   public ResponseEntity<GetListingImageResponse> getImmediateSaleListingsImages(
       @PathVariable String id) {
@@ -52,6 +73,15 @@ public class ListingController {
         .body(productListingService.findAllImmediateSaleListingImagesByID(id));
   }
 
+  /**
+   * Post request to create a immediate sale listing.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @param submitListingRequest has the listing details
+   * @param productImages has the byte data of uploaded images
+   * @return A list of {@code AuctionSaleListingCreationResponse}  containing the
+   * details of listed product
+   */
   @PostMapping("/create-auctionsale-listing")
   public ResponseEntity<AuctionSaleListingCreationResponse> createAuctionListing(
       @Valid @RequestHeader("Authorization") String authorizationHeader,
@@ -63,6 +93,13 @@ public class ListingController {
                 authorizationHeader, submitListingRequest, productImages));
   }
 
+  /**
+   * Get all auction sale listing of the user.
+   *
+   * @param authorizationHeader The authorization header containing the JWT of user.
+   * @return A list of {@code ImmediateSaleListing}  containing the
+   * details of products listed by the logged in user
+   */
   @GetMapping("/get-auctionsale-listing")
   public ResponseEntity<List<AuctionSaleListing>> getAuctionSaleListings(
       @Valid @RequestHeader("Authorization") String authorizationHeader) {
@@ -70,6 +107,13 @@ public class ListingController {
         .body(productListingService.findAllAuctionSaleListingBySellerEmail(authorizationHeader));
   }
 
+  /**
+   * get image url associated with the auctionsale listing.
+   *
+   * @param id listing id of a particular listing.
+   * @return A list of {@code GetListingImageResponse}  containing the
+   * image URL of images associated with provided listing id
+   */
   @GetMapping("/get-auctionsale-images/{id}")
   public ResponseEntity<GetListingImageResponse> getAuctionSaleListingsImages(
       @PathVariable String id) {

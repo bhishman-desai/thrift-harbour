@@ -27,6 +27,12 @@ public class AdminServiceImpl implements AdminService {
 
   private final AuctionSaleListingRepository auctionSaleListingRepository;
 
+  /**
+   * Approve/Deny a listing and return the status of listing.
+   * @param reviewRequest containing the listing id, status to be updated and sell category
+   * @param authorizationHeader from request
+   * @return A {@code ListingReviewResponse} object containing the id of listing and status - Approved/Denied
+   */
   @Override
   public ListingReviewResponse reviewListing(
       String authorizationHeader, ListingReviewRequest reviewRequest) {
@@ -45,6 +51,12 @@ public class AdminServiceImpl implements AdminService {
     return response;
   }
 
+  /**
+   * Approve/Deny a immediate sale listing and return the status of listing.
+   * @param reviewRequest containing the listing id, status to be updated and sell category
+   * @param adminEmail email of approver
+   * @return A {@code ListingReviewResponse} object containing the id of listing and status - Approved/Denied
+   */
   private ListingReviewResponse setStatusOfImmediateSaleListing(
       String adminEmail, ListingReviewRequest reviewRequest) {
 
@@ -88,6 +100,12 @@ public class AdminServiceImpl implements AdminService {
     return listingReviewResponse;
   }
 
+  /**
+   * Approve/Deny a auction sale listing and return the status of listing.
+   * @param reviewRequest containing the listing id, status to be updated and sell category
+   * @param adminEmail email of approver
+   * @return A {@code ListingReviewResponse} object containing the id of listing and status - Approved/Denied
+   */
   private ListingReviewResponse setStatusOfAuctionSaleListing(
       String adminEmail, ListingReviewRequest reviewRequest) {
 

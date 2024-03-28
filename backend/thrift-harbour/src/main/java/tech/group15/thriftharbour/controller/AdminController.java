@@ -35,33 +35,63 @@ public class AdminController {
     return ResponseEntity.ok("Hi from admin!");
   }
 
-  /* Get all immediate sale listing for admin*/
+
+  /**
+   * Get all immediate sale listing for admin.
+   *
+   * @return A list of {@code ImmediateSaleMinifiedResponse} containing the
+   * minimal details immediate sale products.
+   */
   @GetMapping("/get-all-immediatesale-listing")
   public ResponseEntity<List<ImmediateSaleMinifiedResponse>> getAllImmediateSaleListings() {
     return ResponseEntity.status(HttpStatus.OK)
         .body(productListingService.findAllImmediateSaleListing());
   }
 
-  /* Get all seller who've listed their products */
+  /**
+   * Get all seller who've listed their products.
+   *
+   * @return A list of {@code SellerResponse}  containing the
+   * details of sellers registered in application.
+   */
   @GetMapping("/get-all-sellers")
   public ResponseEntity<List<SellerResponse>> getAllSellers() {
     return ResponseEntity.status(HttpStatus.OK)
             .body(userService.findAllSellers());
   }
 
-  /* Get user by id */
+  /**
+   * Get user by id.
+   *
+   * @param sellerID User Id of seller.
+   * @return A list of {@code User}  containing the
+   * details of user with provided ID
+   */
   @GetMapping("/sellers/{sellerID}")
   public ResponseEntity<User> getUserById(@PathVariable Integer sellerID) {
     return ResponseEntity.ok(userService.findUserById(sellerID));
   }
 
-  /* Get user listing by userid */
+
+  /**
+   * Get user listing by userid.
+   *
+   * @param sellerID User Id of seller.
+   * @return A list of {@code ImmediateSaleListing}  containing the
+   * details of immediate sale products listed by this seller
+   */
   @GetMapping("/sellers/{sellerID}/product-listing")
   public ResponseEntity<List<ImmediateSaleListing>> getUserListingByUserId(@PathVariable Integer sellerID) {
     return ResponseEntity.ok(productListingService.findUserListingById(sellerID));
   }
 
-  /* Get single immediate sale product */
+  /**
+   * Get single immediate sale product.
+   *
+   * @param id listing id of a particular listing.
+   * @return A list of {@code ImmediateSaleListing}  containing the
+   * details of immediate sale product
+   */
   @GetMapping("/get-immediatesale-product/{id}")
   public ResponseEntity<ImmediateSaleListing> getImmediateSaleProduct
   (@PathVariable String id) {
@@ -69,6 +99,11 @@ public class AdminController {
             .body(productListingService.findImmediateSaleListingByID(id));
   }
 
+  /**
+   * Approve/Deny a listing and return the status of listing.
+   * @param listingReviewRequest containing the listing id, status to be updated and sell category
+   * @return A {@code ListingReviewResponse} object containing the id of listing and status - Approved/Denied
+   */
   @Tag(name = "Approve/Reject User Listing")
   @PostMapping("/review-request")
   public ResponseEntity<ListingReviewResponse> reviewRequest(

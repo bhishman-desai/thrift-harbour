@@ -19,6 +19,13 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     @Value("${aws.bucketName}")
     private String bucketName;
 
+    /**
+     * Refresh the token of logged in user to maintain session
+     *
+     * @param path temp path of file in spring context.
+     * @param image product image to be uploaded.
+     * @return integer containing upload status code.
+     */
     @Override
     public int uploadImageToBucket(String path, MultipartFile image) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()

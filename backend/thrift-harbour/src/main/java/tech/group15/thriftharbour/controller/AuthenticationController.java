@@ -18,16 +18,34 @@ import tech.group15.thriftharbour.service.AuthenticationService;
 public class AuthenticationController {
   private final AuthenticationService authenticationService;
 
+  /**
+   * Register user to application
+   *
+   * @param signUpRequest Containing name, mail and password.
+   * @return A {@code User} containing the registered user details.
+   */
   @PostMapping("/signup")
   public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
     return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
   }
 
+  /**
+   * Login user and generate token
+   *
+   * @param signInRequest Containing mail and password.
+   * @return A {@code SignInResponse} containing the token and refresh token.
+   */
   @PostMapping("/signin")
   public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest signInRequest) {
     return ResponseEntity.ok(authenticationService.signIn(signInRequest));
   }
 
+  /**
+   * Refresh the token of logged in user to maintain session
+   *
+   * @param refreshTokenRequest Containing jwt token.
+   * @return A {@code SignInResponse} containing the token and refresh token.
+   */
   @PostMapping("/refresh")
   public ResponseEntity<SignInResponse> refresh(
       @RequestBody RefreshTokenRequest refreshTokenRequest) {
