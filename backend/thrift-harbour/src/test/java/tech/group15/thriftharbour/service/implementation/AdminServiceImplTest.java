@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import tech.group15.thriftharbour.dto.request.ListingReviewRequest;
 import tech.group15.thriftharbour.dto.response.ListingReviewResponse;
@@ -18,9 +17,6 @@ import tech.group15.thriftharbour.model.ImmediateSaleListing;
 import tech.group15.thriftharbour.repository.AuctionSaleListingRepository;
 import tech.group15.thriftharbour.repository.ImmediateSaleListingRepository;
 import tech.group15.thriftharbour.service.JWTService;
-import tech.group15.thriftharbour.utils.DateUtil;
-
-import java.util.Date;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,10 +28,10 @@ public class AdminServiceImplTest {
     private JWTService jwtService;
 
     @Mock
-    private ImmediateSaleListingRepository immediateSaleListingRepository;
+    private ImmediateSaleListingRepository immediateListingRepository;
 
     @Mock
-    private AuctionSaleListingRepository auctionSaleListingRepository;
+    private AuctionSaleListingRepository auctionListingRepository;
 
     @InjectMocks
     private AdminServiceImpl adminService;
@@ -61,8 +57,8 @@ public class AdminServiceImplTest {
         // Mock repository
         ImmediateSaleListing immediateSaleListing = new ImmediateSaleListing();
         immediateSaleListing.setImmediateSaleListingID("1");
-        when(immediateSaleListingRepository.findByImmediateSaleListingID("1")).thenReturn(immediateSaleListing);
-        when(immediateSaleListingRepository.save(any(ImmediateSaleListing.class))).thenReturn(immediateSaleListing);
+        when(immediateListingRepository.findByImmediateSaleListingID("1")).thenReturn(immediateSaleListing);
+        when(immediateListingRepository.save(any(ImmediateSaleListing.class))).thenReturn(immediateSaleListing);
 
         // Perform test
         ListingReviewResponse response = adminService.reviewListing(authorizationHeader, reviewRequest);
@@ -88,8 +84,8 @@ public class AdminServiceImplTest {
         // Mock repository
         AuctionSaleListing auctionSaleListing = new AuctionSaleListing();
         auctionSaleListing.setAuctionSaleListingID("2");
-        when(auctionSaleListingRepository.findByAuctionSaleListingID("2")).thenReturn(auctionSaleListing);
-        when(auctionSaleListingRepository.save(any(AuctionSaleListing.class))).thenReturn(auctionSaleListing);
+        when(auctionListingRepository.findByAuctionSaleListingID("2")).thenReturn(auctionSaleListing);
+        when(auctionListingRepository.save(any(AuctionSaleListing.class))).thenReturn(auctionSaleListing);
 
         // Perform test
         ListingReviewResponse response = adminService.reviewListing(authorizationHeader, reviewRequest);
@@ -113,7 +109,7 @@ public class AdminServiceImplTest {
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn("admin@example.com");
 
         // Mock repository
-        when(immediateSaleListingRepository.findByImmediateSaleListingID("3")).thenReturn(null);
+        when(immediateListingRepository.findByImmediateSaleListingID("3")).thenReturn(null);
 
         // Perform test and verify exception
         Assertions.assertThrows(ListingNotFoundException.class, () -> {
@@ -138,7 +134,7 @@ public class AdminServiceImplTest {
         AuctionSaleListing auctionSaleListing = new AuctionSaleListing();
         auctionSaleListing.setAuctionSaleListingID("4");
         auctionSaleListing.setActive(false);
-        when(auctionSaleListingRepository.findByAuctionSaleListingID("4")).thenReturn(auctionSaleListing);
+        when(auctionListingRepository.findByAuctionSaleListingID("4")).thenReturn(auctionSaleListing);
 
         // Perform test and verify exception
         Assertions.assertThrows(ListingNotActiveException.class, () -> {
@@ -162,8 +158,8 @@ public class AdminServiceImplTest {
         // Mock repository
         ImmediateSaleListing immediateSaleListing = new ImmediateSaleListing();
         immediateSaleListing.setImmediateSaleListingID("5");
-        when(immediateSaleListingRepository.findByImmediateSaleListingID("5")).thenReturn(immediateSaleListing);
-        when(immediateSaleListingRepository.save(any(ImmediateSaleListing.class))).thenReturn(immediateSaleListing);
+        when(immediateListingRepository.findByImmediateSaleListingID("5")).thenReturn(immediateSaleListing);
+        when(immediateListingRepository.save(any(ImmediateSaleListing.class))).thenReturn(immediateSaleListing);
 
         // Perform test
         ListingReviewResponse response = adminService.reviewListing(authorizationHeader, reviewRequest);
@@ -189,8 +185,8 @@ public class AdminServiceImplTest {
         // Mock repository
         AuctionSaleListing auctionSaleListing = new AuctionSaleListing();
         auctionSaleListing.setAuctionSaleListingID("6");
-        when(auctionSaleListingRepository.findByAuctionSaleListingID("6")).thenReturn(auctionSaleListing);
-        when(auctionSaleListingRepository.save(any(AuctionSaleListing.class))).thenReturn(auctionSaleListing);
+        when(auctionListingRepository.findByAuctionSaleListingID("6")).thenReturn(auctionSaleListing);
+        when(auctionListingRepository.save(any(AuctionSaleListing.class))).thenReturn(auctionSaleListing);
 
         // Perform test
         ListingReviewResponse response = adminService.reviewListing(authorizationHeader, reviewRequest);
