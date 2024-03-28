@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     var token = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
-    return UserMapper.generateSignInResponse(token, refreshToken);
+    return UserMapper.generateSignInResponse(token, refreshToken, user.getUserID());
   }
 
   public SignInResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
@@ -64,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     String newToken = jwtService.onRefreshToken(refreshTokenRequest, user);
     String oldToken = refreshTokenRequest.getToken();
 
-    return UserMapper.generateSignInResponse(newToken, oldToken);
+    return UserMapper.generateSignInResponse(newToken, oldToken, user.getUserID());
   }
 
   /**
