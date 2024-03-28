@@ -21,15 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-        "DB_URL_DEV=jdbc:mysql://db-5308.cs.dal.ca/CSCI5308_15_DEVINT?reconnect=true?allowPublicKeyRetrieval=true",
-        "DB_PASSWORD_DEV=phaNg5xahf",
-        "DB_USER_DEV=CSCI5308_15_DEVINT_USER",
-        "AWS_ACCESS_KEY_ID_DEV=AKIAW3MEDB33MVU6ELOD",
-        "AWS_BUCKET_NAME_DEV=mymitsandboxbucket",
-        "AWS_REGION_DEV=ca-central-1",
-        "AWS_SECRET_ACCESS_KEY_DEV=jU9znniP3Nv1PY67jNKcFSVSei3w78FQyt7WwIPL"
-})
+@TestPropertySource(locations = "classpath:testenv.properties")
 public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
