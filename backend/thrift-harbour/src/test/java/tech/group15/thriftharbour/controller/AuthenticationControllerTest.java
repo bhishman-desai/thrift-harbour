@@ -1,18 +1,10 @@
 package tech.group15.thriftharbour.controller;
 
-import org.hibernate.annotations.processing.SQL;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,18 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.view.RedirectView;
-import tech.group15.thriftharbour.ThriftHarbourApplication;
-import tech.group15.thriftharbour.dto.request.*;
-import tech.group15.thriftharbour.dto.response.ForgotPassResponse;
+import tech.group15.thriftharbour.dto.request.SignInRequest;
+import tech.group15.thriftharbour.dto.request.SignUpRequest;
 import tech.group15.thriftharbour.dto.response.SignInResponse;
-import tech.group15.thriftharbour.enums.RoleEnum;
-import tech.group15.thriftharbour.model.User;
-import tech.group15.thriftharbour.service.AuthenticationService;
-import tech.group15.thriftharbour.service.implementation.AuthenticationServiceImpl;
-
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

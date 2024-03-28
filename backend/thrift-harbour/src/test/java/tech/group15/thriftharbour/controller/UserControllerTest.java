@@ -14,7 +14,6 @@ import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
 import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
 import tech.group15.thriftharbour.dto.request.SignInRequest;
 import tech.group15.thriftharbour.dto.request.SignUpRequest;
-import tech.group15.thriftharbour.dto.response.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.response.SignInResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
