@@ -35,6 +35,8 @@ import Modal from "../../../components/ui-components/Modal/Modal";
 import PlaceBid from "../../../components/ui-components/place-bid/PlaceBid";
 import UserProfile from "../../user-profile/UserProfile";
 import { ProfileLink } from "../immediatelisting-sale/ImmediatesaleStyles";
+import ProductHeaderNav from "../../../components/ui-components/ProductDetailsNav/ProductHeaderNav";
+import { isConstructorDeclaration } from "typescript";
 
 const AuctionListingSale = () => {
   const loren =
@@ -141,13 +143,14 @@ const AuctionListingSale = () => {
       isSelected: true,
     },
   ];
+
   return (
     <>
       {!auctionSaleProductDetail ? (
         "Loading..."
       ) : (
         <>
-          <Navbar navOptions={navOptionsUsers} loginType={"USER"} />
+          <ProductHeaderNav />
           <div style={{ height: "100%", padding: 0, borderRadius: 10 }}>
             <Card style={{ backgroundColor: "whitesmoke" }}>
               <Typography
@@ -176,11 +179,18 @@ const AuctionListingSale = () => {
                   <span>
                     Highest Bid: <span>&#36;</span>
                     {/* {"100"} */}
-                    {auctionSaleProductDetail!.highestBid <=
+                    {/* {auctionSaleProductDetail!.highestBid <=
                     auctionSaleProductDetail!.startingBid
                       ? auctionSaleProductDetail!.startingBid
                       : auctionSaleProductDetail?.highestBid}{" "}
-                    by {highestBidUser.firstName}
+                    by {highestBidUser.firstName} */}
+                    {`${
+                      auctionSaleProductDetail.highestBid > 0
+                        ? auctionSaleProductDetail.highestBid +
+                          " by " +
+                          highestBidUser.firstName
+                        : auctionSaleProductDetail.startingBid
+                    }`}
                   </span>
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     <Button onClick={handleFav}>
@@ -273,7 +283,7 @@ const AuctionListingSale = () => {
                           <Typography sx={{ paddingLeft: "2px" }}>
                             (
                             {auctionSaleProductDetail?.seller.avgSellerRatings.toFixed(
-                              2
+                              1
                             )}{" "}
                             of 5 stars)
                             {auctionSaleProductDetail?.seller
@@ -302,6 +312,7 @@ const AuctionListingSale = () => {
           {placeBidButtonClicked && (
             <Modal onClose={closeModal} title={""}>
               <PlaceBid
+                startingBid={auctionSaleProductDetail.startingBid}
                 auctionSaleListingID={
                   auctionSaleProductDetail?.auctionSaleListingID!
                 }

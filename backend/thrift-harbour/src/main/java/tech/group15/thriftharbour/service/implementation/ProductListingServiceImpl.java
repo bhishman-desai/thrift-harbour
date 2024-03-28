@@ -51,16 +51,15 @@ public class ProductListingServiceImpl implements ProductListingService {
     @Value("${aws.region}")
     private String region;
 
-    // Image file and filename as input and the image is uploaded to s3 bucket
-    private int uploadSingleImage(MultipartFile productImage, String uniqueFileName) {
-        if (FileUtils.isImageFile(productImage)) {
-            return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
-        } else {
-            throw new ImageUploadException("Error while Uploading image, Please try again later");
-        }
-    }
-
-    // Method to create an immediate sale listing
+    /**
+     * create a immediate sale listing.
+     *
+     * @param authorizationHeader The authorization header containing the JWT of user.
+     * @param listingRequest has the listing details
+     * @param productImages has the byte data of uploaded images
+     * @return A list of {@code ImmediateSaleListingCreationResponse}  containing the
+     * details of listed product
+     */
     @Override
     public ImmediateSaleListingCreationResponse createImmediateSaleListing(
             String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages) {
@@ -140,6 +139,16 @@ public class ProductListingServiceImpl implements ProductListingService {
                 .build();
     }
 
+
+    /**
+     * Post request to create a immediate sale listing.
+     *
+     * @param authorizationHeader The authorization header containing the JWT of user.
+     * @param listingRequest has the listing details
+     * @param productImages has the byte data of uploaded images
+     * @return A list of {@code AuctionSaleListingCreationResponse}  containing the
+     * details of listed product
+     */
     @Override
     public AuctionSaleListingCreationResponse createAuctionSaleListing(
             String authorizationHeader, SubmitListingRequest listingRequest, List<MultipartFile> productImages) {
@@ -687,5 +696,14 @@ public class ProductListingServiceImpl implements ProductListingService {
         return userRepository
                 .findByEmail(mail)
                 .orElseThrow(() -> new UsernameNotFoundException(ErrorConstant.USER_NOT_FOUND));
+    }
+
+    // Image file and filename as input and the image is uploaded to s3 bucket
+    private int uploadSingleImage(MultipartFile productImage, String uniqueFileName) {
+        if (FileUtils.isImageFile(productImage)) {
+            return awsS3Service.uploadImageToBucket(uniqueFileName, productImage);
+        } else {
+            throw new ImageUploadException("Error while Uploading image, Please try again later");
+        }
     }
 }

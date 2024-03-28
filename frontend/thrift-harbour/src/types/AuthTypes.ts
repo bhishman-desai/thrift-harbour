@@ -16,6 +16,7 @@ export interface LoginCredentials {
 }
 
 export interface LoginResponse {
+  userID: number;
   status: number;
   token: string;
   refreshToken: string;

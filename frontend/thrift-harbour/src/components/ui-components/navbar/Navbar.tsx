@@ -28,6 +28,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   const currentState = window.history.state;
+
   const [currentSelected, setCurrentSelected] = useState(
     loginType === "ADMIN"
       ? "Dashboard"
@@ -51,14 +52,15 @@ const Navbar: React.FC<NavbarProps> = ({ navOptions, loginType }) => {
   const home = currentUrl.includes("home");
   const handleUrlChange = (selectedTab: string) => {
     if (selectedTab !== "Buy Products") {
+      setCurrentSelected(selectedTab);
       window.history.pushState({}, "", "/home");
     }
   };
 
   // Call handleUrlChange when the tab is changed
-  // useEffect(() => {
-  //   handleUrlChange(currentSelected);
-  // }, [currentSelected]);
+  useEffect(() => {
+    handleUrlChange(currentSelected);
+  }, [currentSelected]);
 
   return (
     <>

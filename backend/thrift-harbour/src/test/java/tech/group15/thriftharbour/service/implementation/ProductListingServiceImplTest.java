@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.http.HttpStatusCode;
 import tech.group15.thriftharbour.dto.request.SubmitListingRequest;
 import tech.group15.thriftharbour.dto.response.*;
 import tech.group15.thriftharbour.enums.RoleEnum;
@@ -32,7 +35,7 @@ class ProductListingServiceImplTest {
     @Mock
     JWTService jwtService;
     @Mock
-    ImmediateSaleListingRepository immediateSaleListingRepository;
+    ImmediateSaleListingRepository immediateListingRepository;
     @Mock
     ImmediateSaleImageRepository immediateSaleImageRepository;
     @Mock
@@ -64,12 +67,16 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testCreateImmediateSaleListing(){
+        MockMultipartFile mockFile1 = new MockMultipartFile("image1", "image1.png", "image/png", "test image content".getBytes());
+        MockMultipartFile mockFile2 = new MockMultipartFile("image2", "image2.png", "image/png", "another test image content".getBytes());
+        List<MultipartFile> productImages = Arrays.asList(mockFile1, mockFile2);
 
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(awsS3Service.uploadImageToBucket(anyString(), any())).thenReturn(2);
+        when(awsS3Service.uploadImageToBucket(anyString(), any(MultipartFile.class))).thenReturn(HttpStatusCode.OK);
 
-        ImmediateSaleListingCreationResponse result = productListingServiceImpl.createImmediateSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.DIRECT, "auctionSlot"), Collections.emptyList());
+        ImmediateSaleListingCreationResponse result = productListingServiceImpl.createImmediateSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.DIRECT, "auctionSlot"), productImages);
 
         Assertions.assertNotNull(result);
     }
@@ -91,12 +98,16 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testCreateAuctionSaleListing(){
+        MockMultipartFile mockFile1 = new MockMultipartFile("image1", "image1.png", "image/png", "test image content".getBytes());
+        MockMultipartFile mockFile2 = new MockMultipartFile("image2", "image2.png", "image/png", "another test image content".getBytes());
+        List<MultipartFile> productImages = Arrays.asList(mockFile1, mockFile2);
 
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(awsS3Service.uploadImageToBucket(anyString(), any())).thenReturn(2);
+        when(awsS3Service.uploadImageToBucket(anyString(), any(MultipartFile.class))).thenReturn(HttpStatusCode.OK);
 
-        AuctionSaleListingCreationResponse result = productListingServiceImpl.createAuctionSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.AUCTION, "2024-03-10"), Collections.emptyList());
+        AuctionSaleListingCreationResponse result = productListingServiceImpl.createAuctionSaleListing(authorizationHeader, new SubmitListingRequest("productName", "productDescription", 0d, "category", SellCategoryEnum.AUCTION, "2024-03-10"), productImages);
 
         Assertions.assertNotNull(result);
     }
@@ -106,11 +117,11 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindImmediateSaleListingByID(){
-        when(immediateSaleListingRepository.findById(any())).thenReturn(Optional.of(immediateSaleListing));
+        when(immediateListingRepository.findById(any())).thenReturn(Optional.of(immediateSaleListing));
 
         ImmediateSaleListing result = productListingServiceImpl.findImmediateSaleListingByID("immediateSaleListingID");
         Assertions.assertEquals(immediateSaleListing, result);
-        verify(immediateSaleListingRepository).findById("immediateSaleListingID");
+        verify(immediateListingRepository).findById("immediateSaleListingID");
     }
 
     /**
@@ -118,7 +129,7 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindImmediateSaleListingByID_ProductNotFound(){
-        when(immediateSaleListingRepository.findById(any())).thenReturn(Optional.empty());
+        when(immediateListingRepository.findById(any())).thenReturn(Optional.empty());
 
         assertThrows(ListingNotFoundException.class, () -> productListingServiceImpl.findImmediateSaleListingByID("immediateSaleListingID"));
     }
@@ -128,13 +139,13 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindAllImmediateSaleListing(){
-        when(immediateSaleListingRepository.findAll()).thenReturn(List.of(immediateSaleListing));
+        when(immediateListingRepository.findAll()).thenReturn(List.of(immediateSaleListing));
 
         List<ImmediateSaleMinifiedResponse> result = productListingServiceImpl.findAllImmediateSaleListing();
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(List.of(immediateSaleListing).size(), result.size());
-        verify(immediateSaleListingRepository).findAll();
+        verify(immediateListingRepository).findAll();
     }
 
     /**
@@ -143,11 +154,11 @@ class ProductListingServiceImplTest {
     @Test
     void testFindAllImmediateSaleListingBySellerEmail(){
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
-        when(immediateSaleListingRepository.findAllBySellerEmail(anyString())).thenReturn(List.of(immediateSaleListing));
+        when(immediateListingRepository.findAllBySellerEmail(anyString())).thenReturn(List.of(immediateSaleListing));
 
         List<ImmediateSaleListing> result = productListingServiceImpl.findAllImmediateSaleListingBySellerEmail(authorizationHeader);
         Assertions.assertNotNull(result);
-        verify(immediateSaleListingRepository).findAllBySellerEmail(sellerEmail);
+        verify(immediateListingRepository).findAllBySellerEmail(sellerEmail);
     }
 
     /**
@@ -192,11 +203,11 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindUserListingById(){
-        when(immediateSaleListingRepository.findAllBySellerID(anyInt())).thenReturn(List.of(immediateSaleListing));
+        when(immediateListingRepository.findAllBySellerID(anyInt())).thenReturn(List.of(immediateSaleListing));
 
         List<ImmediateSaleListing> result = productListingServiceImpl.findUserListingById(user.getUserID());
         Assertions.assertEquals(List.of(immediateSaleListing), result);
-        verify(immediateSaleListingRepository).findAllBySellerID(user.getUserID());
+        verify(immediateListingRepository).findAllBySellerID(user.getUserID());
     }
 
     /**
@@ -204,12 +215,12 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindAllApprovedImmediateSaleListing(){
-        when(immediateSaleListingRepository.findAllApprovedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, true, false, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(immediateListingRepository.findAllApprovedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, true, false, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
         when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
 
         List<ApprovedImmediateSaleListingForAdminResponse> result = productListingServiceImpl.findAllApprovedImmediateSaleListing();
         Assertions.assertNotNull(result);
-        verify(immediateSaleListingRepository).findAllApprovedImmediateSaleListing();
+        verify(immediateListingRepository).findAllApprovedImmediateSaleListing();
         verify(immediateSaleImageRepository).getAllByImmediateSaleListingID("immediateSaleListingID");
     }
 
@@ -218,12 +229,12 @@ class ProductListingServiceImplTest {
      */
     @Test
     void testFindAllDeniedImmediateSaleListing(){
-        when(immediateSaleListingRepository.findAllDeniedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, false, true, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
+        when(immediateListingRepository.findAllDeniedImmediateSaleListing()).thenReturn(List.of(new ImmediateSaleListing("immediateSaleListingID", "productName", "productDescription", 0d, "category", "sellerEmail", new User(0, "firstName", "lastName", "email", "password", RoleEnum.USER, 0d, 0d), true, false, true, "approverEmail", "messageFromApprover", false, new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime(), new GregorianCalendar(2024, Calendar.MARCH, 21, 18, 43).getTime())));
         when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
 
         List<DeniedImmediateSaleListingForAdminResponse> result = productListingServiceImpl.findAllDeniedImmediateSaleListing();
         Assertions.assertNotNull(result);
-        verify(immediateSaleListingRepository).findAllDeniedImmediateSaleListing();
+        verify(immediateListingRepository).findAllDeniedImmediateSaleListing();
         verify(immediateSaleImageRepository).getAllByImmediateSaleListingID("immediateSaleListingID");
     }
 
@@ -302,7 +313,7 @@ class ProductListingServiceImplTest {
     @Test
     void testFindAllImmediateListing(){
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
-        when(immediateSaleListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(immediateSaleListing));
+        when(immediateListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(immediateSaleListing));
         when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
@@ -310,8 +321,8 @@ class ProductListingServiceImplTest {
         Assertions.assertNotNull(result);
 
         verify(jwtService).extractUserNameFromRequestHeaders(authorizationHeader);
-        verify(immediateSaleListingRepository).findAllImmediateSaleListing(sellerEmail);
-        immediateSaleListingRepository.findAllImmediateSaleListing(sellerEmail).forEach(listing ->
+        verify(immediateListingRepository).findAllImmediateSaleListing(sellerEmail);
+        immediateListingRepository.findAllImmediateSaleListing(sellerEmail).forEach(listing ->
                 verify(immediateSaleImageRepository).getAllByImmediateSaleListingID(listing.getImmediateSaleListingID()));
         verify(userRepository).findByEmail(sellerEmail);
     }
@@ -322,7 +333,7 @@ class ProductListingServiceImplTest {
     @Test
     void testFindAllImmediateListing_SellerNotFound() {
         when(jwtService.extractUserNameFromRequestHeaders(anyString())).thenReturn(sellerEmail);
-        when(immediateSaleListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(immediateSaleListing));
+        when(immediateListingRepository.findAllImmediateSaleListing(anyString())).thenReturn(List.of(immediateSaleListing));
         when(immediateSaleImageRepository.getAllByImmediateSaleListingID(anyString())).thenReturn(List.of(immediateSaleImage));
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 

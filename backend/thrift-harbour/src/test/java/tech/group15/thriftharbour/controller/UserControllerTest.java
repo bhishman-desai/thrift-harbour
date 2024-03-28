@@ -10,9 +10,10 @@ import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import tech.group15.thriftharbour.dto.request.BuyerRatingsRequest;
+import tech.group15.thriftharbour.dto.request.SellerRatingsRequest;
 import tech.group15.thriftharbour.dto.request.SignInRequest;
 import tech.group15.thriftharbour.dto.request.SignUpRequest;
-import tech.group15.thriftharbour.dto.response.GetListingImageResponse;
 import tech.group15.thriftharbour.dto.response.SignInResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:testenv.properties")
-public class ListingControllerTest {
-
+public class UserControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -32,8 +32,7 @@ public class ListingControllerTest {
     private int port;
 
     @Test
-    public void testGetImmediateSaleListingImage() {
-
+    public void testAddBuyerRatings(){
         SignUpRequest request = new SignUpRequest();
         request.setEmail("mock@dal.ca");
         request.setFirstName("Mock");
@@ -51,35 +50,35 @@ public class ListingControllerTest {
         String token = msg.getBody().getToken();
         System.out.println("Token set" + token);
 
+        BuyerRatingsRequest buyerRatingsRequest = new BuyerRatingsRequest();
+        buyerRatingsRequest.setRatingToUserId(1000);
+        buyerRatingsRequest.setBuyerRatings(5);
+
         // Set the authentication token in the request headers
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
         System.out.println(token);
         // Create the request entity with headers
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<BuyerRatingsRequest> requestEntity = new HttpEntity<>(buyerRatingsRequest, headers);
 
-        this.jdbcTemplate.execute("insert into immediate_sale_image values (1000, '1998-10-15','url', '789')");
+        this.jdbcTemplate.execute("insert into buyer_ratings (rating_to_user_id, rating_from_user_id, buyer_ratings) values (1000, 2, 5)");
 
-        // Send a GET request to the endpoint
-        ResponseEntity<GetListingImageResponse> response = restTemplate.exchange(
-                "http://localhost:" + port + "/api/v1/users/listing/get-immediatesale-images/{id}",
-                HttpMethod.GET,
+        // Send a Post request to the endpoint
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/user/add-buyer-ratings",
+                HttpMethod.POST,
                 requestEntity,
-                GetListingImageResponse.class,
-                "1000");
+                String.class);
 
-        // Assert the response status code
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        this.jdbcTemplate.execute("DELETE FROM user WHERE email= 'mock@dal.ca'");
-        this.jdbcTemplate.execute("DELETE FROM immediate_sale_image WHERE imageurl = 'url'");
-
+        this.jdbcTemplate.execute("DELETE FROM buyer_ratings WHERE rating_to_user_id = 1000");
     }
 
     @Test
-    public void testGetAuctionSaleListingImage() {
-
+    public void testAddSellerRatings(){
         SignUpRequest request = new SignUpRequest();
         request.setEmail("mock@dal.ca");
         request.setFirstName("Mock");
@@ -97,29 +96,30 @@ public class ListingControllerTest {
         String token = msg.getBody().getToken();
         System.out.println("Token set" + token);
 
+        SellerRatingsRequest sellerRatingsRequest = new SellerRatingsRequest();
+        sellerRatingsRequest.setRatingToUserId(1000);
+        sellerRatingsRequest.setSellerRatings(5);
+
         // Set the authentication token in the request headers
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
         System.out.println(token);
         // Create the request entity with headers
-        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<SellerRatingsRequest> requestEntity = new HttpEntity<>(sellerRatingsRequest, headers);
 
-        this.jdbcTemplate.execute("insert into auction_sale_image values (1000, '1998-10-15', '789', 'url')");
+        this.jdbcTemplate.execute("insert into seller_ratings (rating_to_user_id, rating_from_user_id, seller_ratings) values (1000, 2, 5)");
 
-        // Send a GET request to the endpoint
-        ResponseEntity<GetListingImageResponse> response = restTemplate.exchange(
-                "http://localhost:" + port + "/api/v1/users/listing/get-auctionsale-images/{id}",
-                HttpMethod.GET,
+        // Send a Post request to the endpoint
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/user/add-seller-ratings",
+                HttpMethod.POST,
                 requestEntity,
-                GetListingImageResponse.class,
-                "1000");
+                String.class);
 
-        // Assert the response status code
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        this.jdbcTemplate.execute("DELETE FROM user WHERE email= 'mock@dal.ca'");
-        this.jdbcTemplate.execute("DELETE FROM auction_sale_image WHERE imageurl = 'url'");
-
+        this.jdbcTemplate.execute("DELETE FROM seller_ratings WHERE rating_to_user_id = 1000");
     }
 }
