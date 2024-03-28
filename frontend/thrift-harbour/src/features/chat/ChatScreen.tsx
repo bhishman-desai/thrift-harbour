@@ -29,7 +29,7 @@ const ChatScreen: React.FC = () => {
 
   const [users, setUsers] = useState<UserChatType[]>([]);
   const [stompClient, setStompClient] = useState<Stomp.Client>(
-    {} as Stomp.Client,
+    {} as Stomp.Client
   );
 
   const [openChat, setOpenChat] = useState(false);
@@ -53,7 +53,7 @@ const ChatScreen: React.FC = () => {
   const fetchChatHistory = async () => {
     const [chatHistory, error] = await chatService.fetchChatHistory(
       String(sender.userID),
-      String(recipient.userID),
+      String(recipient.userID)
     );
   };
 
@@ -67,7 +67,7 @@ const ChatScreen: React.FC = () => {
 
         if (response && response[0]?.status === 200) {
           /* TODO: Change the URL */
-          const socket = new SockJS("http://localhost:8080/ws");
+          const socket = new SockJS("http://172.17.1.50:8080/ws");
           const stompClient = Stomp.over(socket);
 
           const user = response[0].data;
@@ -90,18 +90,18 @@ const ChatScreen: React.FC = () => {
                     id === "1"
                       ? await adminService.getUserbyIDAdmin(
                           parseInt(chatPayload.senderId),
-                          token,
+                          token
                         )
                       : await adminService.getUserbyIDUser(
                           parseInt(chatPayload.senderId),
-                          token,
+                          token
                         );
 
                   if (senderUserResponse[0].status === 200) {
                     const senderUser = senderUserResponse[0].data;
                     /* TODO: Set notification for user */
                   }
-                },
+                }
               );
             });
             setStompClient(stompClient);
