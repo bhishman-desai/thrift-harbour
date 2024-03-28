@@ -40,6 +40,7 @@ import FormControl from "@mui/material/FormControl";
 import { Dates } from "../../../utils/Dates";
 import ErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
 import SuccessErrorModal from "../../../components/ui-components/SuccessErrorModal/SuccessErrorModal";
+import Navbar from "../../../components/ui-components/navbar/Navbar";
 
 const ProductListing: React.FC = () => {
   const listingService = new ListingService();

@@ -22,6 +22,7 @@ import {
   Ratings,
 } from "./BuyProductsStyles";
 
+interface BuyProductsProps {}
 const BuyProducts: React.FC = () => {
   const navigate = useNavigate();
   const products = new ProductsService();
