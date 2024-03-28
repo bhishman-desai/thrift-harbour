@@ -14,6 +14,7 @@ const Home: React.FC = () => {
   const [authorized, setAuthorized] = useState(false);
   const [loginType, setLogintype] = useState<string | null>();
   const [error, setError] = useState(false);
+
   // Accessing the 'tab' property of the state object
 
   const navOptionsUsers = [

@@ -15,11 +15,13 @@ export interface PlaceBidProps {
   auctionSaleListingID: string;
   highestBid: number;
   highestBidUser: any;
+  startingBid: number;
 }
 const PlaceBid: React.FC<PlaceBidProps> = ({
   auctionSaleListingID,
   highestBid,
   highestBidUser,
+  startingBid,
 }) => {
   const bid = new BidService();
   const token = localStorage.getItem("token");
@@ -62,7 +64,13 @@ const PlaceBid: React.FC<PlaceBidProps> = ({
   return (
     <Container>
       <Header>
-        Highest bid is ${highestBid} by {highestBidUser.firstName}
+        {highestBid > 0 ? (
+          <>
+            Highest bid is ${highestBid} by {highestBidUser.firstName}
+          </>
+        ) : (
+          <>Starting bid is ${startingBid}</>
+        )}
       </Header>
       <Instruct>Place your bid below</Instruct>
       <Field style={{ marginTop: "4px" }}>

@@ -48,6 +48,7 @@ const Login: React.FC = () => {
     setIsLoading(true);
     try {
       const [data, error] = await auth.signInUser(loginCredentials);
+      localStorage.setItem("uId", String(data?.userID));
       if (data?.token) {
         setErrorInLogin(false);
         setIsLoading(false);

@@ -23,7 +23,6 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/*" element={<ResetPassword />} />
-          <Route path="/listing" element={<ProductListing />} />
           <Route path="/seller" element={<ListedBySeller />} />
           <Route
             path="/immediatesale-product-detail/:id"

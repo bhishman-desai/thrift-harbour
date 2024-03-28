@@ -3,16 +3,16 @@ import styled from "styled-components";
 export const Container = styled.div`
   position: absolute;
   display: flex;
-  flex-direction: column;
-  top: 50px;
+  align-items: center;
+  justify-content: center;
   right: 0.5rem;
-  height: 3rem;
+  height: 2rem;
   width: 6rem;
   border-radius: 5px;
   background-color: #78b2e7;
 `;
 export const Menuoption = styled.div`
-  height: 50%;
+  height: 20%;
   width: 100%;
   color: white;
   text-align: center;
