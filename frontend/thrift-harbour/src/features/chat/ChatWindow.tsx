@@ -61,7 +61,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   useEffect(() => {
     if (open) {
-      /* TODO: Change the URL */
       const socket = new SockJS("http://172.17.1.50:8080/ws");
       const stompClient = Stomp.over(socket);
 
