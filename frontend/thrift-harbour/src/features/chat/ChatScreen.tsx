@@ -66,7 +66,6 @@ const ChatScreen: React.FC = () => {
             : await adminService.getUserbyIDUser(parseInt(id || "1"), token);
 
         if (response && response[0]?.status === 200) {
-          /* TODO: Change the URL */
           const socket = new SockJS("http://172.17.1.50:8080/ws");
           const stompClient = Stomp.over(socket);
 
@@ -99,7 +98,6 @@ const ChatScreen: React.FC = () => {
 
                   if (senderUserResponse[0].status === 200) {
                     const senderUser = senderUserResponse[0].data;
-                    /* TODO: Set notification for user */
                   }
                 }
               );
@@ -114,7 +112,6 @@ const ChatScreen: React.FC = () => {
           };
         }
       } catch (error) {
-        /* TODO: Handle Error */
       }
     })();
   }, []);

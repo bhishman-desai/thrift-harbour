@@ -29,7 +29,7 @@ public class ThriftHarbourApplication implements CommandLineRunner {
     if (adminAccount == null) {
       User admin = new User();
 
-      /* TODO: Change the hard-coded password and use a better approach */
+      /* As per client requirement, adding the Admin on boot. */
       admin.setFirstName("admin");
       admin.setLastName("admin");
       admin.setEmail("admin@dal.ca");
