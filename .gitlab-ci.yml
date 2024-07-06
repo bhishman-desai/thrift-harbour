@@ -1,0 +1,16 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"
+
+stages:
+  - triggers
+
+frontend-trigger:
+  stage: triggers
+  trigger:
+    include: frontend/.gitlab-ci.yml
+
+backend-trigger:
+  stage: triggers
+  trigger:
+    include: backend/.gitlab-ci.yml
